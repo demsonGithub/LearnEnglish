@@ -1,3 +1,4 @@
+using Demkin.System.Domain.Entities;
 using Demkin.System.Infrastructure;
 using Demkin.System.Infrastructure.Repositories;
 using MediatR;
@@ -13,7 +14,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddMediatR(typeof(Program).Assembly);
+builder.Services.AddMediatR(typeof(Program).Assembly, typeof(User).Assembly);
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddDbContext<SystemDbContext>(options =>

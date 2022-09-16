@@ -9,7 +9,6 @@ namespace Demkin.System.Domain.Events
         public UserCreatedDomainEvent(User user)
         {
             User = user;
-            Console.WriteLine($"{User.Id},{User.UserName}被创建了");
         }
     }
 }

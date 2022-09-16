@@ -1,13 +1,14 @@
 ﻿using Demkin.Infrastructure.Core;
 using Demkin.System.Domain.Entities;
 using Demkin.System.Infrastructure.EntityConfigurations;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Demkin.System.Infrastructure
 {
     public class SystemDbContext : EFContext
     {
-        public SystemDbContext(DbContextOptions<SystemDbContext> options) : base(options)
+        public SystemDbContext(DbContextOptions<SystemDbContext> options, IMediator mediator) : base(options, mediator)
         {
         }
 

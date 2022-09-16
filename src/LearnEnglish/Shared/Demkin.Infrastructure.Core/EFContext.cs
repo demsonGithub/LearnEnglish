@@ -1,12 +1,16 @@
-﻿using MediatR;
+﻿using Demkin.Domain.Abstraction;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Demkin.Infrastructure.Core
 {
     public class EFContext : DbContext, IUnitOfWork
     {
-        public EFContext(DbContextOptions options) : base(options)
+        private readonly IMediator _mediator;
+
+        public EFContext(DbContextOptions options, IMediator mediator) : base(options)
         {
+            _mediator = mediator;
         }
 
         #region UnitOfWork
@@ -15,8 +19,18 @@ namespace Demkin.Infrastructure.Core
         {
             var result = await base.SaveChangesAsync(cancellationToken);
 
-            Console.WriteLine("执行了SaveChangesAsync");
+            Console.WriteLine("执行了SaveChangesAsync,可以发布事件");
 
+            var domainEntities = this.ChangeTracker.Entries<Entity>().Where(x => x.Entity.DomainEvents != null && x.Entity.DomainEvents.Any());
+
+            var domainEvents = domainEntities.SelectMany(x => x.Entity.DomainEvents).ToList();
+
+            domainEntities.ToList().ForEach(entity => entity.Entity.ClearDomainEvents());
+
+            foreach (var item in domainEvents)
+            {
+                await _mediator.Publish(item);
+            }
             return true;
         }
 
