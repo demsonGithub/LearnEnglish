@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\Demkin.Domain.Abstraction\Demkin.Domain.Abstraction.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Demkin.Utils\Demkin.Utils.csproj" />
+  </ItemGroup>
+
 </Project>
