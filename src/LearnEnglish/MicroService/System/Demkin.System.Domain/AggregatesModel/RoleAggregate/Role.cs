@@ -1,6 +1,6 @@
-﻿namespace Demkin.System.Domain.Entities
+﻿namespace Demkin.System.Domain.AggregatesModel.RoleAggregate
 {
-    public class Role : Entity<long>
+    public class Role : Entity<long>, IAggregateRoot
     {
         public string RoleName { get; private set; }
 

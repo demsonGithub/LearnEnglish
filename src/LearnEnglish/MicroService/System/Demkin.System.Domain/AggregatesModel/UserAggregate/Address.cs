@@ -1,6 +1,6 @@
 ﻿using Demkin.Domain.Abstraction;
 
-namespace Demkin.System.Domain.ValueObjects
+namespace Demkin.System.Domain.AggregatesModel.UserAggregate
 {
     public class Address : ValueObject
     {

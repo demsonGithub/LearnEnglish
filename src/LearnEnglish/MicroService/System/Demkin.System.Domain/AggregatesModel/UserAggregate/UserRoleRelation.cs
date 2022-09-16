@@ -1,4 +1,4 @@
-﻿namespace Demkin.System.Domain.Entities
+﻿namespace Demkin.System.Domain.AggregatesModel.UserAggregate
 {
     public class UserRoleRelation : Entity<long>
     {

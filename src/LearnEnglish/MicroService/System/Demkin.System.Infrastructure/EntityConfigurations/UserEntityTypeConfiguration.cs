@@ -1,5 +1,4 @@
-﻿using Demkin.System.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Demkin.System.Infrastructure.EntityConfigurations

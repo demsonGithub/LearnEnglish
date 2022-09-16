@@ -1,6 +1,6 @@
 ﻿using Demkin.System.Domain.Events;
 
-namespace Demkin.System.Domain.Entities
+namespace Demkin.System.Domain.AggregatesModel.UserAggregate
 {
     public class User : Entity<long>, IAggregateRoot
     {
@@ -10,8 +10,13 @@ namespace Demkin.System.Domain.Entities
 
         public Address? Address { get; private set; }
 
+        private readonly List<UserRoleRelation> _userRoleRelations;
+        public IReadOnlyCollection<UserRoleRelation> UserRoleRelations => _userRoleRelations;
+
         private User()
-        { }
+        {
+            _userRoleRelations = new List<UserRoleRelation>();
+        }
 
         public User(string userName, string password, Address? address)
         {
@@ -20,7 +25,7 @@ namespace Demkin.System.Domain.Entities
             Password = password;
             Address = address;
 
-            this.AddDomainEvent(new UserCreatedDomainEvent(this));
+            AddDomainEvent(new UserCreatedDomainEvent(this));
         }
     }
 }

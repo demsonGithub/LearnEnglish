@@ -1,9 +1,10 @@
 ﻿using Demkin.Infrastructure.Core;
-using Demkin.System.Domain.Entities;
+using System.Linq.Expressions;
 
 namespace Demkin.System.Infrastructure.Repositories
 {
     public interface IUserRepository : IRepository<User, long>
     {
+        Task<User> GetAsync(Expression<Func<User, bool>> expression);
     }
 }

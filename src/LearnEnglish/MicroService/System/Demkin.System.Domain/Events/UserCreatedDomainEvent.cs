@@ -1,4 +1,4 @@
-﻿using Demkin.System.Domain.Entities;
+﻿using Demkin.System.Domain.AggregatesModel.UserAggregate;
 
 namespace Demkin.System.Domain.Events
 {

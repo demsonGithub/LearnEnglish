@@ -1,15 +1,15 @@
-﻿namespace Demkin.System.Domain.Entities
+﻿namespace Demkin.System.Domain.AggregatesModel.RoleAggregate
 {
-    public class RoleModulePermissionRelation : Entity<long>
+    public class RoleModuleRelation : Entity<long>
     {
         public long RoleId { get; private set; }
 
         public long ModulePermissionId { get; private set; }
 
-        private RoleModulePermissionRelation()
+        private RoleModuleRelation()
         { }
 
-        public RoleModulePermissionRelation(long roleId, long modulePermissionId)
+        public RoleModuleRelation(long roleId, long modulePermissionId)
         {
             Id = IdGenerateHelper.Instance.GenerateId();
             RoleId = roleId;

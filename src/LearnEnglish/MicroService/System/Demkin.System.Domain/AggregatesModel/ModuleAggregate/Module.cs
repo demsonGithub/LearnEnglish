@@ -1,8 +1,8 @@
 ﻿using Demkin.System.Domain.Enum;
 
-namespace Demkin.System.Domain.Entities
+namespace Demkin.System.Domain.AggregatesModel.ModuleAggregate
 {
-    public class ModulePermission : Entity<long>
+    public class Module : Entity<long>, IAggregateRoot
     {
         public long ParentId { get; private set; }
 
@@ -14,10 +14,10 @@ namespace Demkin.System.Domain.Entities
 
         public LinkType LinkType { get; private set; }
 
-        private ModulePermission()
+        private Module()
         { }
 
-        public ModulePermission(long parentId, string name, string url, string? icon, LinkType linkType)
+        public Module(long parentId, string name, string url, string? icon, LinkType linkType)
         {
             Id = IdGenerateHelper.Instance.GenerateId();
             ParentId = parentId;
