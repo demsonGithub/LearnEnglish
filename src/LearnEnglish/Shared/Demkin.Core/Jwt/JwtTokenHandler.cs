@@ -1,4 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -43,7 +44,13 @@ namespace Demkin.Core.Jwt
             return token;
         }
 
-        public static object SerializeJwtToken(string token)
+        /// <summary>
+        /// 解析JwtToken
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static TokenModel SerializeJwtToken(string token)
         {
             var jwtHandler = new JwtSecurityTokenHandler();
             if (string.IsNullOrEmpty(token))
@@ -55,9 +62,31 @@ namespace Demkin.Core.Jwt
                 throw new Exception("token不能解析");
             }
             JwtSecurityToken jwtToken = jwtHandler.ReadJwtToken(token);
+            jwtToken.Payload.TryGetValue(ClaimTypes.Name, out object name);
+
             jwtToken.Payload.TryGetValue(ClaimTypes.Role, out object roles);
 
-            return roles;
+            TokenModel tokenModel = new TokenModel()
+            {
+                Name = name.ToString(),
+            };
+            if (roles.GetType().Name == "JArray")
+            {
+                tokenModel.Roles = JsonConvert.DeserializeObject<string[]>(roles.ToString());
+            }
+            else
+            {
+                tokenModel.Roles = new string[] { roles != null ? roles.ToString() : "" };
+            }
+
+            return tokenModel;
         }
+    }
+
+    public class TokenModel
+    {
+        public string Name { get; set; }
+
+        public string[] Roles { get; set; }
     }
 }

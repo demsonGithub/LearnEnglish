@@ -18,9 +18,8 @@ namespace Demkin.Infrastructure.Core
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
         {
             var result = await base.SaveChangesAsync(cancellationToken);
-            base.Dispose();
 
-            Console.WriteLine("执行了SaveChangesAsync,可以发布事件");
+            Console.WriteLine("执行SaveChangesAsync");
 
             var domainEntities = this.ChangeTracker.Entries<Entity>().Where(x => x.Entity.DomainEvents != null && x.Entity.DomainEvents.Any());
 
@@ -32,6 +31,8 @@ namespace Demkin.Infrastructure.Core
             {
                 await _mediator.Publish(item);
             }
+
+            Dispose();
             return true;
         }
 

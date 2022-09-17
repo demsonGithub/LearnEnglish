@@ -1,4 +1,6 @@
-﻿namespace Demkin.Core
+﻿using System;
+
+namespace Demkin.Core
 {
     public static class ApiResultBuilder
     {
@@ -35,7 +37,7 @@
             return result;
         }
 
-        public static ApiResponse<T> Fail(string message, T data)
+        public static ApiResponse<T> Fail(string message, T data = default(T))
         {
             var result = new ApiResponse<T>(ExpectResult.Fail, message, data);
             return result;

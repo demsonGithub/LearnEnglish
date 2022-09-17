@@ -53,7 +53,7 @@ namespace Demkin.System.Infrastructure
             var user = new User("admin", "123456", address);
             _dbContext.Users.Add(user);
 
-            var role = new Role("超级管理员", "系统最大的权限者");
+            var role = new Role("sysadmin", "超级管理员,系统最大的权限者");
             _dbContext.Roles.Add(role);
 
             var userRoleRelation = new UserRoleRelation(user.Id, role.Id);
