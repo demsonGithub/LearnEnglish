@@ -18,6 +18,7 @@ namespace Demkin.Infrastructure.Core
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
         {
             var result = await base.SaveChangesAsync(cancellationToken);
+            base.Dispose();
 
             Console.WriteLine("执行了SaveChangesAsync,可以发布事件");
 

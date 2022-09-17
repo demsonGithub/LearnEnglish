@@ -17,7 +17,7 @@ namespace Demkin.System.Infrastructure
             InitializeData();
         }
 
-        private static void InitializeData()
+        private static async void InitializeData()
         {
             #region 判断是否存在数据
 
@@ -59,7 +59,7 @@ namespace Demkin.System.Infrastructure
             var userRoleRelation = new UserRoleRelation(user.Id, role.Id);
             _dbContext.UserRoleRelations.Add(userRoleRelation);
 
-            _dbContext.SaveEntitiesAsync();
+            await _dbContext.SaveEntitiesAsync();
 
             Console.WriteLine("完成初始化数据");
         }

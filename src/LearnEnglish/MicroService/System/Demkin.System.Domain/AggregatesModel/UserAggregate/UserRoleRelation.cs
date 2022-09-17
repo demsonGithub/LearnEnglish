@@ -2,9 +2,13 @@
 {
     public class UserRoleRelation : Entity<long>
     {
-        public long UserId { get; private set; }
+        public long UserId { get; private set; } = default(long);
 
-        public long RoleId { get; private set; }
+        public long RoleId { get; private set; } = default(long);
+
+        public virtual User? User { get; private set; }
+
+        public virtual Role? Role { get; private set; }
 
         private UserRoleRelation()
         { }

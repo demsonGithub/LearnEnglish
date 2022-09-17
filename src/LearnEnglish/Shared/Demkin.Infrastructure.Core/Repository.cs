@@ -1,10 +1,6 @@
 ﻿using Demkin.Domain.Abstraction;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Demkin.Infrastructure.Core
 {
@@ -12,12 +8,13 @@ namespace Demkin.Infrastructure.Core
     {
         protected virtual TDbContext DbContext { get; set; }
 
-        public Repository(TDbContext dbContext)
+        protected Repository(TDbContext dbContext)
         {
             DbContext = dbContext;
         }
 
-        public virtual IUnitOfWork UnitOfWork => DbContext;
+        // EFContext实现了IUnitOfWork
+        public IUnitOfWork UnitOfWork => DbContext;
 
         public virtual async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
@@ -25,7 +22,7 @@ namespace Demkin.Infrastructure.Core
             return result.Entity;
         }
 
-        public virtual async Task<bool> RemoveAsync(Entity entity)
+        public virtual async Task<bool> RemoveAsync(Entity entity, CancellationToken cancellationToken = default)
         {
             return await Task.Run(() =>
             {
@@ -34,20 +31,38 @@ namespace Demkin.Infrastructure.Core
             });
         }
 
+        public virtual async Task<bool> RemoveAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        {
+            return await Task.Run(() =>
+            {
+                DbContext.RemoveRange(predicate, cancellationToken);
+                return true;
+            });
+        }
+
+        public virtual async Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        {
+            return await DbContext.Set<TEntity>().FirstOrDefaultAsync(predicate);
+        }
+
+        public virtual async Task<IEnumerable<TEntity>> FindListAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        {
+            return await DbContext.Set<TEntity>().Where(predicate).ToListAsync();
+        }
+
+        public virtual async Task<bool> IsExistAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        {
+            var result = await DbContext.Set<TEntity>().FindAsync(predicate);
+
+            return result != null;
+        }
+
         public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             return await Task.Run(() =>
             {
-                var result = DbContext.Update(entity);
-                return result.Entity;
-            });
-        }
-
-        public async Task<bool> IsExistAsync(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken = default)
-        {
-            return await Task.Run(() =>
-            {
-                return DbContext.Set<TEntity>().Any(expression);
+                var result = DbContext.Update(entity).Entity;
+                return result;
             });
         }
     }
@@ -58,14 +73,14 @@ namespace Demkin.Infrastructure.Core
         {
         }
 
-        public virtual async Task<TEntity> GetAsync(TKey id, CancellationToken cancellationToken = default)
+        public virtual async Task<TEntity> FindAsync(TKey id, CancellationToken cancellationToken = default)
         {
             var entity = await DbContext.FindAsync<TEntity>(id, cancellationToken);
 
             return entity;
         }
 
-        public virtual async Task<bool> DeleteAsync(TKey id, CancellationToken cancellationToken = default)
+        public virtual async Task<bool> RemoveAsync(TKey id, CancellationToken cancellationToken = default)
         {
             var entity = await DbContext.FindAsync<TEntity>(id, cancellationToken);
             if (entity == null)

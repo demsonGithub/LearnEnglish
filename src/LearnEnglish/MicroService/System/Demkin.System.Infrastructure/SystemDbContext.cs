@@ -3,6 +3,8 @@
 using Demkin.System.Infrastructure.EntityConfigurations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace Demkin.System.Infrastructure
 {
@@ -12,15 +14,15 @@ namespace Demkin.System.Infrastructure
         {
         }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<User> Users { get; set; } = default!;
 
-        public DbSet<Role> Roles { get; set; }
+        public DbSet<Role> Roles { get; set; } = default!;
 
-        public DbSet<UserRoleRelation> UserRoleRelations { get; set; }
+        public DbSet<UserRoleRelation> UserRoleRelations { get; set; } = default!;
 
-        public DbSet<Module> Modules { get; set; }
+        public DbSet<Module> Modules { get; set; } = default!;
 
-        public DbSet<RoleModuleRelation> RoleModuleRelations { get; set; }
+        public DbSet<RoleModuleRelation> RoleModuleRelations { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

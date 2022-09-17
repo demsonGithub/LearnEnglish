@@ -1,27 +1,28 @@
-using Demkin.System.Domain.AggregatesModel.UserAggregate;
+using Demkin.Core.Jwt;
 using Demkin.System.Infrastructure;
-using Demkin.System.Infrastructure.Repositories;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
+using Demkin.System.WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-
 var Configuration = builder.Configuration;
-// Add services to the container.
 
+// Add services to the container.
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddMediatR(typeof(Program).Assembly, typeof(User).Assembly);
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-//builder.Services.AddScoped<SystemDbContext>();
-
-builder.Services.AddDbContext<SystemDbContext>(options =>
+builder.Services.Configure<JwtOptions>(options =>
 {
-    options.UseSqlServer(Configuration.GetValue<string>("ConnectionStrings:sqlserver1"), x => x.CommandTimeout(20));
+    options.SecretKey = Configuration["JwtOptions:SecretKey"];
+    options.Issuer = Configuration["JwtOptions:Issuer"];
+    options.Audience = Configuration["JwtOptions:Audience"];
+    options.ExpireSeconds = Convert.ToInt32(Configuration["JwtOptions:ExpireSeconds"]);
 });
+
+builder.Services.AddMediatRService();
+
+builder.Services.AddDataBaseDomainContext(Configuration.GetValue<string>("ConnectionStrings:sqlserver"));
+
+builder.Services.AddRepositoriesDI();
 
 var app = builder.Build();
 

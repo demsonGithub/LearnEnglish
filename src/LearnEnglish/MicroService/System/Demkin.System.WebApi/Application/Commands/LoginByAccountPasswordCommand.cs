@@ -2,7 +2,7 @@
 
 namespace Demkin.System.WebApi.Application.Commands
 {
-    public class LoginByAccountPasswordCommand : IRequest<string>
+    public class LoginByAccountPasswordCommand : IRequest<ApiResponse<string>>
     {
         public LoginByAccountPasswordCommand(string account, string password)
         {
