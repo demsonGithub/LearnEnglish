@@ -1,18 +1,28 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "strict": true,
-    "jsx": "preserve",
-    "sourceMap": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "lib": ["ESNext", "DOM"],
-    "skipLibCheck": true
+    "target": "ESNext", // 目标语言的版本
+    "useDefineForClassFields": true, //此标志用作迁移到即将推出的类字段标准版本的一部分
+    "module": "ESNext", // 生成代码的模板标准
+    "moduleResolution": "Node", // 模块解析策略，ts默认用node的解析策略
+    "strict": true, // 开启所有严格的类型检查
+    "jsx": "preserve", //生成代码中会保留JSX以供后续的转换操作使用(比如：Babel).另外,输出文件会带有.jsx扩展名。
+    "sourceMap": true, // 生成目标文件的sourceMap文件
+    "resolveJsonModule": true, //是否解析 JSON 模块
+    "isolatedModules": true, //是否将每个文件转换为单独的模块
+    "esModuleInterop": true, // 允许export=导出，由import from 导入
+    "lib": ["ESNext", "DOM"], // TS需要引用的库，即声明文件，es5 默认引用dom、es5、scripthost,如需要使用es的高级版本特性，通常都需要配置，如es8的数组新特性需要引入"ES2019.Array",
+    "skipLibCheck": true, //是否跳过声明文件的类型检查，这可以在编译期间以牺牲类型系统准确性为代价来节省时间
+    "strictNullChecks": false, // null 和 undefined 两种类型是任意类型的子类型:strict
+    "baseUrl": ".", // 解析非相对模块的基地址，默认是当前目录
+    "paths": {
+      // 路径映射，相对于baseUrl
+      "@/*": ["src/*"]
+    },
+    "allowSyntheticDefaultImports": true, //允许从没有默认导出的模块中进行默认导入
+    "types": ["vite/client", "node"], // 加载的声明文件包
+    "typeRoots": ["./node_modules/@types/"] // 声明文件目录，默认时node_modules/@types
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "vite.config.ts"],
+  "exclude": ["node_modules", "dist", "**/*.js"], //编译器需要排除的文件或文件夹
   "references": [{ "path": "./tsconfig.node.json" }]
 }
