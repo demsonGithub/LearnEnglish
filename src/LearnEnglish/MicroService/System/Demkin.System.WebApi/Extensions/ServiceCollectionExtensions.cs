@@ -36,5 +36,20 @@ namespace Demkin.System.WebApi.Extensions
 
             return services;
         }
+
+        public static IServiceCollection AddCorsSetup(this IServiceCollection services)
+        {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("LearnEnglish", policy =>
+                {
+                    policy.WithOrigins("http://localhost:8080")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+                });
+            });
+            return services;
+        }
     }
 }

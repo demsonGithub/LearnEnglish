@@ -2,6 +2,11 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
 import autoprefixer from 'autoprefixer'
+import viteCompression from 'vite-plugin-compression'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import svgBuilder from './src/plugins/svgBuilder'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -9,8 +14,27 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, 'src'),
     },
+    extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json'],
   },
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    viteCompression({
+      verbose: true,
+      disable: false,
+      threshold: 10240,
+      algorithm: 'gzip',
+      ext: '.gz',
+    }),
+    svgBuilder(path.resolve('./src/assets/svg')),
+    AutoImport({
+      resolvers: [ElementPlusResolver()],
+      dts: './src/types/auto-imports.d.ts',
+    }),
+    Components({
+      resolvers: [ElementPlusResolver()],
+      dts: './src/types/components.d.ts',
+    }),
+  ],
   css: {
     preprocessorOptions: {
       scss: {
@@ -42,6 +66,20 @@ export default defineConfig({
           },
         },
       ],
+    },
+  },
+  server: {
+    host: '0.0.0.0',
+    port: 8080,
+    https: false,
+    proxy: {},
+  },
+  build: {
+    terserOptions: {
+      compress: {
+        drop_debugger: true,
+        drop_console: true,
+      },
     },
   },
 })

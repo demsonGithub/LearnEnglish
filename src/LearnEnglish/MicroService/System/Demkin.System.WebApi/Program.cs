@@ -38,6 +38,8 @@ builder.Services.AddDataBaseDomainContext(Configuration.GetValue<string>("Connec
 
 builder.Services.AddRepositoriesDI();
 
+builder.Services.AddCorsSetup();
+
 var app = builder.Build();
 
 var scope = app.Services.CreateScope();
@@ -49,6 +51,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("LearnEnglish");
 
 app.UseAuthorization();
 
