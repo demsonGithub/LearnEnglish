@@ -61,4 +61,8 @@ const hasOneShowChild = (children: RouteRecordRawExt[] = []) => {
   return false
 }
 </script>
-<style lang="scss" scope></style>
+<style lang="scss" scope>
+.svg-icon {
+  margin-right: 15px;
+}
+</style>

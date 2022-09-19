@@ -18,7 +18,7 @@ const constantRoutes: RouteRecordRawExt[] = [
       {
         path: '/home',
         name: 'home',
-        meta: { title: '主页', icon: '' },
+        meta: { title: '主页', icon: 'home' },
         component: () => import('@/views/home/index.vue'),
       },
     ],
@@ -27,7 +27,7 @@ const constantRoutes: RouteRecordRawExt[] = [
     path: '/404',
     name: '404',
     component: () => import('@/views/error/NotFound.vue'),
-    meta: { title: '404', icon: '', hidden: true },
+    meta: { title: '404', hidden: true },
   },
   {
     path: '/:pathMatch(.*)',

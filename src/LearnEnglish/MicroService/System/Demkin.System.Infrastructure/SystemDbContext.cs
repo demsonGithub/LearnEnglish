@@ -26,13 +26,13 @@ namespace Demkin.System.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new RoleEntityTypeConfiguraion());
             modelBuilder.ApplyConfiguration(new UserRoleRelationEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ModuleEntityTypeConfiguraion());
             modelBuilder.ApplyConfiguration(new RoleModuleRelationEntityTypeConfiguraion());
-
-            base.OnModelCreating(modelBuilder);
         }
     }
 }
