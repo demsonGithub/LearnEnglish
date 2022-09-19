@@ -60,7 +60,7 @@ try
 
     builder.Services.AddMediatRService();
 
-    builder.Services.AddDataBaseDomainContext(Configuration.GetValue<string>("ConnectionStrings:sqlserver"));
+    builder.Services.AddDataBaseDomainContext(Configuration.GetValue<string>("ConnectionStrings:sqlserver1"));
 
     builder.Services.AddRepositoriesDI();
 
@@ -75,7 +75,11 @@ try
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
-        app.UseSwaggerUI();
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint($"/swagger/v1/swagger.json", "System Service");
+            c.RoutePrefix = "api";
+        });
     }
     app.UseCors("LearnEnglish");
 

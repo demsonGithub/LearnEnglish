@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Demkin.File.Domain.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,5 +41,17 @@ namespace Demkin.File.Domain.AggregatesModel.UploadAggregate
 
         private UploadItem()
         { }
+
+        public UploadItem(string fileName, long fileSizeBytes, string fileSHA256Hash, string backupUrl, string remoteUrl)
+        {
+            FileName = fileName;
+            FileSizeBytes = fileSizeBytes;
+            FileSHA256Hash = fileSHA256Hash;
+            BackupUrl = backupUrl;
+            RemoteUrl = remoteUrl;
+            CreateTime = DateTime.Now;
+
+            AddDomainEvent(new UploadFileDomainEvent(this));
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Demkin.Core.Exceptions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -24,16 +25,20 @@ namespace Demkin.Core.Filters
         public Task OnExceptionAsync(ExceptionContext context)
         {
             Exception exception = context.Exception;
-            _logger.LogError(exception, "UnhandledException occured");
 
             string message;
-            if (_env.IsDevelopment())
+            if (context.Exception.GetType() == typeof(DomainException))
+            {
+                message = exception.Message;
+            }
+            else if (_env.IsDevelopment())
             {
                 message = exception.ToString();
             }
             else
             {
-                message = exception.Message;
+                message = "服务器发生了错误";
+                _logger.LogError(exception, "UnhandledException occured");
             }
 
             ObjectResult result = new ObjectResult(ApiResultBuilder.Fail(message));

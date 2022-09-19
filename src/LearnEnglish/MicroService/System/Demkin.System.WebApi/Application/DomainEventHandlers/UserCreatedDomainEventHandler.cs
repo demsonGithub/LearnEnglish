@@ -1,7 +1,7 @@
 ﻿using Demkin.Domain.Abstraction;
 using Demkin.System.Domain.Events;
 
-namespace Demkin.System.WebApi.Application.DomainEventHandles
+namespace Demkin.System.WebApi.Application.DomainEventHandlers
 {
     public class UserCreatedDomainEventHandler : IDomainEventHandler<UserCreatedDomainEvent>
     {

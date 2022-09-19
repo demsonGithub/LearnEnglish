@@ -30,7 +30,7 @@ namespace Demkin.System.WebApi.Application.Commands
 
             if (userEntity == null)
             {
-                throw new ArgumentException("账号或密码错误");
+                throw new DomainException("账号或密码错误");
             }
             // 账号存在，查询角色,并添加
             var roles = await _userRepository.GetRolesAsync(userEntity.Id);
