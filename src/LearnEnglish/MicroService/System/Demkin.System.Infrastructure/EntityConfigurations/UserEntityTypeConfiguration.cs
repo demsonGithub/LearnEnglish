@@ -12,13 +12,13 @@ namespace Demkin.System.Infrastructure.EntityConfigurations
             builder.Property(x => x.Id).ValueGeneratedNever();
             builder.Property(x => x.UserName).HasMaxLength(20);
             builder.Property(x => x.Password).HasMaxLength(30);
+
             builder.OwnsOne(o => o.Address, a =>
             {
-                a.WithOwner();
-                a.Property(p => p.Province).HasMaxLength(20);
-                a.Property(p => p.City).HasMaxLength(20);
-                a.Property(p => p.Area).HasMaxLength(20);
-                a.Property(p => p.Street).HasMaxLength(50);
+                a.Property(p => p.Province).IsRequired(true).HasMaxLength(20);
+                a.Property(p => p.City).IsRequired(false).HasMaxLength(20);
+                a.Property(p => p.Area).IsRequired(false).HasMaxLength(20);
+                a.Property(p => p.Street).IsRequired(false).HasMaxLength(50);
             });
         }
     }

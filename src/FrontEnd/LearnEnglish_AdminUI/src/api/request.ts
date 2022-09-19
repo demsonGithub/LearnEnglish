@@ -100,7 +100,7 @@ class RequestInstance {
  * 请求的配置
  */
 const requestConfig: AxiosRequestConfig = {
-  baseURL: import.meta.env.VITE_APP_WEB_URL, //请求地址
+  baseURL: import.meta.env.VITE_APP_WEBAPI_URL, //请求地址
   timeout: 5000, //超时时间，毫秒
   // 设置请求头，如果还有415错误，可能是get或post方法传参错误
   headers: {

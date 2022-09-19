@@ -6,8 +6,12 @@ namespace Demkin.System.Domain.AggregatesModel.UserAggregate
     {
         public string Province { get; private set; }
         public string City { get; private set; }
+
         public string Area { get; private set; }
         public string Street { get; private set; }
+
+        private Address()
+        { }
 
         public Address(string province, string city, string area, string street)
         {

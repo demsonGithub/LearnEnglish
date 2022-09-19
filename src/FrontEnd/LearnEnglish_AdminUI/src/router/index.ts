@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
-import { routes } from './routes'
+import { constantRoutes } from './routes'
+
+const routes = [...constantRoutes]
 
 const router = createRouter({
   history: createWebHistory(),

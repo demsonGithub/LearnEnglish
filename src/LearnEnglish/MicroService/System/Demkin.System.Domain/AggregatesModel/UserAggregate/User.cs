@@ -8,7 +8,7 @@ namespace Demkin.System.Domain.AggregatesModel.UserAggregate
 
         public string Password { get; private set; } = "";
 
-        public Address? Address { get; private set; }
+        public Address Address { get; private set; }
 
         private readonly List<UserRoleRelation> _userRoleRelations = new List<UserRoleRelation>();
         public IReadOnlyCollection<UserRoleRelation> UserRoleRelations => _userRoleRelations;
@@ -17,7 +17,7 @@ namespace Demkin.System.Domain.AggregatesModel.UserAggregate
         {
         }
 
-        public User(string userName, string password, Address? address)
+        public User(string userName, string password, Address address)
         {
             Id = IdGenerateHelper.Instance.GenerateId();
             UserName = userName;

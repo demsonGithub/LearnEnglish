@@ -24,7 +24,7 @@ namespace Demkin.System.WebApi.Extensions
                 });
                 options.LogTo(Console.WriteLine,
                 (eventId, logLevel) =>
-                logLevel >= LogLevel.Warning
+                logLevel >= LogLevel.Error
                 );
             });
             return services;

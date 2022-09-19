@@ -32,7 +32,7 @@ namespace Demkin.System.Infrastructure
             modelBuilder.ApplyConfiguration(new ModuleEntityTypeConfiguraion());
             modelBuilder.ApplyConfiguration(new RoleModuleRelationEntityTypeConfiguraion());
 
-            //base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);
         }
     }
 }
