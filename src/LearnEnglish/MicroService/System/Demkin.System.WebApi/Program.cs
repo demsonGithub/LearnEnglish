@@ -1,5 +1,6 @@
 using Demkin.Core.Filters;
 using Demkin.Core.Jwt;
+using Demkin.System.Domain;
 using Demkin.System.Infrastructure;
 using Demkin.System.WebApi.Extensions;
 using Demkin.Utils.ContractResolver;
@@ -60,7 +61,9 @@ try
 
     builder.Services.AddMediatRService();
 
-    builder.Services.AddDataBaseDomainContext(Configuration.GetValue<string>("ConnectionStrings:sqlserver1"));
+    builder.Services.AddDbSetup(Configuration.GetValue<string>("ConnectionStrings:sqlserver"));
+
+    builder.Services.AddScoped<SystemDomainService>();
 
     builder.Services.AddRepositoriesDI();
 

@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.9">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\Demkin.Core\Demkin.Core.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Demkin.Utils\Demkin.Utils.csproj" />
+    <ProjectReference Include="..\Demkin.FileOperation.Domain\Demkin.FileOperation.Domain.csproj" />
+    <ProjectReference Include="..\Demkin.FileOperation.Infrastructure\Demkin.FileOperation.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

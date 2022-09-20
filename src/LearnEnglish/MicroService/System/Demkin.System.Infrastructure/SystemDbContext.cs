@@ -1,10 +1,7 @@
 ﻿using Demkin.Infrastructure.Core;
-
 using Demkin.System.Infrastructure.EntityConfigurations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.Logging;
 
 namespace Demkin.System.Infrastructure
 {

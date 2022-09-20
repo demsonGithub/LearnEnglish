@@ -1,4 +1,5 @@
-﻿using Demkin.System.Domain.AggregatesModel.UserAggregate;
+﻿using Demkin.System.Domain;
+using Demkin.System.Domain.AggregatesModel.UserAggregate;
 using Demkin.System.Infrastructure;
 using Demkin.System.Infrastructure.Repositories;
 using MediatR;
@@ -14,7 +15,7 @@ namespace Demkin.System.WebApi.Extensions
             return services;
         }
 
-        public static IServiceCollection AddDataBaseDomainContext(this IServiceCollection services, string connectionString)
+        public static IServiceCollection AddDbSetup(this IServiceCollection services, string connectionString)
         {
             services.AddDbContext<SystemDbContext>(options =>
             {
