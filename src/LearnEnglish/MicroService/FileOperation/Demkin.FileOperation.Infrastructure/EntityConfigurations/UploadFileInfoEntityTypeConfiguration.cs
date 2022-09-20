@@ -9,8 +9,9 @@ namespace Demkin.FileOperation.Infrastructure.EntityConfigurations
         {
             builder.ToTable("UploadFileInfo");
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).ValueGeneratedNever();
             builder.Property(e => e.FileName).IsUnicode().HasMaxLength(1024);
-            builder.Property(e => e.FileSHA256Hash).IsUnicode(false).HasMaxLength(60);
+            builder.Property(e => e.FileSHA256Hash).IsUnicode(false).HasMaxLength(200);
 
             // 组成符合索引，提高查询效率
             builder.HasIndex(e => new

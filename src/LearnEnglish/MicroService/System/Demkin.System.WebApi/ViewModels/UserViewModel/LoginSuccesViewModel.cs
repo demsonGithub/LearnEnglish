@@ -1,4 +1,4 @@
-﻿namespace Demkin.System.WebApi.ViewModel.UserViewModels
+﻿namespace Demkin.System.WebApi.ViewModels.UserViewModel
 {
     public class LoginSuccesViewModel
     {

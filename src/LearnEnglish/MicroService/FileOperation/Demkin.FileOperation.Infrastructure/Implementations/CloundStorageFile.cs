@@ -25,11 +25,7 @@ namespace Demkin.FileOperation.Infrastructure.Implementations
             {
                 throw new DomainException($"key不能以'/'开头,{nameof(key)}");
             }
-            content.Position = 0;
-            StreamReader streamReader = new StreamReader(content);
-            Console.WriteLine(streamReader.ReadToEnd());
-
-            string webDir = Path.Combine(_env.ContentRootPath, "wwwroot");
+            string webDir = Path.Combine(_env.ContentRootPath, "wwwroot", "UploadedResources");
             string fullPath = Path.Combine(webDir, key);
             // 判断路径的目录是否存在
             string fullPathDir = Path.GetDirectoryName(fullPath);
@@ -45,12 +41,11 @@ namespace Demkin.FileOperation.Infrastructure.Implementations
 
             using (var stream = new FileStream(fullPath, FileMode.Create))
             {
-                content.Position = 0;
                 await content.CopyToAsync(stream);
             }
 
             var request = _httpContextAccessor.HttpContext.Request;
-            string url = request.Scheme + "://" + request.Host + "/FileService/" + key;
+            string url = request.Scheme + "://" + request.Host + "/UploadedResources/" + key;
             return new Uri(url);
         }
     }

@@ -1,40 +1,51 @@
-﻿using Demkin.FileOperation.Domain.Interfaces;
+﻿using Demkin.Core.Exceptions;
+using Demkin.FileOperation.Domain;
+using Demkin.FileOperation.Domain.Interfaces;
 using Demkin.Utils;
 using MediatR;
 
 namespace Demkin.FileOperation.WebApi.Application.Commands
 {
-    public class UploadFileRequestCommand : IRequest<string>
+    public class UploadFileRequestCommand : IRequest<UploadFileInfo>
     {
         public IFormFile File { get; set; }
     }
 
-    public class UploadFileRequestCommandHandler : IRequestHandler<UploadFileRequestCommand, string>
+    public class UploadFileRequestCommandHandler : IRequestHandler<UploadFileRequestCommand, UploadFileInfo>
     {
-        private readonly IStorageFile _storageFile;
+        private readonly FileDomainService _domainService;
+        private readonly IUploadFileInfoRepository _uploadFileInfoRepository;
 
-        public UploadFileRequestCommandHandler(IStorageFile storageFile)
+        public UploadFileRequestCommandHandler(FileDomainService domainService, IUploadFileInfoRepository uploadFileInfoRepository)
         {
-            _storageFile = storageFile;
+            _domainService = domainService;
+            _uploadFileInfoRepository = uploadFileInfoRepository;
         }
 
-        public async Task<string> Handle(UploadFileRequestCommand request, CancellationToken cancellationToken)
+        public async Task<UploadFileInfo> Handle(UploadFileRequestCommand request, CancellationToken cancellationToken)
         {
             var file = request.File;
-
             string fileName = file.FileName;
-
-            string url = "";
             using Stream stream = file.OpenReadStream();
-            string hash = HashHelper.ComputeSha256Hash(stream);
-            DateTime today = DateTime.Today;
-            //用日期把文件分散在不同文件夹存储，同时由于加上了文件hash值作为目录，又用用户上传的文件夹做文件名，
-            //所以几乎不会发生不同文件冲突的可能
-            //用用户上传的文件名保存文件名，这样用户查看、下载文件的时候，文件名更灵活
-            string key = $"{today.Year}/{today.Month}/{today.Day}/{hash}/{fileName}";
 
-            url = (await _storageFile.SaveFileAsync(key, stream, cancellationToken)).ToString();
-            return url;
+            // 先从数据库查
+            var oldFileInfo = await _domainService.FindFileAsync(stream);
+            if (oldFileInfo != null) return oldFileInfo;
+
+            // 上传文件
+            var uploadfileInfo = await _domainService.UploadFileAsync(fileName, stream, cancellationToken);
+
+            // 添加到数据库
+            var result = await _uploadFileInfoRepository.AddAsync(uploadfileInfo, cancellationToken);
+
+            bool isSaveSuccess = await _uploadFileInfoRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
+
+            if (!isSaveSuccess)
+            {
+                throw new DomainException("保存到数据库失败");
+            }
+
+            return result;
         }
     }
 }

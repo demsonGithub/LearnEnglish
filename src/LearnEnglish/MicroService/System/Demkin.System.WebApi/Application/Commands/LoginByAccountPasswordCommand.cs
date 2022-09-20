@@ -1,9 +1,6 @@
 ﻿using Demkin.Core.Jwt;
 using Demkin.System.Domain;
-using Demkin.System.Domain.AggregatesModel.UserAggregate;
 using Microsoft.Extensions.Options;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 namespace Demkin.System.WebApi.Application.Commands
 {

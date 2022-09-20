@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Demkin.FileOperation.WebApi.ViewModels.UploadFile;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Demkin.FileHanlde.WebApi.Controllers
@@ -16,10 +17,19 @@ namespace Demkin.FileHanlde.WebApi.Controllers
 
         [HttpPost]
         [RequestSizeLimit(60_000_000)]
-        public async Task<ApiResponse<string>> UploadFile([FromForm] UploadFileRequestCommand command)
+        public async Task<ApiResponse<UploadFileInfoViewModel>> UploadFile([FromForm] UploadFileRequestCommand command)
         {
             var result = await _mediator.Send(command, HttpContext.RequestAborted);
-            return ApiResultBuilder<string>.Success(result);
+            UploadFileInfoViewModel viewModel = new UploadFileInfoViewModel
+            {
+                Id = result.Id,
+                CreateTime = result.CreateTime,
+                FileName = result.FileName,
+                FileSize = result.FileSizeBytes,
+                RemoteUrl = result.RemoteUrl
+            };
+
+            return ApiResultBuilder<UploadFileInfoViewModel>.Success(viewModel);
         }
 
         [HttpGet]

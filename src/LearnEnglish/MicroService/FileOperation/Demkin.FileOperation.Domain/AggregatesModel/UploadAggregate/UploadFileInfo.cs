@@ -1,4 +1,5 @@
 ﻿using Demkin.FileOperation.Domain.Events;
+using Demkin.Utils.IdGenerate;
 
 namespace Demkin.FileOperation.Domain.AggregatesModel.UploadAggregate
 {
@@ -20,14 +21,14 @@ namespace Demkin.FileOperation.Domain.AggregatesModel.UploadAggregate
         public string FileSHA256Hash { get; private set; }
 
         /// <summary>
-        /// 备份文件地址
-        /// </summary>
-        public string BackupUrl { get; private set; }
-
-        /// <summary>
         /// 网络访问地址
         /// </summary>
-        public string RemoteUrl { get; private set; }
+        public Uri RemoteUrl { get; private set; }
+
+        /// <summary>
+        /// 备份文件地址
+        /// </summary>
+        public Uri? BackupUrl { get; private set; }
 
         /// <summary>
         /// 创建时间
@@ -37,13 +38,14 @@ namespace Demkin.FileOperation.Domain.AggregatesModel.UploadAggregate
         private UploadFileInfo()
         { }
 
-        public UploadFileInfo(string fileName, long fileSizeBytes, string fileSHA256Hash, string backupUrl, string remoteUrl)
+        public UploadFileInfo(string fileName, long fileSizeBytes, string fileSHA256Hash, Uri remoteUrl, Uri? backupUrl)
         {
+            Id = IdGenerateHelper.Instance.GenerateId();
             FileName = fileName;
             FileSizeBytes = fileSizeBytes;
             FileSHA256Hash = fileSHA256Hash;
-            BackupUrl = backupUrl;
             RemoteUrl = remoteUrl;
+            BackupUrl = backupUrl;
             CreateTime = DateTime.Now;
 
             AddDomainEvent(new UploadFileDomainEvent(this));

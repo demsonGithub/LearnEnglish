@@ -25,10 +25,7 @@ namespace Demkin.FileOperation.Infrastructure.Migrations
             modelBuilder.Entity("Demkin.FileOperation.Domain.AggregatesModel.UploadAggregate.UploadFileInfo", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<string>("BackupUrl")
                         .HasColumnType("nvarchar(max)");
@@ -42,9 +39,9 @@ namespace Demkin.FileOperation.Infrastructure.Migrations
                         .HasColumnType("nvarchar(1024)");
 
                     b.Property<string>("FileSHA256Hash")
-                        .HasMaxLength(60)
+                        .HasMaxLength(200)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(60)");
+                        .HasColumnType("varchar(200)");
 
                     b.Property<long>("FileSizeBytes")
                         .HasColumnType("bigint");

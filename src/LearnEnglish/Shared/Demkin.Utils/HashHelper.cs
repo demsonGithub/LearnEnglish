@@ -20,6 +20,8 @@ namespace Demkin.Utils
             using (SHA256 sha256Hash = SHA256.Create())
             {
                 byte[] bytes = sha256Hash.ComputeHash(stream);
+                // 设定起始位置，否则在使用Stream保存的文件是空的
+                stream.Position = 0;
                 return ToHashString(bytes);
             }
         }
@@ -47,6 +49,7 @@ namespace Demkin.Utils
             using (MD5 md5Hash = MD5.Create())
             {
                 byte[] bytes = md5Hash.ComputeHash(input);
+                input.Position = 0;
                 return ToHashString(bytes);
             }
         }

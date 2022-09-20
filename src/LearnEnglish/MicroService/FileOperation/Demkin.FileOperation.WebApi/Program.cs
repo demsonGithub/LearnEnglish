@@ -1,5 +1,7 @@
+using Demkin.FileOperation.Domain;
 using Demkin.FileOperation.Domain.Interfaces;
 using Demkin.FileOperation.Infrastructure.Implementations;
+using Demkin.FileOperation.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,10 +13,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddMediatRService();
-builder.Services.AddDbSetup(builder.Configuration.GetValue<string>("ConnectionStrings:sqlserver"));
+builder.Services.AddDbSetup(builder.Configuration.GetValue<string>("ConnectionStrings:sqlserver1"));
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IStorageFile, CloundStorageFile>();
+builder.Services.AddScoped<IUploadFileInfoRepository, UploadFileInfoRepository>();
+builder.Services.AddScoped<FileDomainService>();
 
 var app = builder.Build();
 
@@ -28,6 +32,8 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = "api";
     });
 }
+
+app.UseStaticFiles();
 
 app.UseAuthorization();
 
