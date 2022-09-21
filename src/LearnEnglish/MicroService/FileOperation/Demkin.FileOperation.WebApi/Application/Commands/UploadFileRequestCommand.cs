@@ -1,10 +1,4 @@
-﻿using Demkin.Core.Exceptions;
-using Demkin.FileOperation.Domain;
-using Demkin.FileOperation.Domain.Interfaces;
-using Demkin.Utils;
-using MediatR;
-
-namespace Demkin.FileOperation.WebApi.Application.Commands
+﻿namespace Demkin.FileOperation.WebApi.Application.Commands
 {
     public class UploadFileRequestCommand : IRequest<UploadFileInfo>
     {

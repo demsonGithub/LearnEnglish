@@ -1,6 +1,4 @@
-﻿using Demkin.Infrastructure.Core;
-using Demkin.System.Infrastructure.EntityConfigurations;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Demkin.System.Infrastructure

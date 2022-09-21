@@ -21,7 +21,7 @@ namespace Demkin.System.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Demkin.System.Domain.AggregatesModel.ModuleAggregate.Module", b =>
+            modelBuilder.Entity("Demkin.System.Domain.AggregateModels.Module", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
@@ -33,14 +33,12 @@ namespace Demkin.System.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("ParentId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Url")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -48,7 +46,7 @@ namespace Demkin.System.Infrastructure.Migrations
                     b.ToTable("Module", (string)null);
                 });
 
-            modelBuilder.Entity("Demkin.System.Domain.AggregatesModel.RoleAggregate.Role", b =>
+            modelBuilder.Entity("Demkin.System.Domain.AggregateModels.Role", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
@@ -57,7 +55,6 @@ namespace Demkin.System.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RoleName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -65,7 +62,7 @@ namespace Demkin.System.Infrastructure.Migrations
                     b.ToTable("Role", (string)null);
                 });
 
-            modelBuilder.Entity("Demkin.System.Domain.AggregatesModel.RoleAggregate.RoleModuleRelation", b =>
+            modelBuilder.Entity("Demkin.System.Domain.AggregateModels.RoleModuleRelation", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
@@ -81,18 +78,16 @@ namespace Demkin.System.Infrastructure.Migrations
                     b.ToTable("RoleModuleRelation", (string)null);
                 });
 
-            modelBuilder.Entity("Demkin.System.Domain.AggregatesModel.UserAggregate.User", b =>
+            modelBuilder.Entity("Demkin.System.Domain.AggregateModels.User", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
@@ -101,7 +96,7 @@ namespace Demkin.System.Infrastructure.Migrations
                     b.ToTable("User", (string)null);
                 });
 
-            modelBuilder.Entity("Demkin.System.Domain.AggregatesModel.UserAggregate.UserRoleRelation", b =>
+            modelBuilder.Entity("Demkin.System.Domain.AggregateModels.UserRoleRelation", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
@@ -114,25 +109,25 @@ namespace Demkin.System.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("RoleId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRoleRelation", (string)null);
                 });
 
-            modelBuilder.Entity("Demkin.System.Domain.AggregatesModel.UserAggregate.User", b =>
+            modelBuilder.Entity("Demkin.System.Domain.AggregateModels.User", b =>
                 {
-                    b.OwnsOne("Demkin.System.Domain.AggregatesModel.UserAggregate.Address", "Address", b1 =>
+                    b.OwnsOne("Demkin.System.Domain.AggregateModels.Address", "Address", b1 =>
                         {
                             b1.Property<long>("UserId")
                                 .HasColumnType("bigint");
 
                             b1.Property<string>("Area")
-                                .IsRequired()
                                 .HasMaxLength(20)
                                 .HasColumnType("nvarchar(20)");
 
                             b1.Property<string>("City")
-                                .IsRequired()
                                 .HasMaxLength(20)
                                 .HasColumnType("nvarchar(20)");
 
@@ -142,7 +137,6 @@ namespace Demkin.System.Infrastructure.Migrations
                                 .HasColumnType("nvarchar(20)");
 
                             b1.Property<string>("Street")
-                                .IsRequired()
                                 .HasMaxLength(50)
                                 .HasColumnType("nvarchar(50)");
 
@@ -157,16 +151,26 @@ namespace Demkin.System.Infrastructure.Migrations
                     b.Navigation("Address");
                 });
 
-            modelBuilder.Entity("Demkin.System.Domain.AggregatesModel.UserAggregate.UserRoleRelation", b =>
+            modelBuilder.Entity("Demkin.System.Domain.AggregateModels.UserRoleRelation", b =>
                 {
-                    b.HasOne("Demkin.System.Domain.AggregatesModel.UserAggregate.User", null)
+                    b.HasOne("Demkin.System.Domain.AggregateModels.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Demkin.System.Domain.AggregateModels.User", "User")
                         .WithMany("UserRoleRelations")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Demkin.System.Domain.AggregatesModel.UserAggregate.User", b =>
+            modelBuilder.Entity("Demkin.System.Domain.AggregateModels.User", b =>
                 {
                     b.Navigation("UserRoleRelations");
                 });

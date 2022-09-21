@@ -6,11 +6,11 @@
         {
         }
 
-        public UploadFileDomainEvent(AggregatesModel.UploadAggregate.UploadFileInfo uploadItem)
+        public UploadFileDomainEvent(UploadFileInfo uploadItem)
         {
             UploadItem = uploadItem;
         }
 
-        public AggregatesModel.UploadAggregate.UploadFileInfo UploadItem { get; }
+        public UploadFileInfo UploadItem { get; }
     }
 }

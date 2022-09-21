@@ -1,6 +1,4 @@
-﻿using MediatR;
-
-namespace Demkin.FileOperation.WebApi.Application.Queries
+﻿namespace Demkin.FileOperation.WebApi.Application.Queries
 {
     public class GetFileUrlRequestQuery : IRequest<string>
     {

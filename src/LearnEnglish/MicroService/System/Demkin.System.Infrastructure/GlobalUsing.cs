@@ -1,3 +1,9 @@
-﻿global using Demkin.System.Domain.AggregatesModel.RoleAggregate;
-global using Demkin.System.Domain.AggregatesModel.UserAggregate;
-global using Demkin.System.Domain.AggregatesModel.ModuleAggregate;
+﻿// shared
+global using Demkin.Infrastructure.Core;
+
+// domain
+global using Demkin.System.Domain.Interfaces;
+global using Demkin.System.Domain.AggregateModels;
+
+// infrastructure
+global using Demkin.System.Infrastructure.EntityConfigurations;

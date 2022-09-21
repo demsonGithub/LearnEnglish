@@ -1,7 +1,4 @@
-﻿using Demkin.FileOperation.Domain.Enum;
-using Microsoft.AspNetCore.Http;
-
-namespace Demkin.FileOperation.Domain.Interfaces
+﻿namespace Demkin.FileOperation.Domain.Interfaces
 {
     public interface IStorageFile
     {

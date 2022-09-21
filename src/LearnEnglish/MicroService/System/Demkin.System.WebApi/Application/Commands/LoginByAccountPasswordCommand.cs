@@ -1,6 +1,4 @@
-﻿using Demkin.Core.Jwt;
-using Demkin.System.Domain;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 
 namespace Demkin.System.WebApi.Application.Commands
 {

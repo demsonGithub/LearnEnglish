@@ -1,6 +1,4 @@
-﻿using Demkin.Core.Jwt;
-
-namespace Demkin.System.WebApi.Application.Queries
+﻿namespace Demkin.System.WebApi.Application.Queries
 {
     public class GetUserInfoByTokenQuery : IRequest<UserInfoViewModel>
     {

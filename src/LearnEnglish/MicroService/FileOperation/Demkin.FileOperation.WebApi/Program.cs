@@ -1,8 +1,3 @@
-using Demkin.FileOperation.Domain;
-using Demkin.FileOperation.Domain.Interfaces;
-using Demkin.FileOperation.Infrastructure.Implementations;
-using Demkin.FileOperation.Infrastructure.Repositories;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -13,7 +8,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddMediatRService();
-builder.Services.AddDbSetup(builder.Configuration.GetValue<string>("ConnectionStrings:sqlserver1"));
+builder.Services.AddDbSetup(builder.Configuration.GetValue<string>("ConnectionStrings:sqlserver"));
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IStorageFile, CloundStorageFile>();

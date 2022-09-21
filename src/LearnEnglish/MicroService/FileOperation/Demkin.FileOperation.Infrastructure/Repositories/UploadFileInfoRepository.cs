@@ -1,5 +1,4 @@
-﻿using Demkin.Infrastructure.Core;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Demkin.FileOperation.Infrastructure.Repositories
 {

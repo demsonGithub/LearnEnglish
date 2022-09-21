@@ -1,7 +1,4 @@
-﻿using Demkin.FileOperation.Infrastructure.EntityConfigurations;
-using Demkin.Infrastructure.Core;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Demkin.FileOperation.Infrastructure
 {

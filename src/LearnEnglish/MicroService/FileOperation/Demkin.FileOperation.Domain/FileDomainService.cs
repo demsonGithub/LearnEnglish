@@ -1,12 +1,4 @@
-﻿using Demkin.FileOperation.Domain.Interfaces;
-using Demkin.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Demkin.FileOperation.Domain
+﻿namespace Demkin.FileOperation.Domain
 {
     public class FileDomainService
     {
@@ -20,7 +12,7 @@ namespace Demkin.FileOperation.Domain
         }
 
         /// <summary>
-        ///  判断数据库中是否存在文件
+        /// 判断数据库中是否存在文件
         /// </summary>
         /// <param name="stream"></param>
         /// <returns></returns>

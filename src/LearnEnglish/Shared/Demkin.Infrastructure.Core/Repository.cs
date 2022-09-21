@@ -6,7 +6,7 @@ namespace Demkin.Infrastructure.Core
 {
     public abstract class Repository<TEntity, TDbContext> : IRepository<TEntity> where TEntity : Entity, IAggregateRoot where TDbContext : EFContext
     {
-        protected virtual TDbContext DbContext { get; set; }
+        protected virtual TDbContext DbContext { get; private set; }
 
         protected Repository(TDbContext dbContext)
         {

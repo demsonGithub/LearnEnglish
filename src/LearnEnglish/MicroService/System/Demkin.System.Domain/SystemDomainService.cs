@@ -1,18 +1,10 @@
-﻿using Demkin.Core.Exceptions;
-using Demkin.Core.Jwt;
-using Demkin.System.Domain.AggregatesModel.UserAggregate;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Demkin.System.Domain
 {
-    public class SystemDomainService
+    public class SystemDomainService : IAutofacRegister
     {
         private readonly IUserRepository _userRepository;
 

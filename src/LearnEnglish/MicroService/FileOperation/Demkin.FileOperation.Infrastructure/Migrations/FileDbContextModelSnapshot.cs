@@ -22,7 +22,7 @@ namespace Demkin.FileOperation.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Demkin.FileOperation.Domain.AggregatesModel.UploadAggregate.UploadFileInfo", b =>
+            modelBuilder.Entity("Demkin.FileOperation.Domain.AggregateModels.UploadFileInfo", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint");

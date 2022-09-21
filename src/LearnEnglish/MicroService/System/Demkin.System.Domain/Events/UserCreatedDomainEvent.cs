@@ -1,6 +1,4 @@
-﻿using Demkin.System.Domain.AggregatesModel.UserAggregate;
-
-namespace Demkin.System.Domain.Events
+﻿namespace Demkin.System.Domain.Events
 {
     public class UserCreatedDomainEvent : IDomainEvent
     {

@@ -1,6 +1,4 @@
-﻿using Demkin.FileOperation.WebApi.ViewModels.UploadFile;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Demkin.FileHanlde.WebApi.Controllers
 {

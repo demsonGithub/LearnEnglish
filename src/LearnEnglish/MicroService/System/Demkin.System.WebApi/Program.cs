@@ -1,9 +1,3 @@
-using Demkin.Core.Filters;
-using Demkin.Core.Jwt;
-using Demkin.System.Domain;
-using Demkin.System.Infrastructure;
-using Demkin.System.WebApi.Extensions;
-using Demkin.Utils.ContractResolver;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -26,7 +20,8 @@ try
     Log.Information("Starting web host");
 
     var builder = WebApplication.CreateBuilder(args);
-    builder.Host.UseSerilog(dispose: true);
+
+    builder.ConfigureInitService();
 
     // Add services to the container.
     builder.Services.AddControllers().AddNewtonsoftJson(options =>
@@ -51,21 +46,9 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
-    builder.Services.Configure<JwtOptions>(options =>
-    {
-        options.SecretKey = Configuration["JwtOptions:SecretKey"];
-        options.Issuer = Configuration["JwtOptions:Issuer"];
-        options.Audience = Configuration["JwtOptions:Audience"];
-        options.ExpireSeconds = Convert.ToInt32(Configuration["JwtOptions:ExpireSeconds"]);
-    });
-
-    builder.Services.AddMediatRService();
-
     builder.Services.AddDbSetup(Configuration.GetValue<string>("ConnectionStrings:sqlserver"));
 
-    builder.Services.AddScoped<SystemDomainService>();
-
-    builder.Services.AddRepositoriesDI();
+    //builder.Services.AddScoped<SystemDomainService>();
 
     builder.Services.AddCorsSetup();
 

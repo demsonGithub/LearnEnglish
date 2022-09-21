@@ -1,4 +1,4 @@
-﻿using Demkin.Infrastructure.Core;
+﻿using Demkin.Domain.Abstraction;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
