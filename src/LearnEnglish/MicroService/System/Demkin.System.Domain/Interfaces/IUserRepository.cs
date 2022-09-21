@@ -2,7 +2,7 @@
 
 namespace Demkin.System.Domain.Interfaces
 {
-    public interface IUserRepository : IRepository<User, long>, IAutofacRegister
+    public interface IUserRepository : IRepository<User, long>, IDenpendencyScope
     {
         Task<User> GetAsync(Expression<Func<User, bool>> expression);
 

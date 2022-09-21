@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Demkin.System.Infrastructure.Migrations
 {
     [DbContext(typeof(SystemDbContext))]
-    [Migration("20220921020505_Init")]
-    partial class Init
+    [Migration("20220921142410_InitDB")]
+    partial class InitDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -120,7 +120,7 @@ namespace Demkin.System.Infrastructure.Migrations
 
             modelBuilder.Entity("Demkin.System.Domain.AggregateModels.User", b =>
                 {
-                    b.OwnsOne("Demkin.System.Domain.AggregateModels.Address", "Address", b1 =>
+                    b.OwnsOne("Demkin.System.Domain.ValueObjects.Address", "Address", b1 =>
                         {
                             b1.Property<long>("UserId")
                                 .HasColumnType("bigint");

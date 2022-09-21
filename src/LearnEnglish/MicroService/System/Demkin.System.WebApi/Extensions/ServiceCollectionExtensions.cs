@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace Demkin.System.WebApi.Extensions
 {
@@ -12,10 +13,16 @@ namespace Demkin.System.WebApi.Extensions
                 {
                     x.CommandTimeout(20);
                 });
-                options.LogTo(Console.WriteLine,
-                (eventId, logLevel) =>
-                logLevel >= LogLevel.Error
-                );
+                options.LogTo(new Action<string>(q =>
+                {
+                    if (q.Contains("Executed DbCommand")) {
+                        Debug.WriteLine(q);
+                    } 
+                }), LogLevel.Information);
+                //options.LogTo(Console.WriteLine,
+                //(eventId, logLevel) =>
+                //logLevel >= LogLevel.Error
+                //);
             });
             return services;
         }

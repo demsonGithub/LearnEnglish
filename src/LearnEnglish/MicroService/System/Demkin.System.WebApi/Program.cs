@@ -24,31 +24,12 @@ try
     builder.ConfigureInitService();
 
     // Add services to the container.
-    builder.Services.AddControllers().AddNewtonsoftJson(options =>
-    {
-        //修改属性名称的序列化方式，首字母小写，即驼峰样式 ,自定义long返回string防止丢失精准度
-        options.SerializerSettings.ContractResolver = new CustomContractResolver();
-        //如果属性名不希望驼峰样式，那就使用默认，然后在返回实体上标注，eg：[Newtonsoft.Json.JsonProperty("code")]
-        //options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-        //忽略循环引用
-        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-        //设置时间格式
-        options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
-        //忽略空值处理
-        //options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-    });
-    // 添加Mvc过滤器
-    builder.Services.Configure<MvcOptions>(options =>
-    {
-        options.Filters.Add<GlobalExceptionFilter>();
-    });
+    builder.Services.AddControllers().AddNewtonsoftJson();
 
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
     builder.Services.AddDbSetup(Configuration.GetValue<string>("ConnectionStrings:sqlserver"));
-
-    //builder.Services.AddScoped<SystemDomainService>();
 
     builder.Services.AddCorsSetup();
 
@@ -74,9 +55,15 @@ try
     app.MapControllers();
 
     app.Run();
+    //when(ex.GetType().Name == "StopTheHostException")
 }
 catch (Exception ex)
 {
+    string type = ex.GetType().Name;
+    if (type.Equals("StopTheHostException", StringComparison.Ordinal))
+    {
+        throw;
+    }
     Log.Fatal(ex, "Host terminated unexpectedly");
 }
 finally

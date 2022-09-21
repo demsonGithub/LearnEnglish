@@ -118,7 +118,7 @@ namespace Demkin.System.Infrastructure.Migrations
 
             modelBuilder.Entity("Demkin.System.Domain.AggregateModels.User", b =>
                 {
-                    b.OwnsOne("Demkin.System.Domain.AggregateModels.Address", "Address", b1 =>
+                    b.OwnsOne("Demkin.System.Domain.ValueObjects.Address", "Address", b1 =>
                         {
                             b1.Property<long>("UserId")
                                 .HasColumnType("bigint");

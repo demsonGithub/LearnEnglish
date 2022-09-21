@@ -1,38 +1,36 @@
 ﻿using Autofac;
-using Autofac.Core;
-using Autofac.Extensions.DependencyInjection;
 using Demkin.Domain.Abstraction;
 using Demkin.Utils;
-using System.Reflection;
 
 namespace Demkin.Core.Extensions
 {
-    public class AutofacModuleRegister : Autofac.Module
+    public class AutofacModuleRegister : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
             var assemblies = ReflectionHelper.GetAllReferencedAssemblies();
 
-            List<Type> types = new List<Type>();
-            List<Type> types2 = new List<Type>();
+            var singletonType = typeof(IDenpendencySingleton); //单例
+            var scopeType = typeof(IDenpendencyScope); //范围
+            var transientType = typeof(IDenpendencyTransient); //瞬时
 
-            foreach (var item in assemblies)
-            {
-                Type[] t = item.GetTypes();
-                foreach (var abc in t)
-                {
-                    if (abc.GetInterfaces().Contains(typeof(IAutofacRegister)))
-                    {
-                        types.Add(abc);
-                    }
-                }
-            }
+            // 单例注入
+            builder.RegisterAssemblyTypes(assemblies.ToArray()).Where(t => t.IsClass && !t.IsAbstract && t.GetInterfaces().Contains(singletonType))
+                .AsSelf()
+               .AsImplementedInterfaces()
+               .SingleInstance();
 
-            builder.RegisterType(types[0]);
+            // 范围注入
+            builder.RegisterAssemblyTypes(assemblies.ToArray()).Where(t => t.IsClass && !t.IsAbstract && t.GetInterfaces().Contains(scopeType))
+                .AsSelf()
+               .AsImplementedInterfaces()
+               .InstancePerLifetimeScope();
 
-            //程序集注册
-            builder.RegisterAssemblyTypes(assemblies.ToArray()).Where(x => x.GetInterfaces().Contains(typeof(IAutofacRegister)))
-                .AsImplementedInterfaces().InstancePerLifetimeScope();
+            // 瞬时注入
+            builder.RegisterAssemblyTypes(assemblies.ToArray()).Where(t => t.IsClass && !t.IsAbstract && t.GetInterfaces().Contains(transientType))
+                .AsSelf()
+               .AsImplementedInterfaces()
+               .InstancePerDependency();
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Security.Claims;
 
 namespace Demkin.System.Domain
 {
-    public class SystemDomainService : IAutofacRegister
+    public class SystemDomainService : IDenpendencyScope
     {
         private readonly IUserRepository _userRepository;
 

@@ -18,8 +18,6 @@ namespace Demkin.System.WebApi.Controllers
         [HttpPost]
         public async Task<ApiResponse<LoginSuccesViewModel>> LoginByAccountPassword([FromBody] LoginByAccountPasswordCommand command)
         {
-            _logger.LogInformation("¿ªÊ¼µÇÂ¼");
-
             var result = await _mediator.Send(command, HttpContext.RequestAborted);
             return ApiResultBuilder<LoginSuccesViewModel>.Success(result);
         }
