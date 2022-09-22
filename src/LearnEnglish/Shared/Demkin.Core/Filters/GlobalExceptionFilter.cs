@@ -1,4 +1,5 @@
 ﻿using Demkin.Core.Exceptions;
+using Demkin.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Hosting;
@@ -34,6 +35,10 @@ namespace Demkin.Core.Filters
             else if (_env.IsDevelopment())
             {
                 message = exception.ToString();
+                if (message.Contains("Cannot resolve parameter"))
+                {
+                    message = StringHelper.MidStrEx(message, "Cannot resolve parameter", "of constructor") + "Dependency injection is not implemented";
+                }
             }
             else
             {

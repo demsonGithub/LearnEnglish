@@ -40,11 +40,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demkin.FileOperation.Infras
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demkin.FileOperation.WebApi", "MicroService\FileOperation\Demkin.FileOperation.WebApi\Demkin.FileOperation.WebApi.csproj", "{194787E3-FA01-400E-9BBD-DA50751AF7BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demkin.Listen.Domain", "MicroService\Listen\Demkin.Listen.Domain\Demkin.Listen.Domain.csproj", "{7148D3F7-17FC-44AF-9D32-A1B7606E1CA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demkin.Listen.Domain", "MicroService\Listen\Demkin.Listen.Domain\Demkin.Listen.Domain.csproj", "{7148D3F7-17FC-44AF-9D32-A1B7606E1CA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demkin.Listen.Infrastructure", "MicroService\Listen\Demkin.Listen.Infrastructure\Demkin.Listen.Infrastructure.csproj", "{88CBEDAE-8917-438A-92AD-DBC2E1E01681}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demkin.Listen.Infrastructure", "MicroService\Listen\Demkin.Listen.Infrastructure\Demkin.Listen.Infrastructure.csproj", "{88CBEDAE-8917-438A-92AD-DBC2E1E01681}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demkin.Listen.WebApi", "MicroService\Listen\Demkin.Listen.WebApi\Demkin.Listen.WebApi.csproj", "{74DDE267-7D3B-4957-845C-D61207408849}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demkin.Listen.WebApiAdmin", "MicroService\Listen\Demkin.Listen.WebApiAdmin\Demkin.Listen.WebApiAdmin.csproj", "{74DDE267-7D3B-4957-845C-D61207408849}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

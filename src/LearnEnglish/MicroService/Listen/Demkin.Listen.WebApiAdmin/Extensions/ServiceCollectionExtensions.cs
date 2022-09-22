@@ -1,7 +1,6 @@
-﻿using Demkin.Listen.Infrastructure;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace Demkin.Listen.WebApi.Extensions
+namespace Demkin.Listen.WebApiAdmin.Extensions
 {
     public static class ServiceCollectionExtensions
     {

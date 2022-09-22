@@ -10,11 +10,15 @@ namespace Demkin.Listen.Infrastructure
         }
 
         private DbSet<Category> Categories { get; set; }
+        private DbSet<Album> Albums { get; set; }
+        private DbSet<Audio> Audios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new CategoryEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new AlbumEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new AudioEntityTypeConfiguration());
         }
     }
 }

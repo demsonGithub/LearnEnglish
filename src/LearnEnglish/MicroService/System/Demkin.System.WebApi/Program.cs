@@ -38,7 +38,6 @@ try
     app.MapControllers();
 
     app.Run();
-    //when(ex.GetType().Name == "StopTheHostException")
 }
 catch (Exception ex)
 {

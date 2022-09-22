@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Demkin.Listen.Domain.Interfaces
 {
-    public interface ICategoryRepository : IRepository<Category, long>
+    public interface ICategoryRepository : IRepository<Category, long>, IDenpendencyScope
     {
     }
 }

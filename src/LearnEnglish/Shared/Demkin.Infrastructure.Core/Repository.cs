@@ -52,9 +52,9 @@ namespace Demkin.Infrastructure.Core
 
         public virtual async Task<bool> IsExistAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         {
-            var result = await DbContext.Set<TEntity>().FindAsync(predicate);
+            var result = await DbContext.Set<TEntity>().AnyAsync(predicate, cancellationToken);
 
-            return result != null;
+            return result;
         }
 
         public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
