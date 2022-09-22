@@ -13,6 +13,85 @@ namespace Demkin.Utils
 {
     public class ReflectionHelper
     {
+        /// <summary>
+        /// loop through all assemblies
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<Assembly> GetAllReferencedAssemblies(bool skipSystemAssemblies = true)
+        {
+            Assembly? rootAssembly = Assembly.GetEntryAssembly();
+            if (rootAssembly == null)
+            {
+                rootAssembly = Assembly.GetCallingAssembly();
+            }
+            var returnAssemblies = new HashSet<Assembly>(new AssemblyEquality());
+            var loadedAssemblies = new HashSet<string>();
+            var assembliesToCheck = new Queue<Assembly>();
+            assembliesToCheck.Enqueue(rootAssembly);
+            if (skipSystemAssemblies && IsSystemAssembly(rootAssembly) != false)
+            {
+                if (IsValid(rootAssembly))
+                {
+                    returnAssemblies.Add(rootAssembly);
+                }
+            }
+            while (assembliesToCheck.Any())
+            {
+                var assemblyToCheck = assembliesToCheck.Dequeue();
+                foreach (var reference in assemblyToCheck.GetReferencedAssemblies())
+                {
+                    if (!loadedAssemblies.Contains(reference.FullName))
+                    {
+                        var assembly = Assembly.Load(reference);
+                        if (skipSystemAssemblies && IsSystemAssembly(assembly))
+                        {
+                            continue;
+                        }
+                        assembliesToCheck.Enqueue(assembly);
+                        loadedAssemblies.Add(reference.FullName);
+                        if (IsValid(assembly))
+                        {
+                            returnAssemblies.Add(assembly);
+                        }
+                    }
+                }
+            }
+            var asmsInBaseDir = Directory.EnumerateFiles(AppContext.BaseDirectory,
+                "*.dll", new EnumerationOptions { RecurseSubdirectories = true });
+            foreach (var asmPath in asmsInBaseDir)
+            {
+                if (!IsManagedAssembly(asmPath))
+                {
+                    continue;
+                }
+                AssemblyName asmName = AssemblyName.GetAssemblyName(asmPath);
+                //如果程序集已经加载过了就不再加载
+                if (returnAssemblies.Any(x => AssemblyName.ReferenceMatchesDefinition(x.GetName(), asmName)))
+                {
+                    continue;
+                }
+                if (skipSystemAssemblies && IsSystemAssembly(asmPath))
+                {
+                    continue;
+                }
+                Assembly? asm = TryLoadAssembly(asmPath);
+                if (asm == null)
+                {
+                    continue;
+                }
+                if (!IsValid(asm))
+                {
+                    continue;
+                }
+                if (skipSystemAssemblies && IsSystemAssembly(asm))
+                {
+                    continue;
+                }
+                returnAssemblies.Add(asm);
+            }
+            return returnAssemblies.ToArray();
+        }
+
         //是否是微软等的官方Assembly
         private static bool IsSystemAssembly(Assembly asm)
         {
@@ -94,86 +173,6 @@ namespace Demkin.Utils
                 }
             }
             return asm;
-        }
-
-        /// <summary>
-        /// loop through all assemblies
-        /// </summary>
-        /// <returns></returns>
-        public static IEnumerable<Assembly> GetAllReferencedAssemblies(bool skipSystemAssemblies = true)
-        {
-            Assembly? rootAssembly = Assembly.GetEntryAssembly();
-            if (rootAssembly == null)
-            {
-                rootAssembly = Assembly.GetCallingAssembly();
-            }
-            var returnAssemblies = new HashSet<Assembly>(new AssemblyEquality());
-            var loadedAssemblies = new HashSet<string>();
-            var assembliesToCheck = new Queue<Assembly>();
-            assembliesToCheck.Enqueue(rootAssembly);
-            if (skipSystemAssemblies && IsSystemAssembly(rootAssembly) != false)
-            {
-                if (IsValid(rootAssembly))
-                {
-                    returnAssemblies.Add(rootAssembly);
-                }
-            }
-            while (assembliesToCheck.Any())
-            {
-                var assemblyToCheck = assembliesToCheck.Dequeue();
-                foreach (var reference in assemblyToCheck.GetReferencedAssemblies())
-                {
-                    if (!loadedAssemblies.Contains(reference.FullName))
-                    {
-                        var assembly = Assembly.Load(reference);
-                        if (skipSystemAssemblies && IsSystemAssembly(assembly))
-                        {
-                            continue;
-                        }
-                        assembliesToCheck.Enqueue(assembly);
-                        loadedAssemblies.Add(reference.FullName);
-                        if (IsValid(assembly))
-                        {
-                            returnAssemblies.Add(assembly);
-                        }
-                    }
-                }
-            }
-            var asmsInBaseDir = Directory.EnumerateFiles(AppContext.BaseDirectory,
-                "*.dll", new EnumerationOptions { RecurseSubdirectories = true });
-            foreach (var asmPath in asmsInBaseDir)
-            {
-                if (!IsManagedAssembly(asmPath))
-                {
-                    continue;
-                }
-                AssemblyName asmName = AssemblyName.GetAssemblyName(asmPath);
-                //如果程序集已经加载过了就不再加载
-                if (returnAssemblies.Any(x => AssemblyName.ReferenceMatchesDefinition(x.GetName(), asmName)))
-                {
-                    continue;
-                }
-                if (skipSystemAssemblies && IsSystemAssembly(asmPath))
-                {
-                    continue;
-                }
-                Assembly? asm = TryLoadAssembly(asmPath);
-                if (asm == null)
-                {
-                    continue;
-                }
-                //Assembly asm = Assembly.Load(asmName);
-                if (!IsValid(asm))
-                {
-                    continue;
-                }
-                if (skipSystemAssemblies && IsSystemAssembly(asm))
-                {
-                    continue;
-                }
-                returnAssemblies.Add(asm);
-            }
-            return returnAssemblies.ToArray();
         }
 
         private static bool IsValid(Assembly asm)

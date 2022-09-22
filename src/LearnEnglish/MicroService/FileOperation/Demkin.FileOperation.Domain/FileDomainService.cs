@@ -1,6 +1,6 @@
 ﻿namespace Demkin.FileOperation.Domain
 {
-    public class FileDomainService
+    public class FileDomainService : IDenpendencyScope
     {
         private readonly IUploadFileInfoRepository _uploadFileInfoRepository;
         private readonly IStorageFile _storageFile;
@@ -39,6 +39,11 @@
             // 创建文件的hash值
             var hash = HashHelper.ComputeSha256Hash(stream);
             long fileSize = stream.Length;
+
+            // 判断文件是否存在
+            var oldFileInfo = await _uploadFileInfoRepository.FindFileAsync(fileSize, hash);
+            if (oldFileInfo != null)
+                throw new DomainException("已存在相同的文件");
 
             DateTime today = DateTime.Today;
 

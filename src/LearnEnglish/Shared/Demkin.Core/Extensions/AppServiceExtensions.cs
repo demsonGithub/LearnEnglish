@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
 using Demkin.Core.Filters;
 using Demkin.Core.Jwt;
@@ -8,21 +7,24 @@ using Demkin.Utils.ContractResolver;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Serilog;
-using System.Reflection;
 
 namespace Demkin.Core.Extensions
 {
     public static class AppServiceExtensions
     {
-        public static void ConfigureInitService(this WebApplicationBuilder builder)
+        public static void InitConfigureDefaultServices(this WebApplicationBuilder builder)
         {
             IServiceCollection services = builder.Services;
+            IConfiguration configuration = builder.Configuration;
 
             // 获取当前程序所依赖的所有程序集,不包含Microsoft的程序集
             var assemblies = ReflectionHelper.GetAllReferencedAssemblies();
+
+            services.AddHttpContextAccessor();
 
             #region Autofac添加依赖注册
 
@@ -57,6 +59,18 @@ namespace Demkin.Core.Extensions
 
             #endregion 各服务Options配置
 
+            #region 自定义Options配置
+
+            builder.Services.Configure<JwtOptions>(options =>
+            {
+                options.SecretKey = builder.Configuration["JwtOptions:SecretKey"];
+                options.Issuer = builder.Configuration["JwtOptions:Issuer"];
+                options.Audience = builder.Configuration["JwtOptions:Audience"];
+                options.ExpireSeconds = Convert.ToInt32(builder.Configuration["JwtOptions:ExpireSeconds"]);
+            });
+
+            #endregion 自定义Options配置
+
             #region Serilog
 
             builder.Host.UseSerilog(dispose: true);
@@ -69,17 +83,25 @@ namespace Demkin.Core.Extensions
 
             #endregion MediatoR
 
-            #region Jwt
+            #region Cors
 
-            builder.Services.Configure<JwtOptions>(options =>
+            builder.Services.AddCors(options =>
             {
-                options.SecretKey = builder.Configuration["JwtOptions:SecretKey"];
-                options.Issuer = builder.Configuration["JwtOptions:Issuer"];
-                options.Audience = builder.Configuration["JwtOptions:Audience"];
-                options.ExpireSeconds = Convert.ToInt32(builder.Configuration["JwtOptions:ExpireSeconds"]);
+                var corsOpt = configuration.GetSection("AppOptions:AllowCors").Value?.Split(',') ?? new string[0];
+
+                if (corsOpt.Length == 0)
+                    Log.Warning("[AppOptions:AllowCors]没有配置");
+
+                options.AddDefaultPolicy(policy =>
+                {
+                    policy.WithOrigins(corsOpt)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+                });
             });
 
-            #endregion Jwt
+            #endregion Cors
         }
     }
 }

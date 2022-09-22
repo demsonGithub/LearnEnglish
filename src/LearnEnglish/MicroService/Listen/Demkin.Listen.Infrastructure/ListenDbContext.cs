@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Demkin.Listen.Infrastructure.EntityConfigurations;
+using Microsoft.EntityFrameworkCore;
 
 namespace Demkin.Listen.Infrastructure
 {
@@ -8,9 +9,12 @@ namespace Demkin.Listen.Infrastructure
         {
         }
 
+        private DbSet<Category> Categories { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfiguration(new CategoryEntityTypeConfiguration());
         }
     }
 }

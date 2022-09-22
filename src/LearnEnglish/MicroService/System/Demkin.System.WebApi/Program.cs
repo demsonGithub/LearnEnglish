@@ -1,27 +1,12 @@
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-
-var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-
-IConfiguration Configuration = new ConfigurationBuilder()
-                    .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                                .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
-                                .Build();
-
-Log.Logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(Configuration)
-    .MinimumLevel.Debug()
-    .Enrich.FromLogContext()
-    .CreateLogger();
+string logFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
+SerilogHelper.LogInitialize(logFilePath);
 
 try
 {
-    Log.Information("Starting web host");
+    Log.Information("Host Starting");
 
     var builder = WebApplication.CreateBuilder(args);
-
-    builder.ConfigureInitService();
+    IConfiguration configuration = builder.Configuration;
 
     // Add services to the container.
     builder.Services.AddControllers().AddNewtonsoftJson();
@@ -29,9 +14,8 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
-    builder.Services.AddDbSetup(Configuration.GetValue<string>("ConnectionStrings:sqlserver"));
-
-    builder.Services.AddCorsSetup();
+    builder.InitConfigureDefaultServices();
+    builder.Services.AddDbSetup(configuration.GetSection("ConnectionStrings:sqlserver").Value);
 
     var app = builder.Build();
 
@@ -48,9 +32,8 @@ try
             c.RoutePrefix = "api";
         });
     }
-    app.UseCors("LearnEnglish");
 
-    app.UseAuthorization();
+    app.InitUseDefaultMiddleware();
 
     app.MapControllers();
 
@@ -64,7 +47,7 @@ catch (Exception ex)
     {
         throw;
     }
-    Log.Fatal(ex, "Host terminated unexpectedly");
+    Log.Fatal(ex, "Host Build Error");
 }
 finally
 {

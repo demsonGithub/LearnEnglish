@@ -1,12 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Builder;
 
 namespace Demkin.Core.Extensions
 {
-    internal class AppMiddlewareExtensions
+    public static class AppMiddlewareExtensions
     {
+        public static IApplicationBuilder InitUseDefaultMiddleware(this IApplicationBuilder app)
+        {
+            // 静态资源
+            app.UseStaticFiles();
+
+            // 启用跨域
+            app.UseCors();
+
+            // 授权
+            app.UseAuthorization();
+
+            return app;
+        }
     }
 }

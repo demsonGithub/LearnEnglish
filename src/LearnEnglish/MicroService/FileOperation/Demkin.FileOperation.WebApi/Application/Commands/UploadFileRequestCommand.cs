@@ -21,11 +21,6 @@
             var file = request.File;
             string fileName = file.FileName;
             using Stream stream = file.OpenReadStream();
-
-            // 先从数据库查
-            var oldFileInfo = await _domainService.FindFileAsync(stream);
-            if (oldFileInfo != null) return oldFileInfo;
-
             // 上传文件
             var uploadfileInfo = await _domainService.UploadFileAsync(fileName, stream, cancellationToken);
 

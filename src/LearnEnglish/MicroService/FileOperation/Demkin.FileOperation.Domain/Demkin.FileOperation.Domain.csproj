@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\Demkin.Core\Demkin.Core.csproj" />
     <ProjectReference Include="..\..\..\Shared\Demkin.Domain.Abstraction\Demkin.Domain.Abstraction.csproj" />
     <ProjectReference Include="..\..\..\Shared\Demkin.Utils\Demkin.Utils.csproj" />
   </ItemGroup>

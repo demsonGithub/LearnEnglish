@@ -1,6 +1,6 @@
 ﻿namespace Demkin.FileOperation.Domain.Interfaces
 {
-    public interface IStorageFile
+    public interface IStorageFile : IDenpendencyScope
     {
         /// <summary>
         /// 文件的存储类型

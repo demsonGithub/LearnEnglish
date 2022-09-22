@@ -15,29 +15,11 @@ namespace Demkin.System.WebApi.Extensions
                 });
                 options.LogTo(new Action<string>(q =>
                 {
-                    if (q.Contains("Executed DbCommand")) {
+                    if (q.Contains("Executed DbCommand"))
+                    {
                         Debug.WriteLine(q);
-                    } 
+                    }
                 }), LogLevel.Information);
-                //options.LogTo(Console.WriteLine,
-                //(eventId, logLevel) =>
-                //logLevel >= LogLevel.Error
-                //);
-            });
-            return services;
-        }
-
-        public static IServiceCollection AddCorsSetup(this IServiceCollection services)
-        {
-            services.AddCors(options =>
-            {
-                options.AddPolicy("LearnEnglish", policy =>
-                {
-                    policy.WithOrigins("http://localhost:8080")
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowCredentials();
-                });
             });
             return services;
         }

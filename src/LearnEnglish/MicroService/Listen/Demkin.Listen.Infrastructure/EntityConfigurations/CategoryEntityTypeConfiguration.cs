@@ -15,7 +15,11 @@ namespace Demkin.Listen.Infrastructure.EntityConfigurations
             builder.ToTable("Category");
             builder.HasKey(c => c.Id);
             builder.Property(c => c.Id).ValueGeneratedNever();
-            builder.HasIndex(a => a.MultipleLanguageTitle);
+            builder.OwnsOne(o => o.MultipleLanguageTitle, x =>
+            {
+                x.Property(y => y.ChineseTitle).HasColumnName("ChineseTitle").IsRequired(true).HasMaxLength(50);
+                x.Property(y => y.EnglishTitle).HasColumnName("EnglishTitle").IsRequired(true).HasMaxLength(50);
+            });
         }
     }
 }

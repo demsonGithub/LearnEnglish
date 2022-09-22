@@ -1,4 +1,5 @@
 ﻿// shared
+global using Demkin.Utils;
 global using MediatR;
 global using Demkin.Core;
 global using Demkin.Core.Exceptions;
