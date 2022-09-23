@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Demkin.Listen.Infrastructure.Migrations.ListenDbContext2Migrations
 {
     [DbContext(typeof(ListenDbContext2))]
-    [Migration("20220923065125_InitDb2")]
+    [Migration("20220923135600_InitDb2")]
     partial class InitDb2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

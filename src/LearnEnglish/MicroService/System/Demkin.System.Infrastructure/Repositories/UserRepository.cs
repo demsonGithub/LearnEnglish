@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace Demkin.System.Infrastructure.Repositories
 {
-    public class UserRepository : Repository<User, long, SystemDbContext>, IUserRepository
+    public class UserRepository : Repository<User, long>, IUserRepository
     {
         private readonly SystemDbContext _dbContext;
 

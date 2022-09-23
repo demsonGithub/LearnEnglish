@@ -11,19 +11,9 @@ namespace Demkin.Listen.Infrastructure.Repositories
     {
         private readonly IDbContextFactory _dbContextFactory;
 
-        //public CategoryRepository(ListenDbContext dbContext):base(dbContext)
-        //{
-        //}
-
         public CategoryRepository(IDbContextFactory dbContextFactory) : base(dbContextFactory)
         {
             _dbContextFactory = dbContextFactory;
         }
-
-        //public void SetCurrentContext(WriteAndReadEnum writeAndReadEnum)
-        //{
-        //    _context = _dbContextFactory.CreateEFContext(writeAndReadEnum);
-        //    base.DbContext = _context;
-        //}
     }
 }

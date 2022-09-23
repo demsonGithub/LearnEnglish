@@ -1,4 +1,5 @@
 ﻿using Demkin.Core.Exceptions;
+using Demkin.Infrastructure.Core;
 using Demkin.Listen.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,7 @@ namespace Demkin.Listen.Domain
         public async Task<List<Category>> GetCategoryList(string title)
         {
             IEnumerable<Category> result;
-            _categoryRepository.SetCurrentContext(WriteAndReadEnum.Read);
+            //_categoryRepository.SetCurrentContext(WriteAndReadEnum.Read);
 
             if (string.IsNullOrWhiteSpace(title))
             {

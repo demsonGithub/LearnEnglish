@@ -19,17 +19,33 @@ namespace Demkin.Infrastructure.Core
         protected Repository(IDbContextFactory dbContextFactory)
         {
             _dbContextFactory = dbContextFactory;
-            _db = _dbContextFactory.CreateDbContext();
+            _db = _dbContextFactory.CreateMasterDbContext();
         }
 
-        public Task ChangeDb(ReadAndWrite readAndWrite)
+        public Task SwitchMasterDb()
         {
-            _db = _dbContextFactory.CreateDbContext(ReadAndWrite.Read);
+            _db = _dbContextFactory.CreateMasterDbContext();
+            return Task.CompletedTask;
+        }
+
+        public Task SwitchSlaveDb()
+        {
+            _db = _dbContextFactory.CreateSlaveDbContext();
             return Task.CompletedTask;
         }
 
         // EFContext实现了IUnitOfWork
-        public IUnitOfWork UnitOfWork => _db;
+        public IUnitOfWork UnitOfWork
+        {
+            get
+            {
+                if (_dbContextFactory != null)
+                {
+                    SwitchMasterDb();
+                }
+                return _db;
+            }
+        }
 
         public virtual async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
@@ -84,6 +100,10 @@ namespace Demkin.Infrastructure.Core
 
     public abstract class Repository<TEntity, TKey> : Repository<TEntity>, IRepository<TEntity, TKey> where TEntity : Entity<TKey>, IAggregateRoot
     {
+        protected Repository(MyDbContext dbContext) : base(dbContext)
+        {
+        }
+
         protected Repository(IDbContextFactory dbContextFactory) : base(dbContextFactory)
         {
         }

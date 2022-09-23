@@ -2,7 +2,7 @@
 
 namespace Demkin.FileOperation.Infrastructure.Repositories
 {
-    public class UploadFileInfoRepository : Repository<UploadFileInfo, long, FileDbContext>, IUploadFileInfoRepository
+    public class UploadFileInfoRepository : Repository<UploadFileInfo, long>, IUploadFileInfoRepository
     {
         private readonly FileDbContext _dbContext;
 

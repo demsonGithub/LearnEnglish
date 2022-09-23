@@ -11,19 +11,14 @@
             _dbContext2 = dbContext2;
         }
 
-        public MyDbContext CreateDbContext(ReadAndWrite readAndWrite = ReadAndWrite.Write)
+        public MyDbContext CreateMasterDbContext()
         {
-            switch (readAndWrite)
-            {
-                case ReadAndWrite.Write:
-                    return _listenDbContext;
+            return _listenDbContext;
+        }
 
-                case ReadAndWrite.Read:
-                    return _dbContext2;
-
-                default:
-                    return _listenDbContext;
-            }
+        public MyDbContext CreateSlaveDbContext()
+        {
+            return _dbContext2;
         }
     }
 }

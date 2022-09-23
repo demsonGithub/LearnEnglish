@@ -7,7 +7,9 @@ namespace Demkin.Domain.Abstraction
     {
         MyDbContext Db { get; }
 
-        Task ChangeDb(ReadAndWrite readAndWrite);
+        Task SwitchMasterDb();
+
+        Task SwitchSlaveDb();
 
         IUnitOfWork UnitOfWork { get; }
 

@@ -4,12 +4,8 @@ namespace Demkin.Infrastructure.Core
 {
     public interface IDbContextFactory : IDenpendencySingleton
     {
-        MyDbContext CreateDbContext(ReadAndWrite readAndWrite = ReadAndWrite.Write);
-    }
+        MyDbContext CreateMasterDbContext();
 
-    public enum ReadAndWrite
-    {
-        Read,
-        Write
+        MyDbContext CreateSlaveDbContext();
     }
 }
