@@ -15,7 +15,7 @@ namespace Demkin.FileHanlde.WebApi.Controllers
 
         [HttpPost]
         [RequestSizeLimit(60_000_000)]
-        public async Task<ApiResponse<UploadFileInfoViewModel>> UploadFile([FromForm] UploadFileRequestCommand command)
+        public async Task<ApiResult<UploadFileInfoViewModel>> UploadFile([FromForm] UploadFileRequestCommand command)
         {
             var result = await _mediator.Send(command, HttpContext.RequestAborted);
             UploadFileInfoViewModel viewModel = new UploadFileInfoViewModel
@@ -31,7 +31,7 @@ namespace Demkin.FileHanlde.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ApiResponse<string>> GetFileUrl([FromBody] GetFileUrlRequestQuery query)
+        public async Task<ApiResult<string>> GetFileUrl([FromBody] GetFileUrlRequestQuery query)
         {
             var result = await _mediator.Send(query, HttpContext.RequestAborted);
 

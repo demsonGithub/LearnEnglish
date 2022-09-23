@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Demkin.Listen.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,13 +7,23 @@ using System.Threading.Tasks;
 
 namespace Demkin.Listen.Infrastructure.Repositories
 {
-    public class CategoryRepository : Repository<Category, long, ListenDbContext>, ICategoryRepository
+    public class CategoryRepository : Repository<Category, long>, ICategoryRepository
     {
-        private readonly ListenDbContext _dbContext;
+        private readonly IDbContextFactory _dbContextFactory;
 
-        public CategoryRepository(ListenDbContext dbContext) : base(dbContext)
+        //public CategoryRepository(ListenDbContext dbContext):base(dbContext)
+        //{
+        //}
+
+        public CategoryRepository(IDbContextFactory dbContextFactory) : base(dbContextFactory)
         {
-            _dbContext = dbContext;
+            _dbContextFactory = dbContextFactory;
         }
+
+        //public void SetCurrentContext(WriteAndReadEnum writeAndReadEnum)
+        //{
+        //    _context = _dbContextFactory.CreateEFContext(writeAndReadEnum);
+        //    base.DbContext = _context;
+        //}
     }
 }

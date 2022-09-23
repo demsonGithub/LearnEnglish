@@ -4,21 +4,36 @@ using System.Linq.Expressions;
 
 namespace Demkin.Infrastructure.Core
 {
-    public abstract class Repository<TEntity, TDbContext> : IRepository<TEntity> where TEntity : Entity, IAggregateRoot where TDbContext : EFContext
+    public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity, IAggregateRoot
     {
-        protected virtual TDbContext DbContext { get; private set; }
+        private readonly IDbContextFactory _dbContextFactory;
 
-        protected Repository(TDbContext dbContext)
+        private MyDbContext _db;
+        public MyDbContext Db => _db;
+
+        protected Repository(MyDbContext dbContext)
         {
-            DbContext = dbContext;
+            _db = dbContext;
+        }
+
+        protected Repository(IDbContextFactory dbContextFactory)
+        {
+            _dbContextFactory = dbContextFactory;
+            _db = _dbContextFactory.CreateDbContext();
+        }
+
+        public Task ChangeDb(ReadAndWrite readAndWrite)
+        {
+            _db = _dbContextFactory.CreateDbContext(ReadAndWrite.Read);
+            return Task.CompletedTask;
         }
 
         // EFContext实现了IUnitOfWork
-        public IUnitOfWork UnitOfWork => DbContext;
+        public IUnitOfWork UnitOfWork => _db;
 
         public virtual async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
-            var result = await DbContext.AddAsync(entity, cancellationToken);
+            var result = await _db.AddAsync(entity, cancellationToken);
             return result.Entity;
         }
 
@@ -26,7 +41,7 @@ namespace Demkin.Infrastructure.Core
         {
             return await Task.Run(() =>
             {
-                DbContext.Remove(entity);
+                _db.Remove(entity);
                 return true;
             });
         }
@@ -35,24 +50,24 @@ namespace Demkin.Infrastructure.Core
         {
             return await Task.Run(() =>
             {
-                DbContext.RemoveRange(predicate, cancellationToken);
+                _db.RemoveRange(predicate, cancellationToken);
                 return true;
             });
         }
 
         public virtual async Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         {
-            return await DbContext.Set<TEntity>().FirstOrDefaultAsync(predicate);
+            return await _db.Set<TEntity>().FirstOrDefaultAsync(predicate);
         }
 
         public virtual async Task<IEnumerable<TEntity>> FindListAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         {
-            return await DbContext.Set<TEntity>().Where(predicate).ToListAsync();
+            return await _db.Set<TEntity>().Where(predicate).ToListAsync();
         }
 
         public virtual async Task<bool> IsExistAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         {
-            var result = await DbContext.Set<TEntity>().AnyAsync(predicate, cancellationToken);
+            var result = await _db.Set<TEntity>().AnyAsync(predicate, cancellationToken);
 
             return result;
         }
@@ -61,33 +76,33 @@ namespace Demkin.Infrastructure.Core
         {
             return await Task.Run(() =>
             {
-                var result = DbContext.Update(entity).Entity;
+                var result = _db.Update(entity).Entity;
                 return result;
             });
         }
     }
 
-    public abstract class Repository<TEntity, TKey, TDbContext> : Repository<TEntity, TDbContext>, IRepository<TEntity, TKey> where TEntity : Entity<TKey>, IAggregateRoot where TDbContext : EFContext
+    public abstract class Repository<TEntity, TKey> : Repository<TEntity>, IRepository<TEntity, TKey> where TEntity : Entity<TKey>, IAggregateRoot
     {
-        public Repository(TDbContext dbContext) : base(dbContext)
+        protected Repository(IDbContextFactory dbContextFactory) : base(dbContextFactory)
         {
         }
 
         public virtual async Task<TEntity> FindAsync(TKey id, CancellationToken cancellationToken = default)
         {
-            var entity = await DbContext.FindAsync<TEntity>(id, cancellationToken);
+            var entity = await Db.FindAsync<TEntity>(id, cancellationToken);
 
             return entity;
         }
 
         public virtual async Task<bool> RemoveAsync(TKey id, CancellationToken cancellationToken = default)
         {
-            var entity = await DbContext.FindAsync<TEntity>(id, cancellationToken);
+            var entity = await Db.FindAsync<TEntity>(id, cancellationToken);
             if (entity == null)
             {
                 return false;
             }
-            DbContext.Remove(entity);
+            Db.Remove(entity);
             return true;
         }
     }

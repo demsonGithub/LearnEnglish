@@ -15,10 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ViewModels\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\..\Shared\Demkin.Core\Demkin.Core.csproj" />
     <ProjectReference Include="..\Demkin.Listen.Domain\Demkin.Listen.Domain.csproj" />
     <ProjectReference Include="..\Demkin.Listen.Infrastructure\Demkin.Listen.Infrastructure.csproj" />

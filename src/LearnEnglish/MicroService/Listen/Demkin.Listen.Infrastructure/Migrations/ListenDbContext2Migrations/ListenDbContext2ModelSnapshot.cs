@@ -4,18 +4,16 @@ using Demkin.Listen.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Demkin.Listen.Infrastructure.Migrations
+namespace Demkin.Listen.Infrastructure.Migrations.ListenDbContext2Migrations
 {
-    [DbContext(typeof(ListenDbContext))]
-    [Migration("20220922151134_InitDB")]
-    partial class InitDB
+    [DbContext(typeof(ListenDbContext2))]
+    partial class ListenDbContext2ModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

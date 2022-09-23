@@ -1,6 +1,6 @@
 ﻿namespace Demkin.Core
 {
-    public interface IApiResponse<T>
+    public interface IApiResult<T>
     {
         ExpectResult code { get; }
 

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Demkin.System.Infrastructure
 {
-    public class SystemDbContext : EFContext
+    public class SystemDbContext : MyDbContext
     {
         public SystemDbContext(DbContextOptions<SystemDbContext> options, IMediator mediator) : base(options, mediator)
         {

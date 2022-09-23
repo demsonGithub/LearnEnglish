@@ -1,6 +1,6 @@
 ﻿namespace Demkin.Core
 {
-    public class ApiResponse<T> : IApiResponse<T>
+    public class ApiResult<T> : IApiResult<T>
     {
         public ExpectResult code { get; }
 
@@ -8,7 +8,7 @@
 
         public T data { get; }
 
-        public ApiResponse(ExpectResult code, string message, T data)
+        public ApiResult(ExpectResult code, string message, T data)
         {
             this.code = code;
             this.message = message;

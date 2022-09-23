@@ -1,11 +1,16 @@
 ﻿using Demkin.Listen.Infrastructure.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Demkin.Listen.Infrastructure
 {
-    public class ListenDbContext : MyDbContext
+    public class ListenDbContext2 : MyDbContext
     {
-        public ListenDbContext(DbContextOptions<ListenDbContext> options, IMediator mediator) : base(options, mediator)
+        public ListenDbContext2(DbContextOptions<ListenDbContext2> options, IMediator mediator) : base(options, mediator)
         {
         }
 

@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Demkin.Infrastructure.Core
 {
-    public class EFContext : DbContext, IUnitOfWork
+    public class MyDbContext : DbContext, IUnitOfWork
     {
         private readonly IMediator _mediator;
 
-        public EFContext(DbContextOptions options, IMediator mediator) : base(options)
+        public MyDbContext(DbContextOptions options, IMediator mediator) : base(options)
         {
             _mediator = mediator;
         }

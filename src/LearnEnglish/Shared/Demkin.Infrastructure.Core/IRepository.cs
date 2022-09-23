@@ -1,9 +1,14 @@
-﻿using System.Linq.Expressions;
+﻿using Demkin.Infrastructure.Core;
+using System.Linq.Expressions;
 
 namespace Demkin.Domain.Abstraction
 {
     public interface IRepository<TEntity> where TEntity : Entity, IAggregateRoot
     {
+        MyDbContext Db { get; }
+
+        Task ChangeDb(ReadAndWrite readAndWrite);
+
         IUnitOfWork UnitOfWork { get; }
 
         Task<bool> IsExistAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);

@@ -31,5 +31,22 @@ namespace Demkin.Listen.Domain
             Category category = new Category(title, coverUrl, sequenceNum);
             return category;
         }
+
+        public async Task<List<Category>> GetCategoryList(string title)
+        {
+            IEnumerable<Category> result;
+            _categoryRepository.SetCurrentContext(WriteAndReadEnum.Read);
+
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                result = await _categoryRepository.FindListAsync(item => true);
+            }
+            else
+            {
+                result = await _categoryRepository.FindListAsync(item => item.Title.Contains(title));
+            }
+
+            return result.ToList();
+        }
     }
 }

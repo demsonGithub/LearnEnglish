@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Demkin.Listen.WebApiAdmin.Controllers
+namespace Demkin.Listen.WebApi.Admin.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
@@ -14,17 +14,17 @@ namespace Demkin.Listen.WebApiAdmin.Controllers
         }
 
         [HttpPost]
-        public async Task<ApiResponse<string>> AddCategory([FromBody] AddCategoryCommand command)
+        public async Task<ApiResult<string>> AddCategory([FromBody] AddCategoryCommand command)
         {
             var result = await _mediator.Send(command, HttpContext.RequestAborted);
 
             return result;
         }
 
-        //[HttpGet]
-        //public async Task<ApiResponse<List<Category>>> GetAllCategory()
-        //{
-        //    var result=await
-        //}
+        [HttpGet]
+        public async Task<ApiResult<List<CategoryViewModel>>> GetCategoryListByCondiations([FromQuery] GetCategoryListByCondiationsQuery query)
+        {
+            return await _mediator.Send(query, HttpContext.RequestAborted);
+        }
     }
 }

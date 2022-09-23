@@ -1,6 +1,6 @@
-﻿namespace Demkin.Listen.WebApiAdmin.Application.Commands
+﻿namespace Demkin.Listen.WebApi.Admin.Application.Commands
 {
-    public class AddCategoryCommand : IRequest<ApiResponse<string>>
+    public class AddCategoryCommand : IRequest<ApiResult<string>>
     {
         public string Name { get; set; }
 
@@ -9,7 +9,7 @@
         public int SequenceNumber { get; set; }
     }
 
-    public class AddCategoryCommandHandler : IRequestHandler<AddCategoryCommand, ApiResponse<string>>
+    public class AddCategoryCommandHandler : IRequestHandler<AddCategoryCommand, ApiResult<string>>
     {
         private readonly ListenDomainService _domainService;
         private readonly ICategoryRepository _categoryRepository;
@@ -20,7 +20,7 @@
             _categoryRepository = categoryRepository;
         }
 
-        public async Task<ApiResponse<string>> Handle(AddCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResult<string>> Handle(AddCategoryCommand request, CancellationToken cancellationToken)
         {
             var category = await _domainService.AddNewCategory(request.Name, request.CoverUrl, request.SequenceNumber);
 

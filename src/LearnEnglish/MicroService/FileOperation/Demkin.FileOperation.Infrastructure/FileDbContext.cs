@@ -2,7 +2,7 @@
 
 namespace Demkin.FileOperation.Infrastructure
 {
-    public class FileDbContext : EFContext
+    public class FileDbContext : MyDbContext
     {
         private readonly IMediator _mediator;
 

@@ -16,7 +16,7 @@ try
     builder.Services.AddSwaggerGen();
 
     builder.InitConfigureDefaultServices();
-    builder.Services.AddDbSetup(configuration.GetSection("ConnectionStrings:sqlserver").Value);
+    builder.Services.AddDbSetup(configuration.GetSection("ConnectionStrings:sqlserver").Value, configuration.GetSection("ConnectionStrings:sqlserver1").Value);
 
     var app = builder.Build();
 
