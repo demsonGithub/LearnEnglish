@@ -22,16 +22,25 @@ namespace Demkin.Infrastructure.Core
             _db = _dbContextFactory.CreateMasterDbContext();
         }
 
-        public Task SwitchMasterDb()
+        public IRepository<TEntity> SwitchMasterDb()
         {
-            _db = _dbContextFactory.CreateMasterDbContext();
-            return Task.CompletedTask;
+            if (_dbContextFactory != null)
+            {
+                _db = _dbContextFactory.CreateMasterDbContext();
+            }
+            return this;
+            //return Task.CompletedTask;
         }
 
-        public Task SwitchSlaveDb()
+        public IRepository<TEntity> SwitchSlaveDb()
         {
-            _db = _dbContextFactory.CreateSlaveDbContext();
-            return Task.CompletedTask;
+            if (_dbContextFactory != null)
+            {
+                _db = _dbContextFactory.CreateSlaveDbContext();
+            }
+            return this;
+
+            //return Task.CompletedTask;
         }
 
         // EFContext实现了IUnitOfWork

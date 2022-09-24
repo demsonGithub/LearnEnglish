@@ -8,7 +8,7 @@ namespace Demkin.FileOperation.Infrastructure
 
         public DbSet<UploadFileInfo> UploadFileInfos { get; set; }
 
-        public FileDbContext(DbContextOptions options, IMediator mediator) : base(options, mediator)
+        public FileDbContext(IMediator mediator) : base(mediator)
         {
             _mediator = mediator;
         }

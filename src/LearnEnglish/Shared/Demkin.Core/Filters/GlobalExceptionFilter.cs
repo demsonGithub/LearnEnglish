@@ -27,6 +27,9 @@ namespace Demkin.Core.Filters
         {
             Exception exception = context.Exception;
 
+            _logger.LogInformation(context.Exception.GetType().Name);
+            _logger.LogInformation(context.Exception.GetType().FullName);
+
             string message;
             if (context.Exception.GetType() == typeof(DomainException))
             {

@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Demkin.Listen.Infrastructure.Migrations.ListenDbContext2Migrations
+namespace Demkin.Listen.Infrastructure.Migrations
 {
-    public partial class InitDb2 : Migration
+    public partial class InitDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

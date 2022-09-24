@@ -5,7 +5,7 @@ namespace Demkin.System.Infrastructure
 {
     public class SystemDbContext : MyDbContext
     {
-        public SystemDbContext(DbContextOptions<SystemDbContext> options, IMediator mediator) : base(options, mediator)
+        public SystemDbContext(IMediator mediator) : base(mediator)
         {
         }
 

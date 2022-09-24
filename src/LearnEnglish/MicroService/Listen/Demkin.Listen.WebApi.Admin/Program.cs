@@ -1,3 +1,6 @@
+using Demkin.Infrastructure.Core;
+using Microsoft.EntityFrameworkCore;
+
 string logFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
 SerilogHelper.LogInitialize(logFilePath);
 
@@ -6,7 +9,6 @@ try
     Log.Information("Host Starting");
 
     var builder = WebApplication.CreateBuilder(args);
-    IConfiguration configuration = builder.Configuration;
 
     // Add services to the container.
 
@@ -16,7 +18,8 @@ try
     builder.Services.AddSwaggerGen();
 
     builder.InitConfigureDefaultServices();
-    builder.Services.AddDbSetup(configuration.GetSection("ConnectionStrings:sqlserver").Value, configuration.GetSection("ConnectionStrings:sqlserver1").Value);
+
+    builder.Services.AddDbContext<ListenDbContext>();
 
     var app = builder.Build();
 

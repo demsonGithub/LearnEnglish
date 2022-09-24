@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Demkin.Listen.Infrastructure.Migrations.ListenDbContext2Migrations
+namespace Demkin.Listen.Infrastructure.Migrations
 {
-    [DbContext(typeof(ListenDbContext2))]
-    [Migration("20220923135600_InitDb2")]
+    [DbContext(typeof(ListenDbContext))]
+    [Migration("20220924063402_InitDb2")]
     partial class InitDb2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -8,7 +8,7 @@ namespace Demkin.Infrastructure.Core
     {
         private readonly IMediator _mediator;
 
-        public MyDbContext(DbContextOptions options, IMediator mediator) : base(options)
+        public MyDbContext(IMediator mediator)
         {
             _mediator = mediator;
         }

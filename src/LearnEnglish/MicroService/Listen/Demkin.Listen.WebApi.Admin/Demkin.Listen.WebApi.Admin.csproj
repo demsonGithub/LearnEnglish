@@ -20,4 +20,8 @@
     <ProjectReference Include="..\Demkin.Listen.Infrastructure\Demkin.Listen.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+
 </Project>

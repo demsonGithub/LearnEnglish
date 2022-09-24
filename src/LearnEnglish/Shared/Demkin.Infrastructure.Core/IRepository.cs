@@ -7,9 +7,9 @@ namespace Demkin.Domain.Abstraction
     {
         MyDbContext Db { get; }
 
-        Task SwitchMasterDb();
+        IRepository<TEntity> SwitchMasterDb();
 
-        Task SwitchSlaveDb();
+        IRepository<TEntity> SwitchSlaveDb();
 
         IUnitOfWork UnitOfWork { get; }
 
