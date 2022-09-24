@@ -24,4 +24,3 @@ global using Demkin.System.Infrastructure.Repositories;
 global using Demkin.System.WebApi.Application.Commands;
 global using Demkin.System.WebApi.Application.Queries;
 global using Demkin.System.WebApi.ViewModels;
-global using Demkin.System.WebApi.Extensions;

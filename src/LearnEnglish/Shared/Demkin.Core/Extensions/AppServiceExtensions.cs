@@ -7,6 +7,7 @@ using Demkin.Utils.ContractResolver;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -16,7 +17,7 @@ namespace Demkin.Core.Extensions
 {
     public static class AppServiceExtensions
     {
-        public static void InitConfigureDefaultServices(this WebApplicationBuilder builder)
+        public static void InitConfigureDefaultServices<T>(this WebApplicationBuilder builder) where T : DbContext
         {
             IServiceCollection services = builder.Services;
             IConfiguration configuration = builder.Configuration;
@@ -25,6 +26,8 @@ namespace Demkin.Core.Extensions
             var assemblies = ReflectionHelper.GetAllReferencedAssemblies();
 
             services.AddHttpContextAccessor();
+
+            services.AddDbContext<T>();
 
             #region Autofac添加依赖注册
 

@@ -1,12 +1,35 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace Demkin.System.Infrastructure
 {
     public class SystemDbContext : MyDbContext
     {
-        public SystemDbContext(IMediator mediator) : base(mediator)
+        private readonly IConfiguration _configuration;
+
+        public SystemDbContext(IMediator mediator, IConfiguration configuration) : base(mediator)
         {
+            _configuration = configuration;
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            string connectionString = _configuration.GetSection("DbConnection:MasterDb").Value;
+
+            optionsBuilder.UseSqlServer(connectionString, x =>
+            {
+                x.CommandTimeout(20);
+            });
+            optionsBuilder.LogTo(new Action<string>(q =>
+            {
+                if (q.Contains("Executed DbCommand"))
+                {
+                    Debug.WriteLine(q);
+                }
+            }), LogLevel.Information);
         }
 
         public DbSet<User> Users { get; set; } = default!;
