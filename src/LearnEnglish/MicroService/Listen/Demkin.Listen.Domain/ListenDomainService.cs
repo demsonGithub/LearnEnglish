@@ -1,22 +1,20 @@
 ﻿using Demkin.Core.Exceptions;
-using Demkin.Infrastructure.Core;
 using Demkin.Listen.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Demkin.Listen.Domain
 {
     public class ListenDomainService : IDenpendencyScope
     {
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IAlbumRepository _albumRepository;
 
-        public ListenDomainService(ICategoryRepository categoryRepository)
+        public ListenDomainService(ICategoryRepository categoryRepository, IAlbumRepository albumRepository)
         {
             _categoryRepository = categoryRepository;
+            _albumRepository = albumRepository;
         }
+
+        #region Category
 
         public async Task<Category> AddNewCategory(string title, string cover, int sequenceNum)
         {
@@ -48,5 +46,41 @@ namespace Demkin.Listen.Domain
 
             return result.ToList();
         }
+
+        #endregion Category
+
+        #region Album
+
+        public async Task<Album> AddNewAlbum(string title, string cover, int sequenceNum, long categoryId)
+        {
+            var objIsExist = await _albumRepository.IsExistAsync(item => item.Title == title);
+            if (objIsExist)
+            {
+                throw new DomainException($"{title}已经存在");
+            }
+            Uri? coverUrl = cover == "" ? null : new Uri(cover);
+
+            Album album = new Album(title, coverUrl, sequenceNum, categoryId);
+
+            return album;
+        }
+
+        public async Task<List<Album>> GetAlbumList(string title)
+        {
+            IEnumerable<Album> result;
+
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                result = await _albumRepository.FindListAsync(item => true);
+            }
+            else
+            {
+                result = await _albumRepository.FindListAsync(item => item.Title.Contains(title));
+            }
+
+            return result.ToList();
+        }
+
+        #endregion Album
     }
 }

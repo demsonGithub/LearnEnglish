@@ -1,19 +1,12 @@
-﻿using Demkin.Listen.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Demkin.Listen.Infrastructure.Repositories
+﻿namespace Demkin.Listen.Infrastructure.Repositories
 {
     public class CategoryRepository : Repository<Category, long>, ICategoryRepository
     {
-        private readonly IDbContextFactory _dbContextFactory;
+        private readonly ListenDbContext _dbContext;
 
-        public CategoryRepository(IDbContextFactory dbContextFactory) : base(dbContextFactory)
+        public CategoryRepository(ListenDbContext dbContext) : base(dbContext)
         {
-            _dbContextFactory = dbContextFactory;
+            _dbContext = dbContext;
         }
     }
 }

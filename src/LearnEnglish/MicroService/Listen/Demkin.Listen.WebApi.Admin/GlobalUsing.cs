@@ -3,7 +3,9 @@ global using Serilog;
 global using Demkin.Utils;
 global using Demkin.Core.Extensions;
 global using MediatR;
+global using AutoMapper;
 global using Demkin.Core;
+global using Demkin.Core.Exceptions;
 
 // domain
 global using Demkin.Listen.Domain;

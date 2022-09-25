@@ -17,9 +17,7 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
-    builder.InitConfigureDefaultServices();
-
-    builder.Services.AddDbContext<ListenDbContext>();
+    builder.InitConfigureDefaultServices<ListenDbContext>();
 
     var app = builder.Build();
 

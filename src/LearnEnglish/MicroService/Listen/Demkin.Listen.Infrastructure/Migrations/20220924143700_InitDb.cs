@@ -15,7 +15,7 @@ namespace Demkin.Listen.Infrastructure.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CoverUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CoverUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SequenceNumber = table.Column<int>(type: "int", nullable: false),
                     CreateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CategoryId = table.Column<long>(type: "bigint", nullable: false),

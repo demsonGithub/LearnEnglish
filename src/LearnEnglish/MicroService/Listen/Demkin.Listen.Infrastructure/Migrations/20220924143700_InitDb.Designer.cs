@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Demkin.Listen.Infrastructure.Migrations
 {
     [DbContext(typeof(ListenDbContext))]
-    [Migration("20220924062059_InitDb")]
+    [Migration("20220924143700_InitDb")]
     partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,7 +33,6 @@ namespace Demkin.Listen.Infrastructure.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("CoverUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreateTime")

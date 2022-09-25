@@ -13,7 +13,7 @@ export function filterPermissionRoute(
   const arrResult: RouteRecordRawExt[] = []
 
   permissionRoutes.forEach(item => {
-    let temp = { ...item }
+    const temp = { ...item }
     temp.children = []
 
     if (hasPermission(currentRoles, item.meta.roles)) {
@@ -29,11 +29,13 @@ export function filterPermissionRoute(
 }
 
 function hasPermission(currentRoles: string[], needRoutes: string[]) {
-  if (typeof needRoutes === 'undefined' || needRoutes.length === 0) return true
+  if (typeof needRoutes === 'undefined' || needRoutes.length === 0) {
+    return true
+  }
 
   let result = false
-  let cRoutes = new Set(currentRoles)
-  let nRoutes = new Set(needRoutes)
+  const cRoutes = new Set(currentRoles)
+  const nRoutes = new Set(needRoutes)
   try {
     cRoutes.forEach(item => {
       if (nRoutes.has(item)) {

@@ -15,4 +15,5 @@ module.exports = {
   ],
   arrowParens: 'avoid', //单参数箭头函数参数周围使用圆括号-eg: (x) => x
   htmlWhitespaceSensitivity: 'ignore',
+  endOfLine: 'auto',
 }

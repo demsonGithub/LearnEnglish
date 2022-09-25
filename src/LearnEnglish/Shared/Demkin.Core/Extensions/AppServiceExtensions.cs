@@ -86,6 +86,12 @@ namespace Demkin.Core.Extensions
 
             #endregion MediatoR
 
+            #region AutoMapper
+
+            services.AddAutoMapper(assemblies);
+
+            #endregion AutoMapper
+
             #region Cors
 
             builder.Services.AddCors(options =>

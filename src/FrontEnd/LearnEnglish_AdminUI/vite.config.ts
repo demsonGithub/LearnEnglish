@@ -72,9 +72,21 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 8080,
     https: false,
-    proxy: {},
+    proxy: {
+      '/User': {
+        target: 'http://localhost:8081',
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/User/, ''),
+      },
+      '/Category': {
+        target: 'http://localhost:8083',
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/Category/, ''),
+      },
+    },
   },
   build: {
+    minify: 'terser',
     terserOptions: {
       compress: {
         drop_debugger: true,

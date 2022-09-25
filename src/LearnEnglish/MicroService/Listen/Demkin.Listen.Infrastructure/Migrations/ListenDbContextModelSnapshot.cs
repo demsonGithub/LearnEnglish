@@ -31,7 +31,6 @@ namespace Demkin.Listen.Infrastructure.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("CoverUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreateTime")

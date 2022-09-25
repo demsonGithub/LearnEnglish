@@ -14,7 +14,7 @@ namespace Demkin.Listen.Domain.AggregateModels
 
         public string Title { get; private set; }
 
-        public Uri CoverUrl { get; private set; }
+        public Uri? CoverUrl { get; private set; }
 
         public int SequenceNumber { get; private set; }
 
@@ -24,7 +24,7 @@ namespace Demkin.Listen.Domain.AggregateModels
 
         public bool IsVisible { get; private set; }
 
-        public Album(string title, Uri coverUrl, int sequenceNumber, long categoryId)
+        public Album(string title, Uri? coverUrl, int sequenceNumber, long categoryId)
         {
             Id = IdGenerateHelper.Instance.GenerateId();
             Title = title;
