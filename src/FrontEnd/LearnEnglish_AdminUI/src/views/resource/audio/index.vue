@@ -4,6 +4,7 @@
   </div>
   <div>
     <el-table :data="categoryData">
+      <el-table-column label="Id" prop="id"></el-table-column>
       <el-table-column label="名称" prop="title"></el-table-column>
       <el-table-column
         label="序号"
@@ -28,8 +29,9 @@
   </div>
 
   <edit-category
-    :dialogEditCategoryVisible="dialogVisible"
+    :dialog-visible="dialogVisible"
     :title="dialogTitle"
+    :edit-obj="modifyCategory"
     @submit-add-category="submitAddCategory"
     @close-dialog="closeDialog"
   ></edit-category>
@@ -44,6 +46,7 @@ import EditCategory from './components/EditCategory.vue'
 import { IEditCategoryOption } from './components/typing'
 
 interface Category {
+  id: string
   title: string
   sequenceNumber: number
   createTime: Date
@@ -65,12 +68,14 @@ const queryCategoryList = async () => {
 
   result.data.forEach((item: any) => {
     const categoryObj: Category = {
+      id: item.id,
       title: item.title,
       sequenceNumber: item.sequenceNumber,
       createTime: item.createTime,
     }
     resultList.push(categoryObj)
   })
+
   categoryData.value = resultList
 }
 
@@ -78,6 +83,7 @@ const dialogVisible = ref(false)
 const dialogTitle = ref('')
 
 const AddCategoryHandler = () => {
+  modifyCategory.value = undefined
   dialogTitle.value = '新增分类'
   dialogVisible.value = true
 }
@@ -87,20 +93,29 @@ const closeDialog = () => {
 }
 
 const submitAddCategory = async (params: IEditCategoryOption) => {
-  let apiParams: IAddCategoryParams = {
+  const apiParams: IAddCategoryParams = {
     name: params.name,
     coverUrl: params.coverUrl,
     sequenceNumber: params.sequenceNum,
   }
-  var result = await categoryApi.AddCategory(apiParams)
+  const result = await categoryApi.AddCategory(apiParams)
 
   dialogVisible.value = false
 
   await queryCategoryList()
 }
 
-const editHandle = params => {
-  console.log('aa', params)
+const modifyCategory = ref<IEditCategoryOption>()
+
+const editHandle = (params: any) => {
+  const currentCategory: IEditCategoryOption = {
+    name: params.title,
+    coverUrl: params.coverUrl,
+    sequenceNum: params.sequenceNumber,
+  }
+  modifyCategory.value = currentCategory
+  dialogTitle.value = '编辑分类'
+  dialogVisible.value = true
 }
 
 onMounted(() => {

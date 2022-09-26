@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    v-model="dialogEditCategoryVisible"
+    v-model="dialogVisible"
     :title="title"
     width="30%"
     draggable
@@ -14,8 +14,6 @@
       <el-form-item label="封面地址：">
         <div class="coverUpload">
           <el-input v-model="form.coverUrl" />
-          <!-- action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" -->
-
           <el-upload
             :show-file-list="false"
             :http-request="uploadImg"
@@ -29,7 +27,11 @@
         <el-input v-model="form.sequenceNum" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="AddCategoryHandler">添加</el-button>
+        <el-button
+          type="primary"
+          @click="AddCategoryHandler"
+          v-text="btnContent"
+        ></el-button>
         <el-button @click="CancelHandler">取消</el-button>
       </el-form-item>
     </el-form>
@@ -38,24 +40,37 @@
 
 <script lang="ts" setup>
 import fileOperationApi from '@/api/fileOperation'
-import { IUploadFileParams } from '@/api/fileOperation/typing'
 import type { UploadProps, UploadRequestHandler } from 'element-plus'
-import { reactive } from 'vue'
+import { computed, reactive, watch } from 'vue'
 import { IEditCategoryOption } from './typing'
 
 interface IEditCategoryOptions {
-  dialogEditCategoryVisible: boolean
+  dialogVisible: boolean
   title: string
+  editObj?: IEditCategoryOption
 }
 
 const props = defineProps<IEditCategoryOptions>()
 const emits = defineEmits(['submitAddCategory', 'closeDialog'])
 
 const form = reactive<IEditCategoryOption>({
-  name: '',
-  coverUrl: '',
-  sequenceNum: 1,
+  name: props.editObj?.name,
+  coverUrl: props.editObj?.coverUrl,
+  sequenceNum: props.editObj?.sequenceNum,
 })
+
+watch(
+  () => props.editObj,
+  (newValue, oldValue) => {
+    form.name = newValue?.name
+    form.coverUrl = newValue?.coverUrl
+    form.sequenceNum = newValue?.sequenceNum
+  }
+)
+
+const btnContent = computed(() =>
+  typeof props.editObj === 'undefined' ? '新增' : '修改'
+)
 
 const AddCategoryHandler = () => {
   emits('submitAddCategory', form)
@@ -66,25 +81,20 @@ const CancelHandler = () => {
 }
 
 const uploadImg = async (params: any): Promise<UploadRequestHandler> => {
-  console.log('222', params)
-  let formData = new FormData()
+  const formData = new FormData()
   formData.append('file', params.file)
 
-  let apiParams: IUploadFileParams = {
-    file: formData,
-  }
+  const result = await fileOperationApi.uploadFile(formData)
 
-  var result = await fileOperationApi.uploadFile(apiParams)
-
-  console.log('333', result)
-
-  return result
+  return result.data
 }
 
 const uploadSuccessHandle: UploadProps['onSuccess'] = (
   response,
   uploadFile
-) => {}
+) => {
+  form.coverUrl = response.remoteUrl
+}
 </script>
 <style lang="scss" scope>
 .coverUpload {

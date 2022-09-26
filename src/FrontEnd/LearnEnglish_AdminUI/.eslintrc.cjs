@@ -39,6 +39,8 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     'prettier/prettier': 'warn',
     'vue/valid-template-root': ['off'],
+    'vue/no-mutating-props': ['off'],
+    'vue/no-v-text-v-html-on-component': ['off'],
     // 添加组件命名忽略规则
     'vue/multi-word-component-names': ['off'],
     // 组件命名驼峰规则

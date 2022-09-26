@@ -41,9 +41,10 @@
             long fileSize = stream.Length;
 
             // 判断文件是否存在
-            var oldFileInfo = await _uploadFileInfoRepository.FindFileAsync(fileSize, hash);
-            if (oldFileInfo != null)
-                throw new DomainException("已存在相同的文件");
+
+            //var oldFileInfo = await _uploadFileInfoRepository.FindFileAsync(fileSize, hash);
+            //if (oldFileInfo != null)
+            //    throw new DomainException("已存在相同的文件");
 
             DateTime today = DateTime.Today;
 

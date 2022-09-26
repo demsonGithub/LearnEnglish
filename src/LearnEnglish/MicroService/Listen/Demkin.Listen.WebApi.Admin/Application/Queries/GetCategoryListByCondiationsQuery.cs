@@ -24,6 +24,7 @@ namespace Demkin.Listen.WebApi.Admin.Application.Queries
 
             var viewEntity = (result.Select(x => new CategoryViewModel
             {
+                Id = x.Id,
                 Title = x.Title,
                 CoverUrl = x.CoverUrl == null ? "" : x.CoverUrl.ToString(),
                 SequenceNumber = x.SequenceNumber,

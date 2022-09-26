@@ -2,6 +2,8 @@
 {
     public class CategoryViewModel
     {
+        public long Id { get; set; }
+
         public string Title { get; set; }
 
         public string CoverUrl { get; set; }

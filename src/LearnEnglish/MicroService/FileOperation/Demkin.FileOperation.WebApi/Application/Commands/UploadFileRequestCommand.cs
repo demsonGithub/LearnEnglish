@@ -21,6 +21,12 @@
             var file = request.File;
             string fileName = file.FileName;
             using Stream stream = file.OpenReadStream();
+
+            var isExistFileInfo = await _domainService.FindFileAsync(stream);
+            if (isExistFileInfo != null)
+            {
+                return isExistFileInfo;
+            }
             // 上传文件
             var uploadfileInfo = await _domainService.UploadFileAsync(fileName, stream, cancellationToken);
 
