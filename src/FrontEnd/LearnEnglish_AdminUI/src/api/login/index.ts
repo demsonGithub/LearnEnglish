@@ -6,7 +6,7 @@ const loginApi: IService.ILoginApi = {
     const result = await request({
       method: 'post',
       url: '/api/User/LoginByAccountPassword',
-      baseURL: '/User',
+      baseURL: '/System',
       data: params,
     })
 

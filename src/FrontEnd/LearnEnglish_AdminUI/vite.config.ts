@@ -16,6 +16,28 @@ export default defineConfig({
     },
     extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json'],
   },
+  server: {
+    host: '0.0.0.0',
+    port: 8080,
+    https: false,
+    proxy: {
+      '/System': {
+        target: 'http://localhost:8081',
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/System/, ''),
+      },
+      '/Listen': {
+        target: 'http://localhost:8083',
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/Listen/, ''),
+      },
+      '/FileOperation': {
+        target: 'http://localhost:8082',
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/FileOperation/, ''),
+      },
+    },
+  },
   plugins: [
     vue(),
     viteCompression({
@@ -68,23 +90,7 @@ export default defineConfig({
       ],
     },
   },
-  server: {
-    host: '0.0.0.0',
-    port: 8080,
-    https: false,
-    proxy: {
-      '/User': {
-        target: 'http://localhost:8081',
-        changeOrigin: true,
-        rewrite: path => path.replace(/^\/User/, ''),
-      },
-      '/Category': {
-        target: 'http://localhost:8083',
-        changeOrigin: true,
-        rewrite: path => path.replace(/^\/Category/, ''),
-      },
-    },
-  },
+
   build: {
     minify: 'terser',
     terserOptions: {

@@ -8,8 +8,20 @@ const categoryApi: IService.ICategoryApi = {
     const result = await request({
       method: 'get',
       url: '/api/Category/GetCategoryListByCondiations',
-      baseURL: '/Category',
+      baseURL: '/Listen',
       params: params,
+    })
+
+    return result.data
+  },
+  AddCategory: async function (
+    params: IService.IAddCategoryParams
+  ): Promise<apiResult> {
+    const result = await request({
+      method: 'post',
+      url: '/api/Category/AddCategory',
+      baseURL: '/Listen',
+      data: params,
     })
 
     return result.data

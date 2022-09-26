@@ -63,15 +63,15 @@ const asyncRoutes: RouteRecordRawExt[] = [
   {
     path: '/资源管理',
     component: Layout,
-    redirect: '/resource/sound',
+    redirect: '/resource/audio',
     name: 'resource',
     meta: { title: '资源管理', icon: 'resource' },
     children: [
       {
-        path: '/resource/sound',
-        name: 'sound',
-        component: () => import('@/views/resource/sound/index.vue'),
-        meta: { title: '听力管理', icon: 'sound', roles: ['admin'] },
+        path: '/resource/audio',
+        name: 'audio',
+        component: () => import('@/views/resource/audio/index.vue'),
+        meta: { title: '听力管理', icon: 'audio', roles: ['admin'] },
       },
     ],
   },
