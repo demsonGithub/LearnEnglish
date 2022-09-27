@@ -21,6 +21,14 @@ namespace Demkin.Listen.WebApi.Admin.Controllers
             return result;
         }
 
+        [HttpPost]
+        public async Task<ApiResult<string>> UpdateCategory([FromBody] UpdateCategoryCommand command)
+        {
+            var result = await _mediator.Send(command, HttpContext.RequestAborted);
+
+            return result ? ApiResultBuilder.Success() : ApiResultBuilder.Fail();
+        }
+
         [HttpGet]
         public async Task<ApiResult<List<CategoryViewModel>>> GetCategoryListByCondiations([FromQuery] GetCategoryListByCondiationsQuery query)
         {

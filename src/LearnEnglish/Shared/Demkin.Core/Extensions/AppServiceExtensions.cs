@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
 using Demkin.Core.Filters;
 using Demkin.Core.Jwt;
@@ -28,16 +29,6 @@ namespace Demkin.Core.Extensions
             services.AddHttpContextAccessor();
 
             services.AddDbContext<T>();
-
-            #region Autofac添加依赖注册
-
-            builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-            builder.Host.ConfigureContainer<ContainerBuilder>((hostContext, autofacBuilder) =>
-            {
-                autofacBuilder.RegisterModule(new AutofacModuleRegister());
-            });
-
-            #endregion Autofac添加依赖注册
 
             #region 各服务Options配置
 
@@ -86,6 +77,35 @@ namespace Demkin.Core.Extensions
 
             #endregion MediatoR
 
+            #region CAP+RabbitMQ
+
+            services.AddTransient<IMediator, Mediator>();
+
+            services.AddCap(options =>
+            {
+                string connectionString = "server=192.168.0.182;uid=sa;pwd=abc123#;database=LearnEnglish_CAP;";
+                options.UseSqlServer(connectionString);
+                options.UseRabbitMQ(mq =>
+                {
+                    // 绑定RabbitMQ的hostname,port,username,password
+                    mq.HostName = "192.168.0.182";
+                    mq.Port = 5672;
+                    mq.UserName = "admin";
+                    mq.Password = "admin";
+                });
+                options.UseDashboard(); // 添加仪表盘 访问地址: http://localhost/cap
+
+                options.FailedRetryInterval = 30; // 失败后重拾间隔，默认60s
+                options.FailedRetryCount = 10; // 失败后重试次数，默认50
+                options.FailedThresholdCallback = info =>
+                {
+                    Log.Error($"Publish Message Error：{info.Message}");
+                };
+                options.SucceedMessageExpiredAfter = 60 * 60; //设置成功信息的删除时间默认24*3600秒
+            });
+
+            #endregion CAP+RabbitMQ
+
             #region AutoMapper
 
             services.AddAutoMapper(assemblies);
@@ -111,6 +131,16 @@ namespace Demkin.Core.Extensions
             });
 
             #endregion Cors
+
+            #region Autofac添加依赖注册
+
+            builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+            builder.Host.ConfigureContainer<ContainerBuilder>((hostContext, autofacBuilder) =>
+            {
+                autofacBuilder.RegisterModule(new AutofacModuleRegister(assemblies));
+            });
+
+            #endregion Autofac添加依赖注册
         }
     }
 }

@@ -1,4 +1,5 @@
 using Demkin.Infrastructure.Core;
+using Demkin.Listen.WebApi.Admin.Application.IntegrationEvents;
 using Microsoft.EntityFrameworkCore;
 
 string logFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
@@ -18,6 +19,7 @@ try
     builder.Services.AddSwaggerGen();
 
     builder.InitConfigureDefaultServices<ListenDbContext>();
+    builder.Services.AddTransient<ISubscriberService, SubscriberService>();
 
     var app = builder.Build();
 

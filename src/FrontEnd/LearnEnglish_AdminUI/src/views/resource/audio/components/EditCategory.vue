@@ -18,8 +18,9 @@
             :show-file-list="false"
             :http-request="uploadImg"
             :on-success="uploadSuccessHandle"
+            :on-error="uploadError"
           >
-            <el-button>选择图片</el-button>
+            <el-button>上传图片</el-button>
           </el-upload>
         </div>
       </el-form-item>
@@ -40,7 +41,11 @@
 
 <script lang="ts" setup>
 import fileOperationApi from '@/api/fileOperation'
-import type { UploadProps, UploadRequestHandler } from 'element-plus'
+import type {
+  UploadFile,
+  UploadProps,
+  UploadRequestHandler,
+} from 'element-plus'
 import { computed, reactive, watch } from 'vue'
 import { IEditCategoryOption } from './typing'
 
@@ -95,6 +100,8 @@ const uploadSuccessHandle: UploadProps['onSuccess'] = (
 ) => {
   form.coverUrl = response.remoteUrl
 }
+
+const uploadError = (error: Error, uploadFile: UploadFile) => {}
 </script>
 <style lang="scss" scope>
 .coverUpload {

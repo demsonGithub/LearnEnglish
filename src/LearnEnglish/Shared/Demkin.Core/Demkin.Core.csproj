@@ -10,6 +10,10 @@
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="DotNetCore.CAP" Version="6.2.0" />
+    <PackageReference Include="DotNetCore.CAP.Dashboard" Version="6.2.0" />
+    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="6.2.0" />
+    <PackageReference Include="DotNetCore.CAP.SqlServer" Version="6.2.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.9" />

@@ -12,7 +12,6 @@
     "Demkin.Listen.WebApi": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": true,
       "launchUrl": "api",
       "applicationUrl": "http://localhost:8083",
       "environmentVariables": {

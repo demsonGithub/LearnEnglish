@@ -6,6 +6,7 @@ global using MediatR;
 global using AutoMapper;
 global using Demkin.Core;
 global using Demkin.Core.Exceptions;
+global using Demkin.Domain.Abstraction;
 
 // domain
 global using Demkin.Listen.Domain;

@@ -2,9 +2,16 @@
 {
     public class UploadFileDomainEventHandle : IDomainEventHandler<UploadFileDomainEvent>
     {
+        private readonly ILogger<UploadFileDomainEventHandle> _logger;
+
+        public UploadFileDomainEventHandle(ILogger<UploadFileDomainEventHandle> logger)
+        {
+            _logger = logger;
+        }
+
         public Task Handle(UploadFileDomainEvent notification, CancellationToken cancellationToken)
         {
-            Console.WriteLine($"上传了一个文件");
+            _logger.LogInformation($"成功上传了{notification.UploadItem.FileName}");
 
             return Task.CompletedTask;
         }

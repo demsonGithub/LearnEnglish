@@ -23,5 +23,21 @@
 
             this.AddDomainEvent(new CategoryCreateDomainEvent(this));
         }
+
+        public void ChangeTitle(string targetValue)
+        {
+            Title = targetValue;
+            AddDomainEvent(new ChangeTitleDomainEvent(this));
+        }
+
+        public void ChangeCoverUrl(string targetValue)
+        {
+            CoverUrl = new Uri(targetValue);
+        }
+
+        public void ChangeSequenceNumber(int targetValue)
+        {
+            SequenceNumber = targetValue;
+        }
     }
 }

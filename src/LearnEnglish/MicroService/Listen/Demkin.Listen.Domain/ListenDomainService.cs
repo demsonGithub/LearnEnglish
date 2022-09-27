@@ -31,6 +31,12 @@ namespace Demkin.Listen.Domain
             return category;
         }
 
+        public async Task<Category> GetCategoryById(long id)
+        {
+            var entity = await _categoryRepository.FindAsync(id);
+            return entity;
+        }
+
         public async Task<List<Category>> GetCategoryList(string title)
         {
             IEnumerable<Category> result;

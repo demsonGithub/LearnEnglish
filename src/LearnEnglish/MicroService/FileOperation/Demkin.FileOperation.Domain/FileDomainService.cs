@@ -16,14 +16,10 @@
         /// </summary>
         /// <param name="stream"></param>
         /// <returns></returns>
-        public async Task<UploadFileInfo> FindFileAsync(Stream stream)
+        public async Task<UploadFileInfo> FindFileAsync(long fileSize, string hash256)
         {
-            // 创建文件的hash值
-            var hash = HashHelper.ComputeSha256Hash(stream);
-            long fileSize = stream.Length;
-
             // 判断数据库中是否存在文件
-            var oldFileInfo = await _uploadFileInfoRepository.FindFileAsync(fileSize, hash);
+            var oldFileInfo = await _uploadFileInfoRepository.FindFileAsync(fileSize, hash256);
             return oldFileInfo;
         }
 
@@ -34,17 +30,20 @@
         /// <param name="stream"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<UploadFileInfo> UploadFileAsync(string fileName, Stream stream, CancellationToken cancellationToken)
+        public async Task<(UploadFileInfo uploadFileInfo, bool isOldData)> UploadFileAsync(string fileName, Stream stream, CancellationToken cancellationToken)
+
         {
             // 创建文件的hash值
+
             var hash = HashHelper.ComputeSha256Hash(stream);
+
             long fileSize = stream.Length;
 
             // 判断文件是否存在
 
-            //var oldFileInfo = await _uploadFileInfoRepository.FindFileAsync(fileSize, hash);
-            //if (oldFileInfo != null)
-            //    throw new DomainException("已存在相同的文件");
+            var oldFileInfo = await FindFileAsync(fileSize, hash);
+            if (oldFileInfo != null)
+                return (oldFileInfo, true);
 
             DateTime today = DateTime.Today;
 
@@ -55,11 +54,12 @@
 
             // 上传文件,领域层不操作数据库所以返回实体对象，由应用层添加保存数据库
             Uri remoteUrl = await _storageFile.SaveFileAsync(key, stream, cancellationToken);
+
             stream.Position = 0;
 
             UploadFileInfo uploadFileInfo = new UploadFileInfo(fileName, fileSize, hash, remoteUrl, null);
 
-            return uploadFileInfo;
+            return (uploadFileInfo, false);
         }
     }
 }
