@@ -1,13 +1,14 @@
 import router from './router/index'
 import Nprogress from 'nprogress'
 import { getCookie } from './utils/jsCookie'
-import { tokenKey, whiteList } from './constant'
 import { useAuthStore } from './store/modules/authStore'
 import { appendRoutes } from './utils/routerHelper'
+import { Constant } from './constant'
+
 router.beforeEach(async (to, from, next) => {
   Nprogress.start()
 
-  if (getCookie(tokenKey)) {
+  if (getCookie(Constant.tokenKey)) {
     if (to.path === '/login') {
       next()
     } else {
@@ -34,7 +35,7 @@ router.beforeEach(async (to, from, next) => {
         }
       }
     }
-  } else if (whiteList.indexOf(to.path) !== -1) {
+  } else if (Constant.whiteList.indexOf(to.path) !== -1) {
     // 在免登录白名单，直接进入
     next()
   } else {

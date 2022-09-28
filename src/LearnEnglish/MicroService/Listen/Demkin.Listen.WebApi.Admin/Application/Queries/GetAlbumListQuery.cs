@@ -4,6 +4,8 @@ namespace Demkin.Listen.WebApi.Admin.Application.Queries
 {
     public class GetAlbumListQuery : IRequest<ApiResult<List<AlbumDetailViewModel>>>
     {
+        public long CategoryId { get; set; }
+
         public string? Title { get; set; }
     }
 
@@ -20,7 +22,7 @@ namespace Demkin.Listen.WebApi.Admin.Application.Queries
 
         public async Task<ApiResult<List<AlbumDetailViewModel>>> Handle(GetAlbumListQuery request, CancellationToken cancellationToken)
         {
-            var albums = await _domainService.GetAlbumList(request.Title);
+            var albums = await _domainService.GetAlbumList(request.CategoryId, request.Title);
 
             var result = _mapper.Map<List<AlbumDetailViewModel>>(albums);
 

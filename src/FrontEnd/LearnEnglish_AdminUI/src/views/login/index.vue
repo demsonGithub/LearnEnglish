@@ -59,9 +59,8 @@
 </template>
 <script lang="ts" setup name="login">
 import loginApi from '@/api/login'
-import { ILoginParams } from '@/api/login/typing'
 import { apiResultCode } from '@/api/request'
-import Constant from '@/utils/constant'
+import { Constant } from '@/constant'
 import { setCookie } from '@/utils/jsCookie'
 import { IVerifyCodeOptions, verifyType, VerifyCode } from '@/utils/verifyCode'
 import { FormInstance, ElMessage } from 'element-plus'

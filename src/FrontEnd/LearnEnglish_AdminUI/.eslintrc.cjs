@@ -45,6 +45,8 @@ module.exports = {
     'vue/multi-word-component-names': ['off'],
     // 组件命名驼峰规则
     // 'vue/component-definition-name-casing': ['off'],
+
+    'no-undef': 'off',
     // 禁止出现console
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     // 禁用debugger

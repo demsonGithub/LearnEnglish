@@ -1,19 +1,20 @@
 <template>
   <el-dialog
     v-model="dialogVisible"
-    :title="title"
-    width="30%"
+    :title="editData === null ? '新增分类' : '修改分类'"
+    width="50%"
     draggable
-    :before-close="CancelHandler"
-    :show-close="false"
+    :close-on-click-modal="false"
+    :show-close="true"
+    @close="handleCancel"
   >
     <el-form :model="form" label-width="120px">
       <el-form-item label="分类名称：">
-        <el-input v-model="form.name" />
+        <el-input v-model="form.title" />
       </el-form-item>
       <el-form-item label="封面地址：">
         <div class="coverUpload">
-          <el-input v-model="form.coverUrl" />
+          <el-input v-model="form.coverUrl" :readonly="true" />
           <el-upload
             :show-file-list="false"
             :http-request="uploadImg"
@@ -25,15 +26,20 @@
         </div>
       </el-form-item>
       <el-form-item label="排序编号：">
-        <el-input v-model="form.sequenceNum" />
+        <el-input
+          v-model="form.sequenceNumber"
+          type="number"
+          min="1"
+          max="99"
+        />
       </el-form-item>
       <el-form-item>
         <el-button
           type="primary"
-          @click="AddCategoryHandler"
-          v-text="btnContent"
+          @click="handleSubmit"
+          v-text="editData === null ? '添加' : '修改'"
         ></el-button>
-        <el-button @click="CancelHandler">取消</el-button>
+        <el-button @click="handleCancel">取消</el-button>
       </el-form-item>
     </el-form>
   </el-dialog>
@@ -46,45 +52,49 @@ import type {
   UploadProps,
   UploadRequestHandler,
 } from 'element-plus'
-import { computed, reactive, watch } from 'vue'
-import { IEditCategoryOption } from './typing'
+import { ref, watch } from 'vue'
 
-interface IEditCategoryOptions {
-  dialogVisible: boolean
+export interface IEditCategoryOptions {
+  id?: string
   title: string
-  editObj?: IEditCategoryOption
+  coverUrl: string
+  sequenceNumber: number
 }
 
-const props = defineProps<IEditCategoryOptions>()
-const emits = defineEmits(['submitAddCategory', 'closeDialog'])
+interface IDialogCategoryProps {
+  dialogVisible: boolean
+  editData?: IEditCategoryOptions
+}
 
-const form = reactive<IEditCategoryOption>({
-  name: props.editObj?.name,
-  coverUrl: props.editObj?.coverUrl,
-  sequenceNum: props.editObj?.sequenceNum,
-})
+const props = defineProps<IDialogCategoryProps>()
+const emits = defineEmits(['closeDialog', 'handleEditCategory'])
+
+const form = ref<IEditCategoryOptions>()
 
 watch(
-  () => props.editObj,
-  (newValue, oldValue) => {
-    form.name = newValue?.name
-    form.coverUrl = newValue?.coverUrl
-    form.sequenceNum = newValue?.sequenceNum
+  () => props.editData,
+  () => {
+    if (props.editData == null) {
+      form.value = {
+        title: '',
+        coverUrl: '',
+        sequenceNumber: null,
+      }
+    } else {
+      form.value = props.editData
+    }
   }
 )
 
-const btnContent = computed(() =>
-  typeof props.editObj === 'undefined' ? '新增' : '修改'
-)
-
-const AddCategoryHandler = () => {
-  emits('submitAddCategory', form)
-}
-
-const CancelHandler = () => {
+const handleCancel = () => {
   emits('closeDialog')
 }
 
+const handleSubmit = () => {
+  emits('handleEditCategory', form.value)
+}
+
+//#region 处理上传图片
 const uploadImg = async (params: any): Promise<UploadRequestHandler> => {
   const formData = new FormData()
   formData.append('file', params.file)
@@ -98,10 +108,11 @@ const uploadSuccessHandle: UploadProps['onSuccess'] = (
   response,
   uploadFile
 ) => {
-  form.coverUrl = response.remoteUrl
+  form.value.coverUrl = response.remoteUrl
 }
 
 const uploadError = (error: Error, uploadFile: UploadFile) => {}
+//#endregion
 </script>
 <style lang="scss" scope>
 .coverUpload {

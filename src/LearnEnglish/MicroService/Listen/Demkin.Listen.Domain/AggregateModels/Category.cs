@@ -32,6 +32,10 @@
 
         public void ChangeCoverUrl(string targetValue)
         {
+            if (string.IsNullOrEmpty(targetValue)) { 
+                CoverUrl = null;
+                return; 
+            }
             CoverUrl = new Uri(targetValue);
         }
 

@@ -71,17 +71,17 @@ namespace Demkin.Listen.Domain
             return album;
         }
 
-        public async Task<List<Album>> GetAlbumList(string title)
+        public async Task<List<Album>> GetAlbumList(long categoryId, string title)
         {
             IEnumerable<Album> result;
 
             if (string.IsNullOrWhiteSpace(title))
             {
-                result = await _albumRepository.FindListAsync(item => true);
+                result = await _albumRepository.FindListAsync(item => item.CategoryId == categoryId);
             }
             else
             {
-                result = await _albumRepository.FindListAsync(item => item.Title.Contains(title));
+                result = await _albumRepository.FindListAsync(item => item.CategoryId == categoryId && item.Title.Contains(title));
             }
 
             return result.ToList();

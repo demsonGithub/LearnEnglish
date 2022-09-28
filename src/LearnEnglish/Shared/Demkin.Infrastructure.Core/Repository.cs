@@ -119,7 +119,9 @@ namespace Demkin.Infrastructure.Core
 
         public virtual async Task<TEntity> FindAsync(TKey id, CancellationToken cancellationToken = default)
         {
-            var entity = await Db.FindAsync<TEntity>(id, cancellationToken);
+            //var entity = await Db.FindAsync<TEntity>(id, cancellationToken);
+
+            var entity = await Db.FindAsync<TEntity>(new object[] { id }, cancellationToken);
 
             return entity;
         }

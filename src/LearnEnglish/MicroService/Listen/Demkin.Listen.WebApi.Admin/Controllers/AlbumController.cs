@@ -15,7 +15,7 @@ namespace Demkin.Listen.WebApi.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<ApiResult<List<AlbumDetailViewModel>>> GetAlbumList([FromBody] GetAlbumListQuery query)
+        public async Task<ApiResult<List<AlbumDetailViewModel>>> GetAlbumList([FromQuery] GetAlbumListQuery query)
         {
             return await _mediator.Send(query, HttpContext.RequestAborted);
         }

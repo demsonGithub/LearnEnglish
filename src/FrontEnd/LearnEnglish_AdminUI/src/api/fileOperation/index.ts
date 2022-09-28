@@ -1,7 +1,6 @@
 import { apiResult, request } from '../request'
-import { IFileOperationApi } from './typing'
 
-const fileOperationApi: IFileOperationApi = {
+const fileOperationApi = {
   uploadFile: async function (params: FormData): Promise<apiResult> {
     const result = await request({
       method: 'post',

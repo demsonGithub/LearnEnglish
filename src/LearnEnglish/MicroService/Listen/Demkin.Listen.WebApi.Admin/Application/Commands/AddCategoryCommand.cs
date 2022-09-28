@@ -2,7 +2,7 @@
 {
     public class AddCategoryCommand : IRequest<ApiResult<string>>
     {
-        public string Name { get; set; }
+        public string Title { get; set; }
 
         public string? CoverUrl { get; set; }
 
@@ -22,7 +22,7 @@
 
         public async Task<ApiResult<string>> Handle(AddCategoryCommand request, CancellationToken cancellationToken)
         {
-            var category = await _domainService.AddNewCategory(request.Name, request.CoverUrl, request.SequenceNumber);
+            var category = await _domainService.AddNewCategory(request.Title, request.CoverUrl, request.SequenceNumber);
 
             // 添加到数据库
             var entity = await _categoryRepository.AddAsync(category);
