@@ -37,22 +37,6 @@ namespace Demkin.Listen.Domain
             return entity;
         }
 
-        public async Task<List<Category>> GetCategoryList(string title)
-        {
-            IEnumerable<Category> result;
-
-            if (string.IsNullOrWhiteSpace(title))
-            {
-                result = await _categoryRepository.SwitchSlaveDb().FindListAsync(item => true);
-            }
-            else
-            {
-                result = await _categoryRepository.SwitchSlaveDb().FindListAsync(item => item.Title.Contains(title));
-            }
-
-            return result.ToList();
-        }
-
         #endregion Category
 
         #region Album
@@ -69,22 +53,6 @@ namespace Demkin.Listen.Domain
             Album album = new Album(title, coverUrl, sequenceNum, categoryId);
 
             return album;
-        }
-
-        public async Task<List<Album>> GetAlbumList(long categoryId, string title)
-        {
-            IEnumerable<Album> result;
-
-            if (string.IsNullOrWhiteSpace(title))
-            {
-                result = await _albumRepository.FindListAsync(item => item.CategoryId == categoryId);
-            }
-            else
-            {
-                result = await _albumRepository.FindListAsync(item => item.CategoryId == categoryId && item.Title.Contains(title));
-            }
-
-            return result.ToList();
         }
 
         #endregion Album

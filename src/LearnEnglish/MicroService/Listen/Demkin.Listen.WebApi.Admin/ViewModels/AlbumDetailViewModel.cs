@@ -8,6 +8,8 @@
 
         public string CoverUrl { get; set; }
 
+        public string CategoryName { get; set; }
+
         public DateTime CreateTime { get; set; }
     }
 }

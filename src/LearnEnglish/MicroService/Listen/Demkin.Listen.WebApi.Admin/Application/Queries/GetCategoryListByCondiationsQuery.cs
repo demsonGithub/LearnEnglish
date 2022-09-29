@@ -9,29 +9,44 @@ namespace Demkin.Listen.WebApi.Admin.Application.Queries
 
     public class GetCategoryListByCondiationsQueryHandler : IRequestHandler<GetCategoryListByCondiationsQuery, ApiResult<List<CategoryViewModel>>>
     {
-        private readonly ListenDomainService _domainService;
-        private readonly ICategoryRepository _categoryRepository;
+        private readonly IMapper _mapper;
+        private readonly IMediator _mediator;
 
-        public GetCategoryListByCondiationsQueryHandler(ListenDomainService domainService, ICategoryRepository categoryRepository)
+        public GetCategoryListByCondiationsQueryHandler(IMapper mapper, IMediator mediator)
         {
-            _domainService = domainService;
-            _categoryRepository = categoryRepository;
+            _mapper = mapper;
+            _mediator = mediator;
         }
 
         public async Task<ApiResult<List<CategoryViewModel>>> Handle(GetCategoryListByCondiationsQuery request, CancellationToken cancellationToken)
         {
-            var result = await _domainService.GetCategoryList(request.Title);
+            var connectionString = "server=192.168.0.143;uid=sa;pwd=abc123#;database=LearnEnglish_Listen;";
+            var dbContext = new ListenDbContext(_mediator, connectionString);
 
-            var viewEntity = (result.Select(x => new CategoryViewModel
+            List<Category> categories = new List<Category>();
+            if (string.IsNullOrEmpty(request.Title))
             {
-                Id = x.Id,
-                Title = x.Title,
-                CoverUrl = x.CoverUrl == null ? "" : x.CoverUrl.ToString(),
-                SequenceNumber = x.SequenceNumber,
-                CreateTime = x.CreateTime,
-            })).ToList();
+                categories = dbContext.Categories.ToList();
+            }
+            else
+            {
+                categories = dbContext.Categories.Where(item => item.Title.Contains(request.Title)).ToList();
+            }
 
-            return ApiResultBuilder<List<CategoryViewModel>>.Success(viewEntity);
+            var result = _mapper.Map<List<CategoryViewModel>>(categories);
+
+            //var result = await _domainService.GetCategoryList(request.Title);
+
+            //var viewEntity = (result.Select(x => new CategoryViewModel
+            //{
+            //    Id = x.Id,
+            //    Title = x.Title,
+            //    CoverUrl = x.CoverUrl == null ? "" : x.CoverUrl.ToString(),
+            //    SequenceNumber = x.SequenceNumber,
+            //    CreateTime = x.CreateTime,
+            //})).ToList();
+
+            return ApiResultBuilder<List<CategoryViewModel>>.Success(result);
         }
     }
 }

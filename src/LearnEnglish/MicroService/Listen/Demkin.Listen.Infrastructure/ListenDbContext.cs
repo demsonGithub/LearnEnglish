@@ -19,9 +19,9 @@ namespace Demkin.Listen.Infrastructure
             _connectionStrings = connectionStrings;
         }
 
-        private DbSet<Category> Categories { get; set; }
-        private DbSet<Album> Albums { get; set; }
-        private DbSet<Audio> Audios { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Album> Albums { get; set; }
+        public DbSet<Audio> Audios { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

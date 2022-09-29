@@ -83,12 +83,12 @@ namespace Demkin.Core.Extensions
 
             services.AddCap(options =>
             {
-                string connectionString = "server=192.168.0.182;uid=sa;pwd=abc123#;database=LearnEnglish_CAP;";
+                string connectionString = "server=192.168.0.143;uid=sa;pwd=abc123#;database=LearnEnglish_CAP;";
                 options.UseSqlServer(connectionString);
                 options.UseRabbitMQ(mq =>
                 {
                     // 绑定RabbitMQ的hostname,port,username,password
-                    mq.HostName = "192.168.0.182";
+                    mq.HostName = "192.168.0.143";
                     mq.Port = 5672;
                     mq.UserName = "admin";
                     mq.Password = "admin";
