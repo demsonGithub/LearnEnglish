@@ -13,6 +13,11 @@ namespace Demkin.Infrastructure.Core
             _mediator = mediator;
         }
 
+        public MyDbContext(DbContextOptions options, IMediator mediator) : base(options)
+        {
+            _mediator = mediator;
+        }
+
         #region UnitOfWork
 
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)

@@ -9,9 +9,8 @@ namespace Demkin.Listen.Infrastructure
     {
         private readonly string _connectionStrings;
 
-        public ListenDbContext(IMediator mediator, IConfiguration configuration) : base(mediator)
+        public ListenDbContext(DbContextOptions<ListenDbContext> options, IMediator mediator) : base(options, mediator)
         {
-            _connectionStrings = configuration.GetSection("DbConnection:MasterDb").Value;
         }
 
         public ListenDbContext(IMediator mediator, string connectionStrings) : base(mediator)
@@ -25,7 +24,7 @@ namespace Demkin.Listen.Infrastructure
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
+            if (!string.IsNullOrEmpty(_connectionStrings))
             {
                 optionsBuilder.UseSqlServer(_connectionStrings);
             }

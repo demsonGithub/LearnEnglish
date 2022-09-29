@@ -7,10 +7,6 @@ namespace Demkin.Domain.Abstraction
     {
         MyDbContext Db { get; }
 
-        IRepository<TEntity> SwitchMasterDb();
-
-        IRepository<TEntity> SwitchSlaveDb();
-
         IUnitOfWork UnitOfWork { get; }
 
         Task<bool> IsExistAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);

@@ -6,8 +6,6 @@ namespace Demkin.Infrastructure.Core
 {
     public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity, IAggregateRoot
     {
-        private readonly IDbContextFactory _dbContextFactory;
-
         private MyDbContext _db;
         public MyDbContext Db => _db;
 
@@ -16,45 +14,8 @@ namespace Demkin.Infrastructure.Core
             _db = dbContext;
         }
 
-        protected Repository(IDbContextFactory dbContextFactory)
-        {
-            _dbContextFactory = dbContextFactory;
-            _db = _dbContextFactory.CreateMasterDbContext();
-        }
-
-        public IRepository<TEntity> SwitchMasterDb()
-        {
-            if (_dbContextFactory != null)
-            {
-                _db = _dbContextFactory.CreateMasterDbContext();
-            }
-            return this;
-            //return Task.CompletedTask;
-        }
-
-        public IRepository<TEntity> SwitchSlaveDb()
-        {
-            if (_dbContextFactory != null)
-            {
-                _db = _dbContextFactory.CreateSlaveDbContext();
-            }
-            return this;
-
-            //return Task.CompletedTask;
-        }
-
         // EFContext实现了IUnitOfWork
-        public IUnitOfWork UnitOfWork
-        {
-            get
-            {
-                if (_dbContextFactory != null)
-                {
-                    SwitchMasterDb();
-                }
-                return _db;
-            }
-        }
+        public IUnitOfWork UnitOfWork => _db;
 
         public virtual async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
@@ -113,14 +74,8 @@ namespace Demkin.Infrastructure.Core
         {
         }
 
-        protected Repository(IDbContextFactory dbContextFactory) : base(dbContextFactory)
-        {
-        }
-
         public virtual async Task<TEntity> FindAsync(TKey id, CancellationToken cancellationToken = default)
         {
-            //var entity = await Db.FindAsync<TEntity>(id, cancellationToken);
-
             var entity = await Db.FindAsync<TEntity>(new object[] { id }, cancellationToken);
 
             return entity;

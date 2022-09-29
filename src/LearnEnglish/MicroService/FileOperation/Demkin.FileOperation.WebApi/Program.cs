@@ -15,7 +15,7 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
-    builder.InitConfigureDefaultServices<FileDbContext>();
+    builder.InitConfigureDefaultServices();
     builder.Services.AddDbSetup(builder.Configuration.GetValue<string>("ConnectionStrings:sqlserver"));
 
     var app = builder.Build();

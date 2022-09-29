@@ -18,8 +18,12 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
-    builder.InitConfigureDefaultServices<ListenDbContext>();
+    builder.InitConfigureDefaultServices();
     builder.Services.AddTransient<ISubscriberService, SubscriberService>();
+    builder.Services.AddDbContext<ListenDbContext>(options =>
+    {
+        options.UseSqlServer(builder.Configuration.GetSection("DbConnection:MasterDb").Value);
+    });
 
     var app = builder.Build();
 

@@ -18,7 +18,7 @@ namespace Demkin.Core.Extensions
 {
     public static class AppServiceExtensions
     {
-        public static void InitConfigureDefaultServices<T>(this WebApplicationBuilder builder) where T : DbContext
+        public static void InitConfigureDefaultServices(this WebApplicationBuilder builder)
         {
             IServiceCollection services = builder.Services;
             IConfiguration configuration = builder.Configuration;
@@ -27,8 +27,6 @@ namespace Demkin.Core.Extensions
             var assemblies = ReflectionHelper.GetAllReferencedAssemblies();
 
             services.AddHttpContextAccessor();
-
-            services.AddDbContext<T>();
 
             #region 各服务Options配置
 
@@ -83,12 +81,12 @@ namespace Demkin.Core.Extensions
 
             services.AddCap(options =>
             {
-                string connectionString = "server=192.168.0.143;uid=sa;pwd=abc123#;database=LearnEnglish_CAP;";
+                string connectionString = "server=192.168.1.7;uid=sa;pwd=abc123#;database=LearnEnglish_CAP;";
                 options.UseSqlServer(connectionString);
                 options.UseRabbitMQ(mq =>
                 {
                     // 绑定RabbitMQ的hostname,port,username,password
-                    mq.HostName = "192.168.0.143";
+                    mq.HostName = "192.168.1.7";
                     mq.Port = 5672;
                     mq.UserName = "admin";
                     mq.Password = "admin";
