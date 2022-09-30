@@ -49,6 +49,24 @@ const albumApi = {
 
     return result.data
   },
+  addAlbum: async function (params: IAddAlbumParams): Promise<apiResult> {
+    const result = await request({
+      method: 'post',
+      url: '/api/Album/AddNewAlbum',
+      baseURL: '/Listen',
+      data: params,
+    })
+    return result.data
+  },
+  updateAlbum: async function (params: IUpdateAlbumParams): Promise<apiResult> {
+    const result = await request({
+      method: 'post',
+      url: '/api/Album/UpdateAlbum',
+      baseURL: '/Listen',
+      data: params,
+    })
+    return result.data
+  },
 }
 
 export { categoryApi, albumApi }

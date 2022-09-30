@@ -84,6 +84,17 @@ const asyncRoutes: RouteRecordRawExt[] = [
           roles: ['admin'],
         },
       },
+      {
+        path: '/audio/episode',
+        name: 'episode',
+        component: () => import('@/views/audio/episode/index.vue'),
+        meta: {
+          title: '音频管理',
+          icon: 'episode',
+          hidden: true,
+          roles: ['admin'],
+        },
+      },
     ],
   },
 ]

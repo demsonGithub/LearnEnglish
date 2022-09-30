@@ -44,12 +44,12 @@
 
 <script lang="ts" setup name="sound">
 import { apiResultCode } from '@/api/request'
-import { categoryApi } from '@/api/resource'
 import { onMounted, ref } from 'vue'
 import { IEditCategoryOptions } from './components/DialogCategory.vue'
 import EditCategory from './components/DialogCategory.vue'
 import { useRouter } from 'vue-router'
 import { useParamStore } from '@/store/modules/paramStore'
+import { categoryApi } from '@/api/audio'
 
 //#region  接口定义
 interface ICategory {
@@ -63,7 +63,7 @@ interface ICategory {
 //#endregion
 
 const router = useRouter()
-const paramsStore = useParamStore()
+const store = useParamStore()
 
 //#region 查询
 const categoryData = ref<ICategory[]>([])
@@ -157,9 +157,8 @@ const handleUpdateSubmit = async (params: IEditCategoryOptions) => {
 const handleManageAlbum = (row: ICategory) => {
   const params = {
     categoryId: row.id,
-    aaa: '123',
   }
-  paramsStore.setParams(params)
+  store.setParams(params)
   router.push({ name: 'album' })
 }
 //#endregion

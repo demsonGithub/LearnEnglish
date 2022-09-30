@@ -32,4 +32,17 @@ declare interface IQueryAlbumParams {
   title: string
 }
 
+declare interface IAddAlbumParams {
+  title: string
+  coverUrl?: string
+  sequenceNumber: number
+  categoryId: string
+}
+
+declare interface IUpdateAlbumParams {
+  id: string
+  title: string
+  coverUrl: string
+  sequenceNumber: number
+}
 //#endregion

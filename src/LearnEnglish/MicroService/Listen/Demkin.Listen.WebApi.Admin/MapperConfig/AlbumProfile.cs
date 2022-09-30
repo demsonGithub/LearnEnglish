@@ -6,9 +6,9 @@ namespace Demkin.Listen.WebApi.Admin.MapperConfig
     {
         public AlbumProfile()
         {
-            CreateMap<Album, AlbumDetailViewModel>();
+            CreateMap<Album, AlbumDetailDto>();
 
-            CreateMap<AlbumDetailViewModel, Album>();
+            CreateMap<AlbumDetailDto, Album>();
         }
     }
 }

@@ -15,17 +15,25 @@ namespace Demkin.Listen.WebApi.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<ApiResult<List<AlbumDetailViewModel>>> GetAlbumList([FromQuery] GetAlbumListQuery query)
+        public async Task<ApiResult<List<AlbumDetailDto>>> GetAlbumList([FromQuery] GetAlbumListQuery query)
         {
             return await _mediator.Send(query, HttpContext.RequestAborted);
         }
 
         [HttpPost]
-        public async Task<ApiResult<AlbumDetailViewModel>> AddNewAlbum([FromBody] AddNewAlbumCommand command)
+        public async Task<ApiResult<AlbumDetailDto>> AddNewAlbum([FromBody] AddNewAlbumCommand command)
         {
             var result = await _mediator.Send(command, HttpContext.RequestAborted);
 
-            return ApiResultBuilder<AlbumDetailViewModel>.Success(result);
+            return ApiResultBuilder<AlbumDetailDto>.Success(result);
+        }
+
+        [HttpPost]
+        public async Task<ApiResult<string>> UpdateAlbum([FromBody] UpdateAlbumCommand command)
+        {
+            var result = await _mediator.Send(command, HttpContext.RequestAborted);
+
+            return result ? ApiResultBuilder.Success() : ApiResultBuilder.Fail();
         }
     }
 }

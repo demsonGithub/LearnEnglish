@@ -8,21 +8,23 @@ namespace Demkin.Listen.Infrastructure
     public class DbContextFactory : IDbContextFactory<ListenDbContext>, IDenpendencySingleton
     {
         private readonly IMediator _mediator;
-
         private readonly List<string> _dbConnectionStrings;
 
         public DbContextFactory(IMediator mediator, IConfiguration configuration)
         {
-            _dbConnectionStrings = GetAllDbInfo();
             _mediator = mediator;
+
+            _dbConnectionStrings = GetAllDbInfo(configuration);
         }
 
         public ListenDbContext CreateDbContext()
         {
-            if (_dbConnectionStrings.Count == 0)
-                throw new DomainException("至少需要一个可用的从库");
+            int maxLength = _dbConnectionStrings.Count;
+            // todo 需要添加读库是否可用
+            if (maxLength == 0)
+                throw new DomainException("至少需要一个可用的库");
             Random random = new Random();
-            int indexNum = random.Next(_dbConnectionStrings.Count);
+            int indexNum = random.Next(maxLength);
 
             string connectionString = _dbConnectionStrings[indexNum];
             ListenDbContext dbContext = new ListenDbContext(_mediator, connectionString);
@@ -30,12 +32,20 @@ namespace Demkin.Listen.Infrastructure
             return dbContext;
         }
 
-        private List<string> GetAllDbInfo()
+        private List<string> GetAllDbInfo(IConfiguration configuration)
         {
-            List<string> dbInfos = new List<string>();
-            string test = "server=192.168.1.7;uid=sa;pwd=abc123#;database=LearnEnglish_Listen11;";
-            dbInfos.Add(test);
-            return dbInfos;
+            List<string> dbInfoList = new List<string>();
+            string[] dbInfos = configuration.GetSection("DbConnection:SlaveDb").Get<string[]>();
+            if (dbInfos == null)
+            {
+                string masterDbConnectionString = configuration.GetSection("DbConnection:MasterDb").Value;
+                dbInfoList.Add(masterDbConnectionString);
+            }
+            else
+            {
+                dbInfoList = dbInfos.ToList();
+            }
+            return dbInfoList;
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Demkin.Listen.WebApi.Admin.ViewModels
 {
-    public class CategoryViewModel
+    public class CategoryDto
     {
         public long Id { get; set; }
 

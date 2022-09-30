@@ -6,6 +6,7 @@
     <el-table :data="albumData">
       <el-table-column label="Id" prop="id"></el-table-column>
       <el-table-column label="名称" prop="title"></el-table-column>
+      <el-table-column label="分类" prop="categoryName"></el-table-column>
       <el-table-column
         label="序号"
         prop="sequenceNumber"
@@ -33,6 +34,12 @@
       </el-table-column>
     </el-table>
   </div>
+  <dialog-album
+    :dialog-visible="dialogAlbumVisible"
+    :edit-data="editData"
+    @close-dialog="handleCloseDialog"
+    @handle-submit="handleSubmitAlbum"
+  ></dialog-album>
 </template>
 
 <script lang="ts" setup>
@@ -40,18 +47,20 @@ import { useParamStore } from '@/store/modules/paramStore'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { albumApi } from '@/api/audio'
+import DialogAlbum, { IEditAlbumOptions } from './component/DialogAlbum.vue'
 
 //#region 接口定义
 interface IAlbum {
   id: string
   title: string
   coverUrl: string
+  categoryName: string
   sequenceNumber: number
   createTime: Date
 }
 //#endregion
 
-const paramStore = useParamStore()
+const store = useParamStore()
 const router = useRouter()
 const currentCategoryId = ref<string>('')
 
@@ -71,6 +80,8 @@ const queryAlbumList = async (categoryId: string) => {
       id: item.id,
       title: item.title,
       coverUrl: item.coverUrl,
+      categoryName: item.categoryName,
+
       sequenceNumber: item.sequenceNumber,
       createTime: item.createTime,
     }
@@ -81,26 +92,81 @@ const queryAlbumList = async (categoryId: string) => {
 
 //#endregion
 
+const dialogAlbumVisible = ref(false)
+const editData = ref<IEditAlbumOptions>()
+
+const handleSubmitAlbum = (params: IEditAlbumOptions) => {
+  if (typeof params.id === 'undefined') {
+    handleAddSubmit(params)
+  } else {
+    handleUpdateSubmit(params)
+  }
+}
 //#region 新增
 
-const handleAddAlbum = () => {}
+const handleAddAlbum = () => {
+  editData.value = null
+  dialogAlbumVisible.value = true
+}
+const handleAddSubmit = async (params: IEditAlbumOptions) => {
+  let apiParams: IAddAlbumParams = {
+    title: params.title,
+    coverUrl: params.coverUrl,
+    sequenceNumber: params.sequenceNumber,
+    categoryId: currentCategoryId.value,
+  }
+  const result = await albumApi.addAlbum(apiParams)
+
+  dialogAlbumVisible.value = false
+  await queryAlbumList(currentCategoryId.value)
+}
 //#endregion
 
 //#region 修改
 
-const handleUpdateAlbum = (row: IAlbum) => {}
+const handleUpdateAlbum = (row: IAlbum) => {
+  editData.value = row
+  dialogAlbumVisible.value = true
+}
+
+const handleUpdateSubmit = async (params: IEditAlbumOptions) => {
+  let apiParams: IUpdateAlbumParams = {
+    id: params.id,
+    title: params.title,
+    coverUrl: params.coverUrl,
+    sequenceNumber: params.sequenceNumber,
+  }
+  const result = await albumApi.updateAlbum(apiParams)
+
+  dialogAlbumVisible.value = false
+  await queryAlbumList(currentCategoryId.value)
+}
+
 //#endregion
 
+const handleCloseDialog = () => {
+  dialogAlbumVisible.value = false
+}
+
 //#region 管理音频
-const handleManageAlbum = (row: IAlbum) => {}
+const handleManageAlbum = (row: IAlbum) => {
+  const params = {
+    albumId: row.id,
+  }
+  store.setParams(params)
+  router.push({ name: 'episode' })
+}
 //#endregion
 
 onMounted(() => {
-  if (paramStore.getParams === null) {
+  if (
+    store.getParams == null ||
+    typeof store.getParams.categoryId === 'undefined'
+  ) {
     router.push({ name: 'category' })
     return
   }
-  currentCategoryId.value = paramStore.getParams.categoryId
+  currentCategoryId.value = store.getParams.categoryId
   queryAlbumList(currentCategoryId.value)
 })
 </script>

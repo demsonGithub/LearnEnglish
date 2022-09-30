@@ -4,7 +4,7 @@
     {
         public CategoryProfile()
         {
-            CreateMap<Category, CategoryViewModel>();
+            CreateMap<Category, CategoryDto>();
         }
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Demkin.Listen.Domain.AggregateModels
+﻿namespace Demkin.Listen.Domain.AggregateModels
 {
     public class Album : Entity<long>, IAggregateRoot
     {
@@ -33,6 +27,36 @@ namespace Demkin.Listen.Domain.AggregateModels
             CategoryId = categoryId;
             IsVisible = false;
             CreateTime = DateTime.Now;
+        }
+
+        public Album ChangeTitle(string title)
+        {
+            Title = title;
+            return this;
+        }
+
+        public Album ChangeCoverUrl(string coverUrl)
+        {
+            CoverUrl = string.IsNullOrEmpty(coverUrl) ? null : new Uri(coverUrl);
+            return this;
+        }
+
+        public Album ChangeSequenceNumber(int sequenceNumber)
+        {
+            SequenceNumber = sequenceNumber;
+            return this;
+        }
+
+        public Album ChangeCategory(long categoryId)
+        {
+            CategoryId = categoryId;
+            return this;
+        }
+
+        public Album ChangeVisible(bool isVisible)
+        {
+            IsVisible = isVisible;
+            return this;
         }
     }
 }
