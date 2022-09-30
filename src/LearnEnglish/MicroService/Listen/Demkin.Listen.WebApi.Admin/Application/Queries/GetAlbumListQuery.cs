@@ -3,14 +3,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Demkin.Listen.WebApi.Admin.Application.Queries
 {
-    public class GetAlbumListQuery : IRequest<ApiResult<List<AlbumDetailDto>>>
+    public class GetAlbumListQuery : IRequest<List<AlbumDetailDto>>
     {
         public long CategoryId { get; set; }
 
         public string? Title { get; set; }
     }
 
-    public class GetAlbumListQueryHandler : IRequestHandler<GetAlbumListQuery, ApiResult<List<AlbumDetailDto>>>
+    public class GetAlbumListQueryHandler : IRequestHandler<GetAlbumListQuery, List<AlbumDetailDto>>
     {
         private readonly IMapper _mapper;
         private readonly IDbContextFactory<ListenDbContext> _dbContextFactory;
@@ -21,7 +21,7 @@ namespace Demkin.Listen.WebApi.Admin.Application.Queries
             _dbContextFactory = dbContextFactory;
         }
 
-        public async Task<ApiResult<List<AlbumDetailDto>>> Handle(GetAlbumListQuery request, CancellationToken cancellationToken)
+        public async Task<List<AlbumDetailDto>> Handle(GetAlbumListQuery request, CancellationToken cancellationToken)
         {
             var dbContext = _dbContextFactory.CreateDbContext();
 
@@ -37,9 +37,9 @@ namespace Demkin.Listen.WebApi.Admin.Application.Queries
                             SequenceNumber = a.SequenceNumber,
                             CreateTime = a.CreateTime
                         };
-            var result = query.ToList();
+            var result = await query.ToListAsync();
 
-            return ApiResultBuilder<List<AlbumDetailDto>>.Success(result);
+            return result;
         }
     }
 }

@@ -74,17 +74,22 @@ const form = ref<IEditCategoryOptions>()
 watch(
   () => props.editData,
   () => {
-    if (props.editData == null) {
-      form.value = {
-        title: '',
-        coverUrl: '',
-        sequenceNumber: null,
-      }
-    } else {
+    reset()
+    if (props.editData !== null) {
       form.value = props.editData
     }
   }
 )
+
+const reset = () => {
+  if (props.editData === null) {
+    form.value = {
+      title: '',
+      coverUrl: '',
+      sequenceNumber: null,
+    }
+  }
+}
 
 const handleCancel = () => {
   emits('closeDialog')

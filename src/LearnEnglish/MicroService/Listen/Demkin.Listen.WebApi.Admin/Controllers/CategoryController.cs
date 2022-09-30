@@ -13,12 +13,19 @@ namespace Demkin.Listen.WebApi.Admin.Controllers
             _mediator = mediator;
         }
 
+        [HttpGet]
+        public async Task<ApiResult<List<CategoryDto>>> GetCategoryListByCondiations([FromQuery] GetCategoryListByCondiationsQuery query)
+        {
+            var result = await _mediator.Send(query, HttpContext.RequestAborted);
+            return ApiResult<List<CategoryDto>>.Build(result);
+        }
+
         [HttpPost]
         public async Task<ApiResult<string>> AddCategory([FromBody] AddCategoryCommand command)
         {
             var result = await _mediator.Send(command, HttpContext.RequestAborted);
 
-            return result;
+            return ApiResult<string>.Build(result);
         }
 
         [HttpPost]
@@ -26,13 +33,15 @@ namespace Demkin.Listen.WebApi.Admin.Controllers
         {
             var result = await _mediator.Send(command, HttpContext.RequestAborted);
 
-            return result ? ApiResultBuilder.Success() : ApiResultBuilder.Fail();
+            return ApiResult<string>.Build(result);
         }
 
-        [HttpGet]
-        public async Task<ApiResult<List<CategoryDto>>> GetCategoryListByCondiations([FromQuery] GetCategoryListByCondiationsQuery query)
+        [HttpPost]
+        public async Task<ApiResult<string>> DeleteCategory([FromBody] DeleteCategoryCommand command)
         {
-            return await _mediator.Send(query, HttpContext.RequestAborted);
+            var result = await _mediator.Send(command, HttpContext.RequestAborted);
+
+            return ApiResult<string>.Build(result);
         }
     }
 }

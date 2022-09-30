@@ -20,6 +20,8 @@ namespace Demkin.Core.Extensions
     {
         public static void InitConfigureDefaultServices(this WebApplicationBuilder builder)
         {
+            string basePath = @"D:\";
+            builder.Configuration.SetBasePath(basePath).AddJsonFile("commonsettings.json", optional: false, reloadOnChange: true);
             IServiceCollection services = builder.Services;
             IConfiguration configuration = builder.Configuration;
 
@@ -81,15 +83,15 @@ namespace Demkin.Core.Extensions
 
             services.AddCap(options =>
             {
-                string connectionString = "server=192.168.0.143;uid=sa;pwd=abc123#;database=LearnEnglish_CAP;";
+                string connectionString = configuration.GetSection("CAP_ConnectionString").Value;
                 options.UseSqlServer(connectionString);
                 options.UseRabbitMQ(mq =>
                 {
                     // 绑定RabbitMQ的hostname,port,username,password
-                    mq.HostName = "192.168.0.143";
-                    mq.Port = 5672;
-                    mq.UserName = "admin";
-                    mq.Password = "admin";
+                    mq.HostName = configuration.GetSection("RabbitMQ:HostName").Value;
+                    mq.Port = Convert.ToInt32(configuration.GetSection("RabbitMQ:Port").Value);
+                    mq.UserName = configuration.GetSection("RabbitMQ:UserName").Value;
+                    mq.Password = configuration.GetSection("RabbitMQ:Password").Value;
                 });
                 options.UseDashboard(); // 添加仪表盘 访问地址: http://localhost/cap
 

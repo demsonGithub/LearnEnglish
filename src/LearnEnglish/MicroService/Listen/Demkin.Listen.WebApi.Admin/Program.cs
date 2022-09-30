@@ -1,4 +1,3 @@
-using Demkin.Infrastructure.Core;
 using Demkin.Listen.WebApi.Admin.Application.IntegrationEvents;
 using Microsoft.EntityFrameworkCore;
 

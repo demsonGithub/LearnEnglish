@@ -27,7 +27,7 @@ namespace Demkin.FileHanlde.WebApi.Controllers
                 RemoteUrl = result.RemoteUrl
             };
 
-            return ApiResultBuilder<UploadFileInfoViewModel>.Success(viewModel);
+            return ApiResult<UploadFileInfoViewModel>.Build(viewModel);
         }
 
         [HttpGet]
@@ -35,7 +35,7 @@ namespace Demkin.FileHanlde.WebApi.Controllers
         {
             var result = await _mediator.Send(query, HttpContext.RequestAborted);
 
-            return ApiResultBuilder.Success(result);
+            return ApiResult<string>.Build(result);
         }
     }
 }

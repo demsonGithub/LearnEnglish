@@ -1,18 +1,58 @@
 ﻿namespace Demkin.Core
 {
-    public class ApiResult<T> : IApiResult<T>
+    public class ApiResult<T>
     {
-        public ExpectResult code { get; }
+        public ApiCode code { get; set; } = ApiCode.Success;
 
-        public string message { get; }
+        public string msg { get; set; } = "";
 
-        public T data { get; }
+        public T data { get; set; }
 
-        public ApiResult(ExpectResult code, string message, T data)
+        public static ApiResult<T> Build()
         {
-            this.code = code;
-            this.message = message;
-            this.data = data;
+            return new ApiResult<T>()
+            {
+                code = ApiCode.Success,
+                msg = "success",
+            };
+        }
+
+        public static ApiResult<T> Build(string msg)
+        {
+            return new ApiResult<T>()
+            {
+                code = ApiCode.Success,
+                msg = msg,
+            };
+        }
+
+        public static ApiResult<T> Build(T data)
+        {
+            return new ApiResult<T>()
+            {
+                code = ApiCode.Success,
+                msg = "success",
+                data = data
+            };
+        }
+
+        public static ApiResult<T> Build(ApiCode code, string msg)
+        {
+            return new ApiResult<T>()
+            {
+                code = code,
+                msg = msg,
+            };
+        }
+
+        public static ApiResult<T> Build(ApiCode code, string msg, T data)
+        {
+            return new ApiResult<T>()
+            {
+                code = code,
+                msg = msg,
+                data = data
+            };
         }
     }
 }

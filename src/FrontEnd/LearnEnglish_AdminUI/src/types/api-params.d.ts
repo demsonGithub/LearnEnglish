@@ -27,6 +27,10 @@ declare interface IUpdateCategoryParams {
   sequenceNumber: number
 }
 
+declare interface IDeleteCategoryParams {
+  id: string
+}
+
 declare interface IQueryAlbumParams {
   categoryId: string
   title: string

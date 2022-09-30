@@ -1,6 +1,6 @@
 ﻿namespace Demkin.Listen.WebApi.Admin.Application.Commands
 {
-    public class UpdateCategoryCommand : IRequest<bool>
+    public class UpdateCategoryCommand : IRequest<string>
     {
         public long Id { get; set; }
 
@@ -11,7 +11,7 @@
         public int sequenceNumber { get; set; }
     }
 
-    public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryCommand, bool>
+    public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryCommand, string>
     {
         private readonly ListenDomainService _domainService;
         private readonly ICategoryRepository _categoryRepository;
@@ -22,7 +22,7 @@
             _categoryRepository = categoryRepository;
         }
 
-        public async Task<bool> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
             var sourceCategory = await _domainService.GetCategoryById(request.Id);
             sourceCategory.ChangeTitle(request.Title);
@@ -31,7 +31,10 @@
 
             var targetCategory = await _categoryRepository.UpdateAsync(sourceCategory);
             var result = await _categoryRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
-            return result;
+            if (!result)
+                throw new DomainException("修改失败");
+
+            return targetCategory.Id.ToString();
         }
     }
 }

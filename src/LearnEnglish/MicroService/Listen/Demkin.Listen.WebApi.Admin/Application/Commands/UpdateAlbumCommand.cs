@@ -1,6 +1,6 @@
 ﻿namespace Demkin.Listen.WebApi.Admin.Application.Commands
 {
-    public class UpdateAlbumCommand : IRequest<bool>
+    public class UpdateAlbumCommand : IRequest<string>
     {
         public long Id { get; set; }
 
@@ -11,7 +11,7 @@
         public int SequenceNumber { get; set; }
     }
 
-    public class UpdateAlbumCommandHandler : IRequestHandler<UpdateAlbumCommand, bool>
+    public class UpdateAlbumCommandHandler : IRequestHandler<UpdateAlbumCommand, string>
     {
         private readonly IAlbumRepository _albumRepository;
 
@@ -20,7 +20,7 @@
             _albumRepository = albumRepository;
         }
 
-        public async Task<bool> Handle(UpdateAlbumCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(UpdateAlbumCommand request, CancellationToken cancellationToken)
         {
             var albumEntity = await _albumRepository.FindAsync(request.Id);
 
@@ -30,7 +30,11 @@
 
             await _albumRepository.UpdateAsync(targetAlbum);
             var result = await _albumRepository.UnitOfWork.SaveEntitiesAsync();
-            return result;
+
+            if (!result)
+                throw new DomainException("修改失败");
+
+            return targetAlbum.Id.ToString();
         }
     }
 }

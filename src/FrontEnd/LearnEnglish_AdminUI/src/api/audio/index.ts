@@ -34,6 +34,17 @@ const categoryApi = {
     })
     return result.data
   },
+  DeleteCategory: async function (
+    params: IDeleteCategoryParams
+  ): Promise<apiResult> {
+    const result = await request({
+      method: 'post',
+      url: '/api/Category/DeleteCategory',
+      baseURL: '/Listen',
+      data: params,
+    })
+    return result.data
+  },
 }
 
 const albumApi = {

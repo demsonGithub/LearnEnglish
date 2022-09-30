@@ -17,7 +17,8 @@ namespace Demkin.Listen.WebApi.Admin.Controllers
         [HttpGet]
         public async Task<ApiResult<List<AlbumDetailDto>>> GetAlbumList([FromQuery] GetAlbumListQuery query)
         {
-            return await _mediator.Send(query, HttpContext.RequestAborted);
+            var result = await _mediator.Send(query, HttpContext.RequestAborted);
+            return ApiResult<List<AlbumDetailDto>>.Build(result);
         }
 
         [HttpPost]
@@ -25,7 +26,7 @@ namespace Demkin.Listen.WebApi.Admin.Controllers
         {
             var result = await _mediator.Send(command, HttpContext.RequestAborted);
 
-            return ApiResultBuilder<AlbumDetailDto>.Success(result);
+            return ApiResult<AlbumDetailDto>.Build(result);
         }
 
         [HttpPost]
@@ -33,7 +34,7 @@ namespace Demkin.Listen.WebApi.Admin.Controllers
         {
             var result = await _mediator.Send(command, HttpContext.RequestAborted);
 
-            return result ? ApiResultBuilder.Success() : ApiResultBuilder.Fail();
+            return ApiResult<string>.Build(result);
         }
     }
 }

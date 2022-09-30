@@ -25,7 +25,13 @@
           >
             编辑
           </el-button>
-          <el-button size="small" type="danger">删除</el-button>
+          <el-button
+            size="small"
+            type="danger"
+            @click="handleDelete(scope.row)"
+          >
+            删除
+          </el-button>
           <el-button size="small" @click="handleManageAlbum(scope.row)">
             管理专辑
           </el-button>
@@ -74,7 +80,6 @@ const queryCategoryList = async () => {
     title: '',
   }
   const result = await categoryApi.queryCategoryList(apiParams)
-
   if (result.code === apiResultCode.fail) {
     categoryData.value = resultList
     return
@@ -86,7 +91,7 @@ const queryCategoryList = async () => {
       title: item.title,
       sequenceNumber: item.sequenceNumber,
       createTime: item.createTime,
-      coverUrl: '',
+      coverUrl: item.coverUrl,
     }
     resultList.push(categoryObj)
   })
@@ -133,8 +138,9 @@ const handleAddSubmit = async (params: IEditCategoryOptions) => {
 
 //#region 修改
 const handleUpdateCategory = (params: ICategory) => {
-  dialogVisible.value = true
   editData.value = params
+
+  dialogVisible.value = true
 }
 
 const handleUpdateSubmit = async (params: IEditCategoryOptions) => {
@@ -147,6 +153,18 @@ const handleUpdateSubmit = async (params: IEditCategoryOptions) => {
   await categoryApi.UpdateCategory(apiParams)
 
   dialogVisible.value = false
+
+  await queryCategoryList()
+}
+
+//#endregion
+
+//#region 删除
+const handleDelete = async (row: ICategory) => {
+  const apiParams: IDeleteCategoryParams = {
+    id: row.id,
+  }
+  const result = await categoryApi.DeleteCategory(apiParams)
 
   await queryCategoryList()
 }

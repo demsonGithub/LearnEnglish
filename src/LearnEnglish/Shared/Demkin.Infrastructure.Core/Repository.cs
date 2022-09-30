@@ -83,7 +83,7 @@ namespace Demkin.Infrastructure.Core
 
         public virtual async Task<bool> RemoveAsync(TKey id, CancellationToken cancellationToken = default)
         {
-            var entity = await Db.FindAsync<TEntity>(id, cancellationToken);
+            var entity = await Db.FindAsync<TEntity>(new object[] { id }, cancellationToken);
             if (entity == null)
             {
                 return false;

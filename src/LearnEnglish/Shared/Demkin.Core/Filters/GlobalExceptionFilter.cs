@@ -46,7 +46,7 @@ namespace Demkin.Core.Filters
                 _logger.LogError(exception, "UnhandledException occured");
             }
 
-            ObjectResult result = new ObjectResult(ApiResultBuilder.Fail(message));
+            ObjectResult result = new ObjectResult(ApiResult<string>.Build(ApiCode.Fail, message));
 
             context.Result = result;
             context.ExceptionHandled = true;
