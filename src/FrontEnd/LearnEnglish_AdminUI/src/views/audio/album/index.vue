@@ -69,8 +69,8 @@ const currentCategoryId = ref<string>('')
 const albumData = ref<IAlbum[]>()
 
 const queryAlbumList = async (categoryId: string) => {
-  let resultList: IAlbum[] = []
-  let apiParams: IQueryAlbumParams = {
+  const resultList: IAlbum[] = []
+  const apiParams: IQueryAlbumParams = {
     categoryId: currentCategoryId.value,
     title: '',
   }
@@ -109,7 +109,7 @@ const handleAddAlbum = () => {
   dialogAlbumVisible.value = true
 }
 const handleAddSubmit = async (params: IEditAlbumOptions) => {
-  let apiParams: IAddAlbumParams = {
+  const apiParams: IAddAlbumParams = {
     title: params.title,
     coverUrl: params.coverUrl,
     sequenceNumber: params.sequenceNumber,
@@ -130,7 +130,7 @@ const handleUpdateAlbum = (row: IAlbum) => {
 }
 
 const handleUpdateSubmit = async (params: IEditAlbumOptions) => {
-  let apiParams: IUpdateAlbumParams = {
+  const apiParams: IUpdateAlbumParams = {
     id: params.id,
     title: params.title,
     coverUrl: params.coverUrl,

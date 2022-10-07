@@ -74,7 +74,7 @@ const form = ref<IEditAlbumOptions>()
 watch(
   () => props.editData,
   () => {
-    if (props.editData == null) {
+    if (props.editData === null) {
       form.value = {
         title: '',
         coverUrl: '',

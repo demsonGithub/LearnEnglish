@@ -1,26 +1,52 @@
 <template>
-  <el-dialog v-model="dialogFormVisible" title="Shipping address">
+  <el-dialog v-model="dialogVisible" title="Shipping address">
     <el-form :model="form">
-      <el-form-item label="Promotion name" :label-width="formLabelWidth">
-        <el-input v-model="form.name" autocomplete="off" />
+      <el-form-item label="标题">
+        <el-input v-model="form.title" />
       </el-form-item>
-      <el-form-item label="Zones" :label-width="formLabelWidth">
-        <el-select v-model="form.region" placeholder="Please select a zone">
-          <el-option label="Zone No.1" value="shanghai" />
-          <el-option label="Zone No.2" value="beijing" />
-        </el-select>
+      <el-form-item label="描述">
+        <el-input v-model="form.description" />
+      </el-form-item>
+      <el-form-item label="音频地址：">
+        <div class="coverUpload">
+          <el-input v-model="form.coverUrl" :readonly="true" />
+          <el-upload
+            :show-file-list="false"
+            :http-request="uploadImg"
+            :on-success="uploadSuccessHandle"
+            :on-error="uploadError"
+          >
+            <el-button>上传图片</el-button>
+          </el-upload>
+        </div>
       </el-form-item>
     </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">
-          Confirm
-        </el-button>
-      </span>
-    </template>
   </el-dialog>
 </template>
 
-<script lang="ts" setup></script>
-<style lang="scss" scope></style>
+<script lang="ts" setup>
+import { ref } from 'vue'
+
+export interface IEditEpisodeOptions {
+  id?: string
+  title: string
+  description: string
+  coverUrl: string
+  sequenceNumber: number
+}
+
+interface IDialogEpisodeProps {
+  dialogVisible: boolean
+  editData?: IEditEpisodeOptions
+}
+
+const props = defineProps<IDialogEpisodeProps>()
+
+const form = ref<IEditEpisodeOptions>()
+</script>
+<style lang="scss" scope>
+.coverUpload {
+  display: flex;
+  width: 100%;
+}
+</style>
