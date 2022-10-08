@@ -1,7 +1,7 @@
 <template>
   <div class="episode-wrapper">
     <div>
-      <el-button type="success">添加音频</el-button>
+      <el-button type="success" @click="handleAddEpisode">添加音频</el-button>
     </div>
     <div style="margin-top: 15px">
       <el-table :data="episodeData" border style="width: 100%">
@@ -34,6 +34,12 @@
         </el-table-column>
       </el-table>
     </div>
+    <dialog-episode
+      :dialog-visible="dialogVisible"
+      :edit-data="editData"
+      @close-dialog="closeDialog"
+      @handle-submit="handleSubmitEpisode"
+    ></dialog-episode>
   </div>
 </template>
 
@@ -41,6 +47,9 @@
 import { useParamStore } from '@/store/modules/paramStore'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import DialogEpisode, {
+  IEditEpisodeOptions,
+} from './component/DialogEpisode.vue'
 
 interface IEpisodeDetial {
   id: number
@@ -63,6 +72,32 @@ const episodeData = ref<IEpisodeDetial[]>()
 
 //#region 查询
 const queryEpisodeList = (albumId: string) => {}
+//#endregion
+
+const dialogVisible = ref<boolean>(false)
+const editData = ref<IEditEpisodeOptions>()
+const closeDialog = () => {
+  dialogVisible.value = false
+}
+
+const handleSubmitEpisode = (params: IEditEpisodeOptions) => {
+  if (typeof params.id === 'undefined') {
+    handleAddSubmit(params)
+  } else {
+    handleUpdateSubmit(params)
+  }
+}
+//#region 新增
+const handleAddEpisode = () => {
+  editData.value = null
+  dialogVisible.value = true
+}
+
+const handleAddSubmit = (params: IEditEpisodeOptions) => {}
+//#endregion
+
+//#region 修改
+const handleUpdateSubmit = (params: IEditEpisodeOptions) => {}
 //#endregion
 
 onMounted(() => {

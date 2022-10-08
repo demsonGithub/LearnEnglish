@@ -1,4 +1,5 @@
 using Demkin.Core.Extensions;
+using Demkin.FileOperation.WebApi.Hubs;
 using Serilog;
 
 string logFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
@@ -18,6 +19,8 @@ try
     builder.InitConfigureDefaultServices();
     builder.Services.AddDbSetup(builder.Configuration.GetValue<string>("ConnectionStrings:sqlserver"));
 
+    builder.Services.AddSignalR();
+
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
@@ -34,6 +37,7 @@ try
     app.InitUseDefaultMiddleware();
 
     app.MapControllers();
+    app.MapHub<FileUploadStatusHub>("/Hubs/FileUploadStatusHub");
 
     app.Run();
 }

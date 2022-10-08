@@ -47,11 +47,7 @@
 
 <script lang="ts" setup>
 import fileOperationApi from '@/api/fileOperation'
-import type {
-  UploadFile,
-  UploadProps,
-  UploadRequestHandler,
-} from 'element-plus'
+import { UploadFile, UploadProps, UploadRequestHandler } from 'element-plus'
 import { ref, watch } from 'vue'
 
 export interface IEditAlbumOptions {

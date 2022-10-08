@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Demkin.FileOperation.Infrastructure.Repositories
 {
@@ -13,7 +14,8 @@ namespace Demkin.FileOperation.Infrastructure.Repositories
 
         public StorageType StorageType => StorageType.Public;
 
-        public CloundStorageFile(IWebHostEnvironment env, IHttpContextAccessor httpContextAccessor)
+        public CloundStorageFile(IWebHostEnvironment env,
+            IHttpContextAccessor httpContextAccessor)
         {
             _env = env;
             _httpContextAccessor = httpContextAccessor;
@@ -41,7 +43,28 @@ namespace Demkin.FileOperation.Infrastructure.Repositories
 
             using (var stream = new FileStream(fullPath, FileMode.Create))
             {
+                CancellationTokenSource cts = new CancellationTokenSource();
+
+                Thread td = new Thread(() =>
+                {
+                    try
+                    {
+                        while (true)
+                        {
+                            double vl = content.Position / content.Length;
+                            Console.WriteLine($"已复制:{vl}%");
+
+                            Thread.Sleep(1);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                });
+                td.Start();
                 await content.CopyToAsync(stream);
+                td.Interrupt();
             }
 
             var request = _httpContextAccessor.HttpContext.Request;
