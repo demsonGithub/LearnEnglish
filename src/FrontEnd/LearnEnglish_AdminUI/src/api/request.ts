@@ -70,6 +70,8 @@ class RequestInstance {
    * @param {any} res 响应回调，根据不同状态进行不同的操作
    */
   private errorHandle(res: any) {
+    console.log('111', res)
+
     switch (res.status) {
       case 401:
         break
@@ -101,7 +103,7 @@ class RequestInstance {
  */
 const requestConfig: AxiosRequestConfig = {
   //baseURL: import.meta.env.VITE_APP_WEBAPI_URL, //请求地址
-  timeout: 5000, //超时时间，毫秒
+  //timeout: 5000, //超时时间，毫秒
   // 设置请求头，如果还有415错误，可能是get或post方法传参错误
   headers: {
     'Content-Type': 'application/json',

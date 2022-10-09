@@ -85,15 +85,15 @@ watch(
   }
 )
 
-const handleSubmit = () => {
-  send()
-}
+const handleSubmit = () => {}
 
 const handleCancel = () => {
   emits('closeDialog')
 }
 
 const uploadFile = async (params: any): Promise<UploadRequestHandler> => {
+  progressStatus.value = null
+  progressValue.value = 0
   const formData = new FormData()
   formData.append('file', params.file)
 
@@ -124,8 +124,7 @@ const init = () => {
     .build()
 
   connection.on('RecieveMessage', data => {
-    let [user, message] = data
-    console.log(user, message)
+    progressValue.value = data
   })
 
   connection.start()

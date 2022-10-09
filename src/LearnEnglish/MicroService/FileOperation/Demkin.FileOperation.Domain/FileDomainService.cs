@@ -1,14 +1,19 @@
-﻿namespace Demkin.FileOperation.Domain
+﻿using Demkin.Core;
+using Microsoft.Extensions.Caching.Memory;
+
+namespace Demkin.FileOperation.Domain
 {
     public class FileDomainService : IDenpendencyScope
     {
         private readonly IUploadFileInfoRepository _uploadFileInfoRepository;
         private readonly IStorageFile _storageFile;
+        private readonly IMemoryCache _cache;
 
-        public FileDomainService(IUploadFileInfoRepository uploadFileInfoRepository, IStorageFile storageFile)
+        public FileDomainService(IUploadFileInfoRepository uploadFileInfoRepository, IStorageFile storageFile, IMemoryCache cache)
         {
             _uploadFileInfoRepository = uploadFileInfoRepository;
             _storageFile = storageFile;
+            _cache = cache;
         }
 
         /// <summary>
@@ -22,6 +27,8 @@
             var oldFileInfo = await _uploadFileInfoRepository.FindFileAsync(fileSize, hash256);
             return oldFileInfo;
         }
+
+        private static CancellationTokenSource _tokenSource = new CancellationTokenSource();
 
         /// <summary>
         /// 上传文件

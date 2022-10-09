@@ -15,5 +15,10 @@
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task<Uri> SaveFileAsync(string key, Stream content, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// 上传文件的进度
+        /// </summary>
+        int GetCompletedPercent();
     }
 }

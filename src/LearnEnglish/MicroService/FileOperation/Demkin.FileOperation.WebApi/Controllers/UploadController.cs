@@ -14,7 +14,7 @@ namespace Demkin.FileHanlde.WebApi.Controllers
         }
 
         [HttpPost]
-        [RequestSizeLimit(60_000_000)]
+        [DisableRequestSizeLimit]
         public async Task<ApiResult<UploadFileInfoViewModel>> UploadFile([FromForm] UploadFileRequestCommand command)
         {
             var result = await _mediator.Send(command, HttpContext.RequestAborted);

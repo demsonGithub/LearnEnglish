@@ -1,5 +1,8 @@
 ﻿using Demkin.FileOperation.WebApi.Application.IntegrationEvents;
+using Demkin.FileOperation.WebApi.Hubs;
 using DotNetCore.CAP;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Demkin.FileOperation.WebApi.Application.Commands
 {
@@ -10,13 +13,19 @@ namespace Demkin.FileOperation.WebApi.Application.Commands
 
     public class UploadFileRequestCommandHandler : IRequestHandler<UploadFileRequestCommand, UploadFileInfo>
     {
+        private readonly IMemoryCache _cache;
         private readonly FileDomainService _domainService;
+        private readonly IHubContext<FileUploadStatusHub> _hubContext;
         private readonly ICapPublisher _capPublisher;
         private readonly IUploadFileInfoRepository _uploadFileInfoRepository;
 
-        public UploadFileRequestCommandHandler(FileDomainService domainService, ICapPublisher capPublisher, IUploadFileInfoRepository uploadFileInfoRepository)
+        private volatile bool isStopProgress = false;
+
+        public UploadFileRequestCommandHandler(IMemoryCache cache, FileDomainService domainService, IHubContext<FileUploadStatusHub> hubContext, ICapPublisher capPublisher, IUploadFileInfoRepository uploadFileInfoRepository)
         {
+            _cache = cache;
             _domainService = domainService;
+            _hubContext = hubContext;
             _capPublisher = capPublisher;
             _uploadFileInfoRepository = uploadFileInfoRepository;
         }
@@ -27,8 +36,28 @@ namespace Demkin.FileOperation.WebApi.Application.Commands
             string fileName = file.FileName;
             using Stream stream = file.OpenReadStream();
 
+            var hash = HashHelper.ComputeSha256Hash(stream);
+            DateTime today = DateTime.Today;
+            string key = $"{today.Year}/{today.Month}/{today.Day}/{hash}/{fileName}";
+
             // 上传文件
+            Task.Factory.StartNew(() =>
+            {
+                while (true)
+                {
+                    int completedPercent = _cache.Get<int>(key);
+
+                    _hubContext.Clients.All.SendAsync("RecieveMessage", completedPercent);
+                    Thread.Sleep(100);
+                    if (completedPercent >= 100 || isStopProgress)
+                    {
+                        _cache.Remove(key);
+                        break;
+                    }
+                }
+            });
             var result = await _domainService.UploadFileAsync(fileName, stream, cancellationToken);
+            isStopProgress = true;
 
             if (result.isOldData)
             {

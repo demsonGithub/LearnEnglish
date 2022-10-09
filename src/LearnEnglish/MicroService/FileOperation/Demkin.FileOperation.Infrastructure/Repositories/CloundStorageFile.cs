@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 
 namespace Demkin.FileOperation.Infrastructure.Repositories
 {
@@ -11,14 +13,19 @@ namespace Demkin.FileOperation.Infrastructure.Repositories
     {
         private readonly IWebHostEnvironment _env;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger<CloundStorageFile> _logger;
+        private readonly IMemoryCache _cache;
+        private int _completedPercent = 0;
 
         public StorageType StorageType => StorageType.Public;
 
         public CloundStorageFile(IWebHostEnvironment env,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor, ILogger<CloundStorageFile> logger, IMemoryCache cache)
         {
             _env = env;
             _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
+            _cache = cache;
         }
 
         public async Task<Uri> SaveFileAsync(string key, Stream content, CancellationToken cancellationToken = default)
@@ -35,41 +42,42 @@ namespace Demkin.FileOperation.Infrastructure.Repositories
             {
                 Directory.CreateDirectory(fullPathDir);
             }
-            // 如果存在，尝试删除
-            if (File.Exists(fullPath))
+            try
             {
-                File.Delete(fullPath);
+                // 如果存在，尝试删除
+                if (File.Exists(fullPath))
+                {
+                    File.Delete(fullPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"上传文件:{ex.Message}");
             }
 
-            using (var stream = new FileStream(fullPath, FileMode.Create))
+            using (var fsWrite = new FileStream(fullPath, FileMode.Create))
             {
-                CancellationTokenSource cts = new CancellationTokenSource();
+                _completedPercent = 0;
+                byte[] buffer = new byte[1024 * 1024 * 1];
+                int readByteCount = 0;
 
-                Thread td = new Thread(() =>
+                while (true)
                 {
-                    try
-                    {
-                        while (true)
-                        {
-                            double vl = content.Position / content.Length;
-                            Console.WriteLine($"已复制:{vl}%");
+                    readByteCount = await content.ReadAsync(buffer, 0, buffer.Length);
+                    await fsWrite.WriteAsync(buffer, 0, readByteCount);
+                    _completedPercent = Convert.ToInt32(fsWrite.Length / Convert.ToDouble(content.Length) * 100);
 
-                            Thread.Sleep(1);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.Message);
-                    }
-                });
-                td.Start();
-                await content.CopyToAsync(stream);
-                td.Interrupt();
+                    _cache.Set(key, _completedPercent);
+                    if (readByteCount == 0)
+                        break;
+                }
             }
 
             var request = _httpContextAccessor.HttpContext.Request;
             string url = request.Scheme + "://" + request.Host + "/UploadedResources/" + key;
             return new Uri(url);
         }
+
+        public int GetCompletedPercent() => _completedPercent;
     }
 }
