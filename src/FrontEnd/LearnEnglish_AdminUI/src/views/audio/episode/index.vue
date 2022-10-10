@@ -29,7 +29,13 @@
         <el-table-column label="操作" width="240">
           <template #default="scope">
             <el-button size="small">编辑</el-button>
-            <el-button size="small" type="danger">删除</el-button>
+            <el-button
+              size="small"
+              type="danger"
+              @click="handleDelete(scope.row)"
+            >
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -44,6 +50,7 @@
 </template>
 
 <script lang="ts" setup>
+import { episodeApi } from '@/api/audio'
 import { useParamStore } from '@/store/modules/paramStore'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -93,11 +100,32 @@ const handleAddEpisode = () => {
   dialogVisible.value = true
 }
 
-const handleAddSubmit = (params: IEditEpisodeOptions) => {}
+const handleAddSubmit = async (params: IEditEpisodeOptions) => {
+  const apiParams: IAddEpisodeParams = {
+    title: params.title,
+    description: params.description,
+    sequenceNumber: params.sequenceNumber,
+    audioUrl: params.audioUrl,
+    durationInSecond: params.audioDuration,
+    subtitles: params.subtitles,
+    albumId: currentAlbumId.value,
+  }
+  console.log('1', apiParams)
+
+  const result = await episodeApi.addEpisode(apiParams)
+
+  queryEpisodeList(currentAlbumId.value)
+  dialogVisible.value = false
+}
 //#endregion
 
 //#region 修改
 const handleUpdateSubmit = (params: IEditEpisodeOptions) => {}
+//#endregion
+
+//#region 删除
+
+const handleDelete = (params: IEpisodeDetial) => {}
 //#endregion
 
 onMounted(() => {

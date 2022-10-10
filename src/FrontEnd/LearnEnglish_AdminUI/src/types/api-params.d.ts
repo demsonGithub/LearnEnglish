@@ -49,4 +49,18 @@ declare interface IUpdateAlbumParams {
   coverUrl: string
   sequenceNumber: number
 }
+
+declare interface IQueryEpisodeParams {
+  albumId: string
+}
+
+declare interface IAddEpisodeParams {
+  title: string
+  description: string
+  sequenceNumber: number
+  audioUrl: string
+  durationInSecond: number
+  subtitles: string
+  albumId: string
+}
 //#endregion

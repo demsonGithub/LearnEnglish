@@ -80,4 +80,16 @@ const albumApi = {
   },
 }
 
-export { categoryApi, albumApi }
+const episodeApi = {
+  addEpisode: async function (params: IAddEpisodeParams): Promise<apiResult> {
+    const result = await request({
+      method: 'post',
+      url: '/api/Episode/AddEpisode',
+      baseURL: '/Listen',
+      data: params,
+    })
+    return result.data
+  },
+}
+
+export { categoryApi, albumApi, episodeApi }

@@ -70,8 +70,6 @@ class RequestInstance {
    * @param {any} res 响应回调，根据不同状态进行不同的操作
    */
   private errorHandle(res: any) {
-    console.log('111', res)
-
     switch (res.status) {
       case 401:
         break

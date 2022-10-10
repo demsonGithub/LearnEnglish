@@ -22,7 +22,6 @@
             :show-file-list="false"
             :http-request="uploadFile"
             :on-success="uploadSuccessHandle"
-            :on-error="uploadError"
           >
             <el-button>上传音频</el-button>
           </el-upload>
@@ -35,7 +34,10 @@
         <el-input v-model="form.audioDuration" />
       </el-form-item>
       <el-form-item label="字&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;幕：">
-        <el-input v-model="form.description" />
+        <el-input v-model="form.subtitles" />
+      </el-form-item>
+      <el-form-item label="排序编号：">
+        <el-input v-model="form.sequenceNumber" />
       </el-form-item>
       <el-form-item>
         <el-button
@@ -54,14 +56,16 @@ import fileOperationApi from '@/api/fileOperation'
 import { UploadFile, UploadProps, UploadRequestHandler } from 'element-plus'
 import { onMounted, ref, watch } from 'vue'
 import * as signalR from '@microsoft/signalr'
+import { apiResultCode } from '@/api/request'
 
 export interface IEditEpisodeOptions {
   id?: string
   title: string
   description: string
+  sequenceNumber: number
   audioUrl: string
   audioDuration: number
-  sequenceNumber: number
+  subtitles: string
 }
 
 interface IDialogEpisodeProps {
@@ -86,6 +90,7 @@ watch(
         audioUrl: '',
         audioDuration: null,
         sequenceNumber: null,
+        subtitles: '',
       }
     } else {
       form.value = props.editData
@@ -93,9 +98,19 @@ watch(
   }
 )
 
-const handleSubmit = () => {}
+const handleSubmit = () => {
+  emits('handleSubmit', form.value)
+}
 
 const handleCancel = () => {
+  form.value = {
+    title: '',
+    description: '',
+    audioUrl: '',
+    audioDuration: null,
+    sequenceNumber: null,
+    subtitles: '',
+  }
   emits('closeDialog')
 }
 
@@ -107,6 +122,10 @@ const uploadFile = async (params: any): Promise<UploadRequestHandler> => {
 
   const result = await fileOperationApi.uploadFile(formData)
   getAudioDuration(params.file)
+
+  if (result.code === apiResultCode.fail) {
+    progressStatus.value = 'exception'
+  }
 
   return result.data
 }
@@ -120,14 +139,10 @@ const uploadSuccessHandle: UploadProps['onSuccess'] = (
   progressStatus.value = 'success'
 }
 
-const uploadError = (error: Error, uploadFile: UploadFile) => {
-  progressStatus.value = 'exception'
-}
-
 //获取时长的函数
 const getAudioDuration = (file: Blob | MediaSource) => {
-  let url = URL.createObjectURL(file)
-  let audioElement = new Audio(url)
+  const url = URL.createObjectURL(file)
+  const audioElement = new Audio(url)
 
   audioElement.addEventListener('loadedmetadata', function () {
     form.value.audioDuration = audioElement.duration
@@ -139,6 +154,7 @@ const init = () => {
     .withUrl('http://localhost:8082/Hubs/FileUploadStatusHub', {
       skipNegotiation: true,
       transport: 1, // 强制WebSockets
+      logger: signalR.LogLevel.Error,
     })
     .build()
 

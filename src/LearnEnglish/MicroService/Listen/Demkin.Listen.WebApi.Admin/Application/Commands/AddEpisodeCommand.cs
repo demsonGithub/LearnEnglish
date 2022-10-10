@@ -33,42 +33,42 @@ namespace Demkin.Listen.WebApi.Admin.Application.Commands
         public async Task<string> Handle(AddEpisodeCommand request, CancellationToken cancellationToken)
         {
             // 1. 如果不是m4a格式，通知转码业务去转码,保证存入数据库的数据都是合法数据
-            if (!request.AudioUrl.EndsWith("m4a", StringComparison.OrdinalIgnoreCase))
-            {
-                var builder = new Episode.Builder();
-                builder.Title(request.Title)
-                    .Description(request.Description)
-                    .SequenceNumber(request.SequenceNumber)
-                    .AudioUrl(request.AudioUrl)
-                    .DurationInSecond(request.DurationInSecond)
-                    .Subtitles(request.Subtitles)
-                    .AlbumId(request.AlbumId);
-                var entity = builder.Create();
+            //if (!request.AudioUrl.EndsWith("m4a", StringComparison.OrdinalIgnoreCase))
+            //{
+            //    var builder = new Episode.Builder();
+            //    builder.Title(request.Title)
+            //        .Description(request.Description)
+            //        .SequenceNumber(request.SequenceNumber)
+            //        .AudioUrl(request.AudioUrl)
+            //        .DurationInSecond(request.DurationInSecond)
+            //        .Subtitles(request.Subtitles)
+            //        .AlbumId(request.AlbumId);
+            //    var entity = builder.Create();
 
-                await _capPublisher.PublishAsync("Transcoding.Audio", new { MediaId = entity.Id, MediaUrl = entity.AudioUrl, OutputFormat = "m4a" });
+            //    await _capPublisher.PublishAsync("Transcoding.Audio", new { MediaId = entity.Id, MediaUrl = entity.AudioUrl, OutputFormat = "m4a" });
 
-                return entity.Id.ToString();
-            }
-            else
-            {
-                var builder = new Episode.Builder();
-                builder.Title(request.Title)
-                    .Description(request.Description)
-                    .SequenceNumber(request.SequenceNumber)
-                    .AudioUrl(request.AudioUrl)
-                    .DurationInSecond(request.DurationInSecond)
-                    .Subtitles(request.Subtitles)
-                    .AlbumId(request.AlbumId);
-                var entity = builder.Create();
+            //    return entity.Id.ToString();
+            //}
+            //else
+            //{
+            var builder = new Episode.Builder();
+            builder.Title(request.Title)
+                .Description(request.Description)
+                .SequenceNumber(request.SequenceNumber)
+                .AudioUrl(request.AudioUrl)
+                .DurationInSecond(request.DurationInSecond)
+                .Subtitles(request.Subtitles)
+                .AlbumId(request.AlbumId);
+            var entity = builder.Create();
 
-                await _episodeRepository.AddAsync(entity, cancellationToken);
+            await _episodeRepository.AddAsync(entity, cancellationToken);
 
-                await _episodeRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
+            await _episodeRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
 
-                await _capPublisher.PublishAsync("Transcoding.Audio", new { MediaId = entity.Id, MediaUrl = entity.AudioUrl, OutputFormat = "m4a" });
+            await _capPublisher.PublishAsync("Transcoding.Audio", new { MediaId = entity.Id, MediaUrl = entity.AudioUrl, OutputFormat = "m4a" });
 
-                return entity.Id.ToString();
-            }
+            return entity.Id.ToString();
+            //}
         }
     }
 }
