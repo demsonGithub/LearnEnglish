@@ -35,17 +35,20 @@
         private UploadFileInfo()
         { }
 
-        public UploadFileInfo(string fileName, long fileSizeBytes, string fileSHA256Hash, Uri remoteUrl, Uri backupUrl)
+        public static UploadFileInfo Create(string fileName, long fileSizeBytes, string fileSHA256Hash, Uri remoteUrl, Uri backupUrl)
         {
-            Id = IdGenerateHelper.Instance.GenerateId();
-            FileName = fileName;
-            FileSizeBytes = fileSizeBytes;
-            FileSHA256Hash = fileSHA256Hash;
-            RemoteUrl = remoteUrl;
-            BackupUrl = backupUrl;
-            CreateTime = DateTime.Now;
-
-            AddDomainEvent(new UploadFileDomainEvent(this));
+            UploadFileInfo item = new UploadFileInfo()
+            {
+                Id = IdGenerateHelper.Instance.GenerateId(),
+                FileName = fileName,
+                FileSizeBytes = fileSizeBytes,
+                FileSHA256Hash = fileSHA256Hash,
+                RemoteUrl = remoteUrl,
+                BackupUrl = backupUrl,
+                CreateTime = DateTime.Now
+            };
+            item.AddDomainEvent(new UploadFileDomainEvent(item));
+            return item;
         }
     }
 }

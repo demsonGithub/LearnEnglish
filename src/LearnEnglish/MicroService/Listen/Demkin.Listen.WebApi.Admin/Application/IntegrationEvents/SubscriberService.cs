@@ -14,7 +14,7 @@ namespace Demkin.Listen.WebApi.Admin.Application.IntegrationEvents
         [CapSubscribe("UploadFileCompleted")]
         public Task UploadFileCompleted(UploadFileCompletedIntegrationEvent integrationEvent)
         {
-            _logger.LogInformation($" 11111111111111处理上传的文件 {integrationEvent.FileId}");
+            _logger.LogInformation($" 上传： {integrationEvent.FileId}");
             return Task.CompletedTask;
         }
     }

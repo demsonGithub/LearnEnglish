@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Demkin.Listen.Infrastructure.EntityConfigurations
 {
-    public class AudioEntityTypeConfiguration : IEntityTypeConfiguration<Audio>
+    public class AudioEntityTypeConfiguration : IEntityTypeConfiguration<Episode>
     {
-        public void Configure(EntityTypeBuilder<Audio> builder)
+        public void Configure(EntityTypeBuilder<Episode> builder)
         {
             builder.ToTable("Audio");
             builder.HasKey(x => x.Id);

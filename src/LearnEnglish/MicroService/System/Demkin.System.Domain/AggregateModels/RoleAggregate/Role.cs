@@ -10,11 +10,16 @@
         {
         }
 
-        public Role(string roleName, string? description)
+        public static Role Create(string roleName, string? description)
         {
-            Id = IdGenerateHelper.Instance.GenerateId();
-            RoleName = roleName;
-            Description = description;
+            Role item = new Role()
+            {
+                Id = IdGenerateHelper.Instance.GenerateId(),
+                RoleName = roleName,
+                Description = description
+            };
+            item.AddDomainEvent(new RoleCreatedDomainEvent(item));
+            return item;
         }
     }
 }

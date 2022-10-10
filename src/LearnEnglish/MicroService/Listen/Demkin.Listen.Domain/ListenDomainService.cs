@@ -25,9 +25,7 @@ namespace Demkin.Listen.Domain
                 throw new DomainException($"{title}已经存在");
             }
 
-            Uri? coverUrl = cover == "" ? null : new Uri(cover);
-
-            Category category = new Category(title, coverUrl, sequenceNum);
+            Category category = Category.Create(title, cover, sequenceNum);
             return category;
         }
 
@@ -48,9 +46,8 @@ namespace Demkin.Listen.Domain
             {
                 throw new DomainException($"{title}已经存在");
             }
-            Uri? coverUrl = cover == "" ? null : new Uri(cover);
 
-            Album album = new Album(title, coverUrl, sequenceNum, categoryId);
+            Album album = Album.Create(title, cover, sequenceNum, categoryId);
 
             return album;
         }

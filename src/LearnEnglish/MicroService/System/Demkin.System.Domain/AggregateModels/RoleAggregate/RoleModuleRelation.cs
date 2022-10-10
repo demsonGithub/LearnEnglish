@@ -9,11 +9,16 @@
         private RoleModuleRelation()
         { }
 
-        public RoleModuleRelation(long roleId, long modulePermissionId)
+        public static RoleModuleRelation Create(long roleId, long modulePermissionId)
         {
-            Id = IdGenerateHelper.Instance.GenerateId();
-            RoleId = roleId;
-            ModulePermissionId = modulePermissionId;
+            RoleModuleRelation item = new RoleModuleRelation()
+            {
+                Id = IdGenerateHelper.Instance.GenerateId(),
+                RoleId = roleId,
+                ModulePermissionId = modulePermissionId
+            };
+            item.AddDomainEvent(new RoleModuleRelationCreatedDomainEvent(item));
+            return item;
         }
     }
 }

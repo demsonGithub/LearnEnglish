@@ -61,7 +61,6 @@ namespace Demkin.FileOperation.WebApi.Application.Commands
 
             if (result.isOldData)
             {
-                await _capPublisher.PublishAsync("UploadFileCompleted", new UploadFileCompletedIntegrationEvent(result.uploadFileInfo.Id));
                 return result.uploadFileInfo;
             }
 
@@ -72,9 +71,6 @@ namespace Demkin.FileOperation.WebApi.Application.Commands
 
             if (!isSaveSuccess)
                 throw new DomainException("保存到数据库失败");
-
-            // 完成上传，通知订阅者
-            await _capPublisher.PublishAsync("UploadFileCompleted", new UploadFileCompletedIntegrationEvent(uploadFileInfoEntity.Id));
 
             return uploadFileInfoEntity;
         }

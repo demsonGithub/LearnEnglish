@@ -8,7 +8,7 @@
 
         public string Title { get; private set; }
 
-        public Uri? CoverUrl { get; private set; }
+        public string? CoverUrl { get; private set; }
 
         public int SequenceNumber { get; private set; }
 
@@ -18,15 +18,20 @@
 
         public bool IsVisible { get; private set; }
 
-        public Album(string title, Uri? coverUrl, int sequenceNumber, long categoryId)
+        public static Album Create(string title, string? coverUrl, int sequenceNumber, long categoryId)
         {
-            Id = IdGenerateHelper.Instance.GenerateId();
-            Title = title;
-            CoverUrl = coverUrl;
-            SequenceNumber = sequenceNumber;
-            CategoryId = categoryId;
-            IsVisible = false;
-            CreateTime = DateTime.Now;
+            Album item = new()
+            {
+                Id = IdGenerateHelper.Instance.GenerateId(),
+                Title = title,
+                CoverUrl = coverUrl,
+                SequenceNumber = sequenceNumber,
+                CategoryId = categoryId,
+                IsVisible = false,
+                CreateTime = DateTime.Now
+            };
+            item.AddDomainEvent(new AlbumCreatedDomainEvent(item));
+            return item;
         }
 
         public Album ChangeTitle(string title)
@@ -37,7 +42,7 @@
 
         public Album ChangeCoverUrl(string coverUrl)
         {
-            CoverUrl = string.IsNullOrEmpty(coverUrl) ? null : new Uri(coverUrl);
+            CoverUrl = coverUrl;
             return this;
         }
 

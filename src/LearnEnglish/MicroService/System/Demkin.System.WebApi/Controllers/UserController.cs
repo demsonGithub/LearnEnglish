@@ -16,18 +16,18 @@ namespace Demkin.System.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ApiResult<LoginSuccesViewModel>> LoginByAccountPassword([FromBody] LoginByAccountPasswordCommand command)
+        public async Task<ApiResult<LoginSuccesDto>> LoginByAccountPassword([FromBody] LoginByAccountPasswordCommand command)
         {
             var result = await _mediator.Send(command, HttpContext.RequestAborted);
-            return ApiResult<LoginSuccesViewModel>.Build(result);
+            return ApiResult<LoginSuccesDto>.Build(result);
         }
 
         [HttpPost]
-        public async Task<ApiResult<UserInfoViewModel>> GetUserInfoByToken([FromBody] GetUserInfoByTokenQuery query)
+        public async Task<ApiResult<UserInfoDto>> GetUserInfoByToken([FromBody] GetUserInfoByTokenQuery query)
         {
             var result = await _mediator.Send(query, HttpContext.RequestAborted);
 
-            return ApiResult<UserInfoViewModel>.Build(result);
+            return ApiResult<UserInfoDto>.Build(result);
         }
     }
 }

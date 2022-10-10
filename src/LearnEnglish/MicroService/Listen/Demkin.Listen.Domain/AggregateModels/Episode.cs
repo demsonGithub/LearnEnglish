@@ -1,15 +1,10 @@
 ﻿using Demkin.Core.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Demkin.Listen.Domain.AggregateModels
 {
-    public class Audio : Entity<long>, IAggregateRoot
+    public class Episode : Entity<long>, IAggregateRoot
     {
-        private Audio()
+        private Episode()
         { }
 
         public string Title { get; private set; }
@@ -18,7 +13,7 @@ namespace Demkin.Listen.Domain.AggregateModels
 
         public int SequenceNumber { get; private set; }
 
-        public Uri AudioUrl { get; private set; }
+        public string AudioUrl { get; private set; }
 
         public double DurationInSecond { get; private set; }
 
@@ -28,12 +23,12 @@ namespace Demkin.Listen.Domain.AggregateModels
 
         public long AlbumId { get; private set; }
 
-        private class Builder
+        public class Builder
         {
             private string _title;
             private string _description;
             private int _sequenceNumber;
-            private Uri _audioUrl;
+            private string _audioUrl;
             private double _durationInSecond;
             private string _subtitles;
             private bool _isVisible;
@@ -59,7 +54,7 @@ namespace Demkin.Listen.Domain.AggregateModels
                 return this;
             }
 
-            public Builder AudioUrl(Uri audioUrl)
+            public Builder AudioUrl(string audioUrl)
             {
                 _audioUrl = audioUrl;
                 return this;
@@ -91,7 +86,7 @@ namespace Demkin.Listen.Domain.AggregateModels
 
             #endregion 链式赋值
 
-            private Audio Build()
+            public Episode Create()
             {
                 if (string.IsNullOrEmpty(_title))
                 {
@@ -120,7 +115,7 @@ namespace Demkin.Listen.Domain.AggregateModels
                     throw new DomainException($"{nameof(_albumId)}为空");
                 }
 
-                Audio entity = new Audio()
+                Episode entity = new Episode()
                 {
                     Id = IdGenerateHelper.Instance.GenerateId(),
                     Title = _title,
@@ -133,6 +128,7 @@ namespace Demkin.Listen.Domain.AggregateModels
                     AlbumId = _albumId,
                 };
 
+                entity.AddDomainEvent(new EpisodeCreatedDomainEvent(entity));
                 return entity;
             }
         }

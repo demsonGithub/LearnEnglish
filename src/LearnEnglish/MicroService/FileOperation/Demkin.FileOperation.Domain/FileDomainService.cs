@@ -64,7 +64,7 @@ namespace Demkin.FileOperation.Domain
 
             stream.Position = 0;
 
-            UploadFileInfo uploadFileInfo = new UploadFileInfo(fileName, fileSize, hash, remoteUrl, null);
+            UploadFileInfo uploadFileInfo = UploadFileInfo.Create(fileName, fileSize, hash, remoteUrl, null);
 
             return (uploadFileInfo, false);
         }

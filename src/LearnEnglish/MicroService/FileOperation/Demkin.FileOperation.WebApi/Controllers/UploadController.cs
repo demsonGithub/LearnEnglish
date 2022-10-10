@@ -15,10 +15,10 @@ namespace Demkin.FileHanlde.WebApi.Controllers
 
         [HttpPost]
         [DisableRequestSizeLimit]
-        public async Task<ApiResult<UploadFileInfoViewModel>> UploadFile([FromForm] UploadFileRequestCommand command)
+        public async Task<ApiResult<UploadFileInfoDto>> UploadFile([FromForm] UploadFileRequestCommand command)
         {
             var result = await _mediator.Send(command, HttpContext.RequestAborted);
-            UploadFileInfoViewModel viewModel = new UploadFileInfoViewModel
+            UploadFileInfoDto viewModel = new UploadFileInfoDto
             {
                 Id = result.Id,
                 CreateTime = result.CreateTime,
@@ -27,7 +27,7 @@ namespace Demkin.FileHanlde.WebApi.Controllers
                 RemoteUrl = result.RemoteUrl
             };
 
-            return ApiResult<UploadFileInfoViewModel>.Build(viewModel);
+            return ApiResult<UploadFileInfoDto>.Build(viewModel);
         }
 
         [HttpGet]

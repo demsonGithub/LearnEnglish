@@ -7,41 +7,49 @@
 
         public string Title { get; private set; }
 
-        public Uri? CoverUrl { get; private set; }
+        public string? CoverUrl { get; private set; }
 
         public int SequenceNumber { get; private set; }
 
         public DateTime CreateTime { get; private set; }
 
-        public Category(string title, Uri? coverUrl, int sequenceNumber)
+        public static Category Create(string title, string? coverUrl, int sequenceNumber)
         {
-            Id = IdGenerateHelper.Instance.GenerateId();
-            Title = title;
-            CoverUrl = coverUrl;
-            SequenceNumber = sequenceNumber;
-            CreateTime = DateTime.Now;
+            Category item = new()
+            {
+                Id = IdGenerateHelper.Instance.GenerateId(),
+                Title = title,
+                CoverUrl = coverUrl,
+                SequenceNumber = sequenceNumber,
+                CreateTime = DateTime.Now
+            };
 
-            this.AddDomainEvent(new CategoryCreateDomainEvent(this));
+            item.AddDomainEvent(new CategoryCreateDomainEvent(item));
+            return item;
         }
 
-        public void ChangeTitle(string targetValue)
+        public Category ChangeTitle(string targetValue)
         {
             Title = targetValue;
             AddDomainEvent(new ChangeTitleDomainEvent(this));
+            return this;
         }
 
-        public void ChangeCoverUrl(string targetValue)
+        public Category ChangeCoverUrl(string targetValue)
         {
-            if (string.IsNullOrEmpty(targetValue)) { 
-                CoverUrl = null;
-                return; 
-            }
-            CoverUrl = new Uri(targetValue);
+            CoverUrl = targetValue;
+
+            AddDomainEvent(new ChangeCoverUrlDomainEvent(this));
+            return this;
         }
 
-        public void ChangeSequenceNumber(int targetValue)
+        public Category ChangeSequenceNumber(int targetValue)
         {
             SequenceNumber = targetValue;
+
+            AddDomainEvent(new ChangeSequenceNumberDomainEvent(this));
+
+            return this;
         }
     }
 }

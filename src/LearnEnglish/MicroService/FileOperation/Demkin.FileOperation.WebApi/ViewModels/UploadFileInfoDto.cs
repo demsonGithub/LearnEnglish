@@ -1,6 +1,6 @@
 ﻿namespace Demkin.FileOperation.WebApi.ViewModels
 {
-    public class UploadFileInfoViewModel
+    public class UploadFileInfoDto
     {
         public long Id { get; set; }
 

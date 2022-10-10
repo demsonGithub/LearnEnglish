@@ -17,14 +17,19 @@ namespace Demkin.System.Domain.AggregateModels
         private Module()
         { }
 
-        public Module(long parentId, string name, string url, string? icon, LinkType linkType)
+        public static Module Create(long parentId, string name, string url, string? icon, LinkType linkType)
         {
-            Id = IdGenerateHelper.Instance.GenerateId();
-            ParentId = parentId;
-            Name = name;
-            Url = url;
-            Icon = icon;
-            LinkType = linkType;
+            Module item = new Module()
+            {
+                Id = IdGenerateHelper.Instance.GenerateId(),
+                ParentId = parentId,
+                Name = name,
+                Url = url,
+                Icon = icon,
+                LinkType = linkType,
+            };
+            item.AddDomainEvent(new ModuleCreatedDomainEvent(item));
+            return item;
         }
     }
 }

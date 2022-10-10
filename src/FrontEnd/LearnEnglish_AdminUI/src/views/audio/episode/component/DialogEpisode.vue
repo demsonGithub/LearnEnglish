@@ -17,19 +17,25 @@
       </el-form-item>
       <el-form-item label="音频地址：">
         <div class="coverUpload">
-          <el-input v-model="form.coverUrl" :readonly="true" />
+          <el-input v-model="form.audioUrl" :readonly="true" />
           <el-upload
             :show-file-list="false"
             :http-request="uploadFile"
             :on-success="uploadSuccessHandle"
             :on-error="uploadError"
           >
-            <el-button>上传图片</el-button>
+            <el-button>上传音频</el-button>
           </el-upload>
         </div>
         <div class="progress">
           <el-progress :percentage="progressValue" :status="progressStatus" />
         </div>
+      </el-form-item>
+      <el-form-item label="音频时长：">
+        <el-input v-model="form.audioDuration" />
+      </el-form-item>
+      <el-form-item label="字&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;幕：">
+        <el-input v-model="form.description" />
       </el-form-item>
       <el-form-item>
         <el-button
@@ -53,7 +59,8 @@ export interface IEditEpisodeOptions {
   id?: string
   title: string
   description: string
-  coverUrl: string
+  audioUrl: string
+  audioDuration: number
   sequenceNumber: number
 }
 
@@ -76,7 +83,8 @@ watch(
       form.value = {
         title: '',
         description: '',
-        coverUrl: '',
+        audioUrl: '',
+        audioDuration: null,
         sequenceNumber: null,
       }
     } else {
@@ -98,6 +106,7 @@ const uploadFile = async (params: any): Promise<UploadRequestHandler> => {
   formData.append('file', params.file)
 
   const result = await fileOperationApi.uploadFile(formData)
+  getAudioDuration(params.file)
 
   return result.data
 }
@@ -106,13 +115,23 @@ const uploadSuccessHandle: UploadProps['onSuccess'] = (
   response,
   uploadFile
 ) => {
-  form.value.coverUrl = response.remoteUrl
+  form.value.audioUrl = response.remoteUrl
   progressValue.value = 100
   progressStatus.value = 'success'
 }
 
 const uploadError = (error: Error, uploadFile: UploadFile) => {
   progressStatus.value = 'exception'
+}
+
+//获取时长的函数
+const getAudioDuration = (file: Blob | MediaSource) => {
+  let url = URL.createObjectURL(file)
+  let audioElement = new Audio(url)
+
+  audioElement.addEventListener('loadedmetadata', function () {
+    form.value.audioDuration = audioElement.duration
+  })
 }
 
 const init = () => {

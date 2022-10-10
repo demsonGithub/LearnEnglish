@@ -1,18 +1,19 @@
 ﻿namespace Demkin.System.WebApi.Application.Queries
 {
-    public class GetUserInfoByTokenQuery : IRequest<UserInfoViewModel>
+    public class GetUserInfoByTokenQuery : IRequest<UserInfoDto>
     {
         public string Token { get; set; }
     }
 
-    public class GetUserInfoByTokenQueryHandler : IRequestHandler<GetUserInfoByTokenQuery, UserInfoViewModel>
+    public class GetUserInfoByTokenQueryHandler : IRequestHandler<GetUserInfoByTokenQuery, UserInfoDto>
     {
-        public Task<UserInfoViewModel> Handle(GetUserInfoByTokenQuery request, CancellationToken cancellationToken)
+        public Task<UserInfoDto> Handle(GetUserInfoByTokenQuery request, CancellationToken cancellationToken)
         {
-            // 解析token
+            // 1.解析token
             var tokenContent = JwtTokenHandler.SerializeJwtToken(request.Token);
 
-            var result = new UserInfoViewModel()
+            // 2. 返回dto
+            var result = new UserInfoDto()
             {
                 UserName = tokenContent.Name,
                 Roles = tokenContent.Roles.ToList()

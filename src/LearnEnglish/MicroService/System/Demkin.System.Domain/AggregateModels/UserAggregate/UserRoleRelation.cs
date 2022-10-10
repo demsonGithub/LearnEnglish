@@ -2,9 +2,9 @@
 {
     public class UserRoleRelation : Entity<long>
     {
-        public long UserId { get; private set; } = default(long);
+        public long UserId { get; private set; }
 
-        public long RoleId { get; private set; } = default(long);
+        public long RoleId { get; private set; }
 
         public virtual User? User { get; private set; }
 
@@ -13,11 +13,16 @@
         private UserRoleRelation()
         { }
 
-        public UserRoleRelation(long userId, long roleId)
+        public static UserRoleRelation Create(long userId, long roleId)
         {
-            Id = IdGenerateHelper.Instance.GenerateId();
-            UserId = userId;
-            RoleId = roleId;
+            UserRoleRelation item = new UserRoleRelation()
+            {
+                Id = IdGenerateHelper.Instance.GenerateId(),
+                UserId = userId,
+                RoleId = roleId,
+            };
+            item.AddDomainEvent(new UserRoleRelationCreatedDomainEvent(item));
+            return item;
         }
     }
 }

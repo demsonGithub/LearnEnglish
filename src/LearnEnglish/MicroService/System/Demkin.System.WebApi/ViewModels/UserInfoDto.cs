@@ -1,6 +1,6 @@
 ﻿namespace Demkin.System.WebApi.ViewModels
 {
-    public class UserInfoViewModel
+    public class UserInfoDto
     {
         public string UserName { get; set; }
 

@@ -1,6 +1,6 @@
 ﻿namespace Demkin.System.WebApi.ViewModels
 {
-    public class LoginSuccesViewModel
+    public class LoginSuccesDto
     {
         public long UserId { get; set; }
 

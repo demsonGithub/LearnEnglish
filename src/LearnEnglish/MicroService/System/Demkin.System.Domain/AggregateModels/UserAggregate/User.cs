@@ -15,14 +15,17 @@
         {
         }
 
-        public User(string userName, string password, Address address)
+        public static User Create(string userName, string password, Address address)
         {
-            Id = IdGenerateHelper.Instance.GenerateId();
-            UserName = userName;
-            Password = password;
-            Address = address;
-
-            AddDomainEvent(new UserCreatedDomainEvent(this));
+            User item = new User()
+            {
+                Id = IdGenerateHelper.Instance.GenerateId(),
+                UserName = userName,
+                Password = password,
+                Address = address,
+            };
+            item.AddDomainEvent(new UserCreatedDomainEvent(item));
+            return item;
         }
 
         public void AssignRoleRelation(IEnumerable<UserRoleRelation> roleRelations)

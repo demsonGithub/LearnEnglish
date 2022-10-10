@@ -7,8 +7,18 @@ namespace Demkin.Listen.WebApi.Admin.Controllers
     [ApiController]
     public class EpisodeController : ControllerBase
     {
-        public EpisodeController()
+        private readonly IMediator _mediator;
+
+        public EpisodeController(IMediator mediator)
         {
+            _mediator = mediator;
+        }
+
+        [HttpPost]
+        public async Task<ApiResult<string>> AddEpisode([FromBody] AddEpisodeCommand command)
+        {
+            var result = await _mediator.Send(command, HttpContext.RequestAborted);
+            return ApiResult<string>.Build(result);
         }
     }
 }

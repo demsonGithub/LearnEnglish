@@ -20,7 +20,7 @@ namespace Demkin.Listen.Infrastructure
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<Album> Albums { get; set; }
-        public DbSet<Audio> Audios { get; set; }
+        public DbSet<Episode> Audios { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

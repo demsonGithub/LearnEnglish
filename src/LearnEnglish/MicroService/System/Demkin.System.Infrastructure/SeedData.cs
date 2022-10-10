@@ -51,13 +51,13 @@ namespace Demkin.System.Infrastructure
             #endregion 判断是否存在数据
 
             Address address = new Address("湖北省", "武汉市", "东西湖区", "三店中路");
-            var user = new User("admin", "123456", address);
+            var user = User.Create("admin", "123456", address);
             _dbContext.Users.Add(user);
 
-            var role = new Role("sysadmin", "超级管理员,系统最大的权限者");
+            var role = Role.Create("sysadmin", "超级管理员,系统最大的权限者");
             _dbContext.Roles.Add(role);
 
-            var userRoleRelation = new UserRoleRelation(user.Id, role.Id);
+            var userRoleRelation = UserRoleRelation.Create(user.Id, role.Id);
             _dbContext.UserRoleRelations.Add(userRoleRelation);
 
             await _dbContext.SaveEntitiesAsync();
