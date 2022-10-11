@@ -17,18 +17,20 @@
         ></el-table-column>
         <el-table-column
           prop="sequenceNumber"
-          label="排序编号"
-          width="100"
+          label="排序"
+          width="60"
         ></el-table-column>
-        <el-table-column prop="title" label="音频源地址"></el-table-column>
+        <el-table-column prop="audioUrl" label="音频源地址"></el-table-column>
         <el-table-column
           prop="durationInSecond"
           label="时长(秒)"
-          width="100"
+          width="120"
         ></el-table-column>
-        <el-table-column label="操作" width="240">
+        <el-table-column label="操作" width="140">
           <template #default="scope">
-            <el-button size="small">编辑</el-button>
+            <el-button size="small" @click="handleEdit(scope.row)">
+              编辑
+            </el-button>
             <el-button
               size="small"
               type="danger"
@@ -51,7 +53,9 @@
 
 <script lang="ts" setup>
 import { episodeApi } from '@/api/audio'
+import { apiResultCode } from '@/api/request'
 import { useParamStore } from '@/store/modules/paramStore'
+import { ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import DialogEpisode, {
@@ -78,7 +82,13 @@ const currentAlbumId = ref()
 const episodeData = ref<IEpisodeDetial[]>()
 
 //#region 查询
-const queryEpisodeList = (albumId: string) => {}
+const queryEpisodeList = async (albumId: string) => {
+  let apiParams: IQueryEpisodeParams = {
+    albumId: albumId,
+  }
+  const result = await episodeApi.queryEpisodeList(apiParams)
+  episodeData.value = result.data
+}
 //#endregion
 
 const dialogVisible = ref<boolean>(false)
@@ -110,9 +120,13 @@ const handleAddSubmit = async (params: IEditEpisodeOptions) => {
     subtitles: params.subtitles,
     albumId: currentAlbumId.value,
   }
-  console.log('1', apiParams)
-
   const result = await episodeApi.addEpisode(apiParams)
+
+  if (result.code === apiResultCode.fail) {
+    console.log(result)
+
+    ElMessage.error(result.msg)
+  }
 
   queryEpisodeList(currentAlbumId.value)
   dialogVisible.value = false
@@ -120,6 +134,10 @@ const handleAddSubmit = async (params: IEditEpisodeOptions) => {
 //#endregion
 
 //#region 修改
+const handleEdit = (row: IEpisodeDetial) => {
+  console.log(row)
+}
+
 const handleUpdateSubmit = (params: IEditEpisodeOptions) => {}
 //#endregion
 

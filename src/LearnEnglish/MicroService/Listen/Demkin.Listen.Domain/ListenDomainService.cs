@@ -1,15 +1,18 @@
 ﻿using Demkin.Core.Exceptions;
 using Demkin.Listen.Domain.Interfaces;
+using DotNetCore.CAP;
 
 namespace Demkin.Listen.Domain
 {
     public class ListenDomainService : IDenpendencyScope
     {
+        private readonly ICapPublisher _capPublisher;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IAlbumRepository _albumRepository;
 
-        public ListenDomainService(ICategoryRepository categoryRepository, IAlbumRepository albumRepository)
+        public ListenDomainService(ICapPublisher capPublisher, ICategoryRepository categoryRepository, IAlbumRepository albumRepository)
         {
+            _capPublisher = capPublisher;
             _categoryRepository = categoryRepository;
             _albumRepository = albumRepository;
         }
@@ -53,5 +56,22 @@ namespace Demkin.Listen.Domain
         }
 
         #endregion Album
+
+        #region Episode
+
+        public static bool IsNeedTranscode(string audioUrl)
+        {
+            // 如果是m4a的格式，不需要转码,反之，通知转码服务转码，然后返回地址
+            if (audioUrl.EndsWith("m4a", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        #endregion Episode
     }
 }

@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Serilog;
+using StackExchange.Redis;
 
 namespace Demkin.Core.Extensions
 {
@@ -141,6 +142,14 @@ namespace Demkin.Core.Extensions
             });
 
             #endregion Autofac添加依赖注册
+
+            #region Redis
+
+            string redisConnStr = configuration.GetValue<string>("Redis:ConnStr");
+            IConnectionMultiplexer redisConnMultiplexer = ConnectionMultiplexer.Connect(redisConnStr);
+            services.AddSingleton(typeof(IConnectionMultiplexer), redisConnMultiplexer);
+
+            #endregion Redis
         }
     }
 }

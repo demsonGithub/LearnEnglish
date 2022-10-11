@@ -97,7 +97,7 @@ namespace Demkin.Listen.Domain.AggregateModels
                 {
                     throw new DomainException($"{nameof(_sequenceNumber)}不能小于0");
                 }
-                if (string.IsNullOrEmpty(_audioUrl.ToString()))
+                if (string.IsNullOrEmpty(_audioUrl))
                 {
                     throw new DomainException($"{nameof(_audioUrl)}为空");
                 }

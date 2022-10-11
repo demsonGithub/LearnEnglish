@@ -16,7 +16,6 @@ global using Demkin.FileOperation.Infrastructure;
 global using Demkin.FileOperation.Infrastructure.Repositories;
 
 // application
-global using Demkin.FileOperation.WebApi.Extensions;
 global using Demkin.FileOperation.WebApi.Application.Commands;
 global using Demkin.FileOperation.WebApi.Application.Queries;
 global using Demkin.FileOperation.WebApi.ViewModels;

@@ -2,6 +2,6 @@
 {
     public interface ISubscriberService
     {
-        Task HandleTranscoding(object obj);
+        Task HandleTranscoding(TranscodeFileIntegrationEventInputParams obj);
     }
 }

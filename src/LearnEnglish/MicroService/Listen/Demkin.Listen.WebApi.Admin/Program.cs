@@ -19,9 +19,11 @@ try
 
     builder.InitConfigureDefaultServices();
     builder.Services.AddTransient<ISubscriberService, SubscriberService>();
+    builder.Services.AddTransient<TranscodeFileIntegrationEvent>();
+
     builder.Services.AddDbContext<ListenDbContext>(options =>
     {
-        options.UseSqlServer(builder.Configuration.GetSection("DbConnection:MasterDb").Value);
+        options.UseSqlServer(builder.Configuration.GetSection("DbConnection:MasterDb_Listen").Value);
     });
 
     var app = builder.Build();

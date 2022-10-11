@@ -8,29 +8,31 @@ namespace Demkin.System.Infrastructure
 {
     public class SystemDbContext : MyDbContext
     {
-        private readonly IConfiguration _configuration;
-
-        public SystemDbContext(IMediator mediator, IConfiguration configuration) : base(mediator)
+        public SystemDbContext(DbContextOptions options, IMediator mediator) : base(options, mediator)
         {
-            _configuration = configuration;
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            string connectionString = _configuration.GetSection("DbConnection:MasterDb").Value;
+        //public SystemDbContext(IMediator mediator, IConfiguration configuration) : base(mediator)
+        //{
+        //    _configuration = configuration;
+        //}
 
-            optionsBuilder.UseSqlServer(connectionString, x =>
-            {
-                x.CommandTimeout(20);
-            });
-            optionsBuilder.LogTo(new Action<string>(q =>
-            {
-                if (q.Contains("Executed DbCommand"))
-                {
-                    Debug.WriteLine(q);
-                }
-            }), LogLevel.Information);
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    string connectionString = _configuration.GetSection("DbConnection:MasterDb").Value;
+
+        //    optionsBuilder.UseSqlServer(connectionString, x =>
+        //    {
+        //        x.CommandTimeout(20);
+        //    });
+        //    optionsBuilder.LogTo(new Action<string>(q =>
+        //    {
+        //        if (q.Contains("Executed DbCommand"))
+        //        {
+        //            Debug.WriteLine(q);
+        //        }
+        //    }), LogLevel.Information);
+        //}
 
         public DbSet<User> Users { get; set; } = default!;
 

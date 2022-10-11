@@ -81,6 +81,18 @@ const albumApi = {
 }
 
 const episodeApi = {
+  queryEpisodeList: async function (
+    params: IQueryEpisodeParams
+  ): Promise<apiResult> {
+    const result = await request({
+      method: 'get',
+      url: '/api/Episode/GetEpisodeList',
+      baseURL: '/Listen',
+      params: params,
+    })
+
+    return result.data
+  },
   addEpisode: async function (params: IAddEpisodeParams): Promise<apiResult> {
     const result = await request({
       method: 'post',

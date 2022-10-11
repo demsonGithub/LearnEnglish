@@ -1,5 +1,6 @@
 using Demkin.Core.Extensions;
 using Demkin.FileOperation.WebApi.Hubs;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 string logFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
@@ -17,7 +18,10 @@ try
     builder.Services.AddSwaggerGen();
 
     builder.InitConfigureDefaultServices();
-    builder.Services.AddDbSetup(builder.Configuration.GetValue<string>("ConnectionStrings:sqlserver"));
+    builder.Services.AddDbContext<FileDbContext>(options =>
+    {
+        options.UseSqlServer(builder.Configuration.GetSection("DbConnection:MasterDb_File").Value);
+    });
 
     builder.Services.AddSignalR();
 

@@ -2,6 +2,6 @@
 {
     public interface ISubscriberService
     {
-        Task UploadFileCompleted(UploadFileCompletedIntegrationEvent integrationEvent);
+        Task UploadFileCompleted(UploadFileCompletedIntegrationEventParams integrationEvent);
     }
 }

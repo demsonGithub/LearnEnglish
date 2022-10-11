@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 string logFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
 SerilogHelper.LogInitialize(logFilePath);
 
@@ -15,7 +17,10 @@ try
     builder.Services.AddSwaggerGen();
 
     builder.InitConfigureDefaultServices();
-    builder.Services.AddDbContext<SystemDbContext>();
+    builder.Services.AddDbContext<SystemDbContext>(options =>
+    {
+        options.UseSqlServer(builder.Configuration.GetSection("DbConnection:MasterDb_System").Value);
+    });
 
     var app = builder.Build();
 

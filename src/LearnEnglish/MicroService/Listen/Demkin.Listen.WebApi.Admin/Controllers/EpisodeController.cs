@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Demkin.Listen.WebApi.Admin.Controllers
 {
@@ -12,6 +11,14 @@ namespace Demkin.Listen.WebApi.Admin.Controllers
         public EpisodeController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpGet]
+        public async Task<ApiResult<List<EpisodeDto>>> GetEpisodeList([FromQuery] GetEpisodeListQuery query)
+        {
+            var result = await _mediator.Send(query, HttpContext.RequestAborted);
+
+            return ApiResult<List<EpisodeDto>>.Build(result);
         }
 
         [HttpPost]

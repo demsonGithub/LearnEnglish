@@ -119,7 +119,7 @@ enum apiResultCode {
 
 interface apiResult {
   code: apiResultCode
-  message: string
+  msg: string
   data: any
 }
 

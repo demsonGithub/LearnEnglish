@@ -35,8 +35,4 @@
     <ProjectReference Include="..\Demkin.Listen.Infrastructure\Demkin.Listen.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Application\DomainEventHandlers\" />
-  </ItemGroup>
-
 </Project>

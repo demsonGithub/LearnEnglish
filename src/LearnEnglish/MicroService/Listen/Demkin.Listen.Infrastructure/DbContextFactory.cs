@@ -38,7 +38,7 @@ namespace Demkin.Listen.Infrastructure
             string[] dbInfos = configuration.GetSection("DbConnection:SlaveDb").Get<string[]>();
             if (dbInfos == null)
             {
-                string masterDbConnectionString = configuration.GetSection("DbConnection:MasterDb").Value;
+                string masterDbConnectionString = configuration.GetSection("DbConnection:MasterDb_Listen").Value;
                 dbInfoList.Add(masterDbConnectionString);
             }
             else
