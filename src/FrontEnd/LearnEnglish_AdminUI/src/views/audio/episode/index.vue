@@ -42,12 +42,14 @@
         </el-table-column>
       </el-table>
     </div>
-    <dialog-episode
-      :dialog-visible="dialogVisible"
-      :edit-data="editData"
-      @close-dialog="closeDialog"
-      @handle-submit="handleSubmitEpisode"
-    ></dialog-episode>
+    <div v-if="dialogVisible">
+      <dialog-episode
+        :dialog-visible="dialogVisible"
+        :edit-data="editData"
+        @close-dialog="closeDialog"
+        @handle-submit="handleSubmitEpisode"
+      ></dialog-episode>
+    </div>
   </div>
 </template>
 
@@ -91,7 +93,7 @@ const queryEpisodeList = async (albumId: string) => {
 }
 //#endregion
 
-const dialogVisible = ref<boolean>(false)
+const dialogVisible = ref(false)
 const editData = ref<IEditEpisodeOptions>()
 const closeDialog = () => {
   dialogVisible.value = false
@@ -106,7 +108,14 @@ const handleSubmitEpisode = (params: IEditEpisodeOptions) => {
 }
 //#region 新增
 const handleAddEpisode = () => {
-  editData.value = null
+  editData.value = {
+    title: '',
+    description: '',
+    audioUrl: '',
+    audioDuration: null,
+    sequenceNumber: null,
+    subtitles: '',
+  }
   dialogVisible.value = true
 }
 

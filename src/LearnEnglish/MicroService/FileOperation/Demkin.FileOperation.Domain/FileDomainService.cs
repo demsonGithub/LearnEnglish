@@ -37,7 +37,7 @@ namespace Demkin.FileOperation.Domain
         /// <param name="stream"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<(UploadFileInfo uploadFileInfo, bool isOldData)> UploadFileAsync(string fileName, Stream stream, CancellationToken cancellationToken)
+        public async Task<(UploadFileInfo uploadFileInfo, bool isOldData)> UploadFileAsync(string cacheKey, string fileName, Stream stream, CancellationToken cancellationToken)
 
         {
             // 创建文件的hash值
@@ -60,7 +60,7 @@ namespace Demkin.FileOperation.Domain
             string key = $"{today.Year}/{today.Month}/{today.Day}/{hash}/{fileName}";
 
             // 上传文件,领域层不操作数据库所以返回实体对象，由应用层添加保存数据库
-            Uri remoteUrl = await _storageFile.SaveFileAsync(key, stream, cancellationToken);
+            Uri remoteUrl = await _storageFile.SaveFileAsync(cacheKey, key, stream, cancellationToken);
 
             stream.Position = 0;
 

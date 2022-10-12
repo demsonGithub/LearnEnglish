@@ -29,4 +29,8 @@
     <ProjectReference Include="..\Demkin.FileOperation.Infrastructure\Demkin.FileOperation.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Application\IntegrationEvents\" />
+  </ItemGroup>
+
 </Project>

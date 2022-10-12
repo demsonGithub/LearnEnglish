@@ -1,5 +1,6 @@
 using Demkin.Core.Extensions;
 using Demkin.Transcoding.WebApi.Application.IntegrationEvents;
+using Demkin.Transcoding.WebApi.Extensions;
 using Demkin.Utils;
 using Serilog;
 
@@ -19,7 +20,8 @@ try
     builder.Services.AddSwaggerGen();
 
     builder.InitConfigureDefaultServices();
-    builder.Services.AddTransient<ISubscriberService, SubscriberService>();
+
+    builder.Services.AddSubscribeEvent();
 
     var app = builder.Build();
 

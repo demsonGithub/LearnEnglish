@@ -1,4 +1,5 @@
-using Demkin.Listen.WebApi.Admin.Application.IntegrationEvents;
+using Demkin.Listen.WebApi.Admin.Extensions;
+using Demkin.Listen.WebApi.Admin.Hubs;
 using Microsoft.EntityFrameworkCore;
 
 string logFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
@@ -18,8 +19,11 @@ try
     builder.Services.AddSwaggerGen();
 
     builder.InitConfigureDefaultServices();
-    builder.Services.AddTransient<ISubscriberService, SubscriberService>();
-    builder.Services.AddTransient<TranscodeFileIntegrationEvent>();
+
+    builder.Services.AddSignalR();
+
+    // Ìí¼ÓCapÊÂ¼þ¶©ÔÄ
+    builder.Services.AddSubscribeEvent();
 
     builder.Services.AddDbContext<ListenDbContext>(options =>
     {
@@ -42,6 +46,7 @@ try
     app.InitUseDefaultMiddleware();
 
     app.MapControllers();
+    app.MapHub<UploadFileHub>("/Hubs/UploadFileHub");
 
     app.Run();
 }

@@ -1,5 +1,4 @@
-﻿using Demkin.FileOperation.WebApi.Application.IntegrationEvents;
-using Demkin.FileOperation.WebApi.Hubs;
+﻿using Demkin.Utils.IdGenerate;
 using DotNetCore.CAP;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Memory;
@@ -8,6 +7,8 @@ namespace Demkin.FileOperation.WebApi.Application.Commands
 {
     public class UploadFileRequestCommand : IRequest<UploadFileInfo>
     {
+        public string? IdentityId { get; set; }
+
         public IFormFile File { get; set; }
     }
 
@@ -15,17 +16,15 @@ namespace Demkin.FileOperation.WebApi.Application.Commands
     {
         private readonly IMemoryCache _cache;
         private readonly FileDomainService _domainService;
-        private readonly IHubContext<FileUploadStatusHub> _hubContext;
         private readonly ICapPublisher _capPublisher;
         private readonly IUploadFileInfoRepository _uploadFileInfoRepository;
 
         private volatile bool isStopProgress = false;
 
-        public UploadFileRequestCommandHandler(IMemoryCache cache, FileDomainService domainService, IHubContext<FileUploadStatusHub> hubContext, ICapPublisher capPublisher, IUploadFileInfoRepository uploadFileInfoRepository)
+        public UploadFileRequestCommandHandler(IMemoryCache cache, FileDomainService domainService, ICapPublisher capPublisher, IUploadFileInfoRepository uploadFileInfoRepository)
         {
             _cache = cache;
             _domainService = domainService;
-            _hubContext = hubContext;
             _capPublisher = capPublisher;
             _uploadFileInfoRepository = uploadFileInfoRepository;
         }
@@ -36,27 +35,23 @@ namespace Demkin.FileOperation.WebApi.Application.Commands
             string fileName = file.FileName;
             using Stream stream = file.OpenReadStream();
 
-            var hash = HashHelper.ComputeSha256Hash(stream);
-            DateTime today = DateTime.Today;
-            string key = $"{today.Year}/{today.Month}/{today.Day}/{hash}/{fileName}";
-
+            string cacheKey = "FileOperation." + IdGenerateHelper.Instance.GenerateId();
             // 上传文件
-            Task.Factory.StartNew(() =>
+            Task.Factory.StartNew(async () =>
             {
                 while (true)
                 {
-                    int completedPercent = _cache.Get<int>(key);
-
-                    _hubContext.Clients.All.SendAsync("RecieveMessage", completedPercent);
-                    Thread.Sleep(100);
+                    int completedPercent = _cache.Get<int>(cacheKey);
+                    await _capPublisher.PublishAsync("FileOperation.UploadFile.Progress", new { IdentityId = request.IdentityId, CompletedProgress = completedPercent });
+                    Thread.Sleep(1000);
                     if (completedPercent >= 100 || isStopProgress)
                     {
-                        _cache.Remove(key);
+                        _cache.Remove(cacheKey);
                         break;
                     }
                 }
             });
-            var result = await _domainService.UploadFileAsync(fileName, stream, cancellationToken);
+            var result = await _domainService.UploadFileAsync(cacheKey, fileName, stream, cancellationToken);
             isStopProgress = true;
 
             if (result.isOldData)

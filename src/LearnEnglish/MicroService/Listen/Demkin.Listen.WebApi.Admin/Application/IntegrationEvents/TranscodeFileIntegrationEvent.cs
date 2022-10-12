@@ -15,6 +15,8 @@ namespace Demkin.Listen.WebApi.Admin.Application.IntegrationEvents
         {
             var a = obj;
 
+            Console.WriteLine(a);
+
             return Task.CompletedTask;
         }
     }

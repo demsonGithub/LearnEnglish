@@ -17,7 +17,7 @@ using StackExchange.Redis;
 
 namespace Demkin.Core.Extensions
 {
-    public static class AppServiceExtensions
+    public static class ServiceCollectionExtensions
     {
         public static void InitConfigureDefaultServices(this WebApplicationBuilder builder)
         {

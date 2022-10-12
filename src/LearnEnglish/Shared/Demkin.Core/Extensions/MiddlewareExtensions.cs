@@ -2,7 +2,7 @@
 
 namespace Demkin.Core.Extensions
 {
-    public static class AppMiddlewareExtensions
+    public static class MiddlewareExtensions
     {
         public static IApplicationBuilder InitUseDefaultMiddleware(this IApplicationBuilder app)
         {

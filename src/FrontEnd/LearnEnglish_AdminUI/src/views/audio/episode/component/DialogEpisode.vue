@@ -53,10 +53,11 @@
 
 <script lang="ts" setup>
 import fileOperationApi from '@/api/fileOperation'
-import { UploadFile, UploadProps, UploadRequestHandler } from 'element-plus'
+import { UploadProps, UploadRequestHandler } from 'element-plus'
 import { onMounted, ref, watch } from 'vue'
 import * as signalR from '@microsoft/signalr'
 import { apiResultCode } from '@/api/request'
+import { computed } from '@vue/reactivity'
 
 export interface IEditEpisodeOptions {
   id?: string
@@ -72,7 +73,6 @@ interface IDialogEpisodeProps {
   dialogVisible: boolean
   editData?: IEditEpisodeOptions
 }
-const form = ref<IEditEpisodeOptions>()
 
 const progressValue = ref(0)
 const progressStatus = ref()
@@ -80,45 +80,24 @@ const progressStatus = ref()
 const props = defineProps<IDialogEpisodeProps>()
 const emits = defineEmits(['closeDialog', 'handleSubmit'])
 
-watch(
-  () => props.editData,
-  () => {
-    if (props.editData === null) {
-      form.value = {
-        title: '',
-        description: '',
-        audioUrl: '',
-        audioDuration: null,
-        sequenceNumber: null,
-        subtitles: '',
-      }
-    } else {
-      form.value = props.editData
-    }
-  }
-)
+const form = computed(() => props.editData)
 
 const handleSubmit = () => {
   emits('handleSubmit', form.value)
 }
 
 const handleCancel = () => {
-  form.value = {
-    title: '',
-    description: '',
-    audioUrl: '',
-    audioDuration: null,
-    sequenceNumber: null,
-    subtitles: '',
-  }
   emits('closeDialog')
 }
+
+const signalrId = ref('')
 
 const uploadFile = async (params: any): Promise<UploadRequestHandler> => {
   progressStatus.value = null
   progressValue.value = 0
   const formData = new FormData()
   formData.append('file', params.file)
+  formData.append('identityId', signalrId.value)
 
   const result = await fileOperationApi.uploadFile(formData)
   getAudioDuration(params.file)
@@ -149,17 +128,22 @@ const getAudioDuration = (file: Blob | MediaSource) => {
   })
 }
 
-const init = () => {
+const init = async () => {
   const connection = new signalR.HubConnectionBuilder()
-    .withUrl('http://localhost:8082/Hubs/FileUploadStatusHub', {
+    .withUrl('http://localhost:8083/Hubs/UploadFileHub', {
       skipNegotiation: true,
-      transport: 1, // 强制WebSockets
+      transport: signalR.HttpTransportType.WebSockets, // 强制WebSockets
       logger: signalR.LogLevel.Error,
     })
     .build()
 
+  // 连接回调函数
+  connection.on('ConnectCallback', connId => {
+    signalrId.value = connId
+  })
+
   connection.on('RecieveMessage', data => {
-    progressValue.value = data
+    progressValue.value = parseInt(data)
   })
 
   connection.start()

@@ -1,5 +1,4 @@
 using Demkin.Core.Extensions;
-using Demkin.FileOperation.WebApi.Hubs;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -23,8 +22,6 @@ try
         options.UseSqlServer(builder.Configuration.GetSection("DbConnection:MasterDb_File").Value);
     });
 
-    builder.Services.AddSignalR();
-
     builder.Services.AddMemoryCache();
 
     var app = builder.Build();
@@ -43,7 +40,6 @@ try
     app.InitUseDefaultMiddleware();
 
     app.MapControllers();
-    app.MapHub<FileUploadStatusHub>("/Hubs/FileUploadStatusHub");
 
     app.Run();
 }

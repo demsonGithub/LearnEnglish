@@ -28,7 +28,7 @@ namespace Demkin.FileOperation.Infrastructure.Repositories
             _cache = cache;
         }
 
-        public async Task<Uri> SaveFileAsync(string key, Stream content, CancellationToken cancellationToken = default)
+        public async Task<Uri> SaveFileAsync(string cacheKey, string key, Stream content, CancellationToken cancellationToken = default)
         {
             if (key.StartsWith("/"))
             {
@@ -67,7 +67,8 @@ namespace Demkin.FileOperation.Infrastructure.Repositories
                     await fsWrite.WriteAsync(buffer, 0, readByteCount);
                     _completedPercent = Convert.ToInt32(fsWrite.Length / Convert.ToDouble(content.Length) * 100);
 
-                    _cache.Set(key, _completedPercent);
+                    _cache.Set(cacheKey, _completedPercent);
+
                     if (readByteCount == 0)
                         break;
                 }
