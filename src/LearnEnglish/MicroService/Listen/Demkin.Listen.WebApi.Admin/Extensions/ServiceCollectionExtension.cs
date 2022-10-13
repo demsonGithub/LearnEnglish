@@ -7,7 +7,7 @@ namespace Demkin.Listen.WebApi.Admin.Extensions
         public static IServiceCollection AddSubscribeEvent(this IServiceCollection services)
         {
             services.AddTransient<TranscodeFileIntegrationEvent>();
-            services.AddTransient<UploadFileCompletedIntegrationEvent>();
+            services.AddTransient<UploadFileResultIntegrationEvent>();
             services.AddTransient<UploadFileProgressIntegrationEvent>();
 
             return services;

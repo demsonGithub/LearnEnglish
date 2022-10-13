@@ -2,11 +2,15 @@
 using DotNetCore.CAP;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Memory;
+using StackExchange.Redis;
 
 namespace Demkin.FileOperation.WebApi.Application.Commands
 {
     public class UploadFileRequestCommand : IRequest<UploadFileInfo>
     {
+        /// <summary>
+        /// SignalR的标识Id
+        /// </summary>
         public string? IdentityId { get; set; }
 
         public IFormFile File { get; set; }
@@ -15,15 +19,17 @@ namespace Demkin.FileOperation.WebApi.Application.Commands
     public class UploadFileRequestCommandHandler : IRequestHandler<UploadFileRequestCommand, UploadFileInfo>
     {
         private readonly IMemoryCache _cache;
+        private readonly IConnectionMultiplexer _redisCoon;
         private readonly FileDomainService _domainService;
         private readonly ICapPublisher _capPublisher;
         private readonly IUploadFileInfoRepository _uploadFileInfoRepository;
 
-        private volatile bool isStopProgress = false;
-
-        public UploadFileRequestCommandHandler(IMemoryCache cache, FileDomainService domainService, ICapPublisher capPublisher, IUploadFileInfoRepository uploadFileInfoRepository)
+        public UploadFileRequestCommandHandler(IMemoryCache cache,
+            IConnectionMultiplexer redisCoon,
+            FileDomainService domainService, ICapPublisher capPublisher, IUploadFileInfoRepository uploadFileInfoRepository)
         {
             _cache = cache;
+            _redisCoon = redisCoon;
             _domainService = domainService;
             _capPublisher = capPublisher;
             _uploadFileInfoRepository = uploadFileInfoRepository;
@@ -36,15 +42,17 @@ namespace Demkin.FileOperation.WebApi.Application.Commands
             using Stream stream = file.OpenReadStream();
 
             string cacheKey = "FileOperation." + IdGenerateHelper.Instance.GenerateId();
+            await _capPublisher.PublishAsync("FileOperation.UploadFile.Progress", new { IdentityId = request.IdentityId, RedisCacheKey = cacheKey });
+            var redisDb = _redisCoon.GetDatabase();
             // 上传文件
             Task.Factory.StartNew(async () =>
             {
                 while (true)
                 {
                     int completedPercent = _cache.Get<int>(cacheKey);
-                    await _capPublisher.PublishAsync("FileOperation.UploadFile.Progress", new { IdentityId = request.IdentityId, CompletedProgress = completedPercent });
+                    await redisDb.StringSetAsync(cacheKey, completedPercent);
                     Thread.Sleep(1000);
-                    if (completedPercent >= 100 || isStopProgress)
+                    if (completedPercent >= 100)
                     {
                         _cache.Remove(cacheKey);
                         break;
@@ -52,7 +60,6 @@ namespace Demkin.FileOperation.WebApi.Application.Commands
                 }
             });
             var result = await _domainService.UploadFileAsync(cacheKey, fileName, stream, cancellationToken);
-            isStopProgress = true;
 
             if (result.isOldData)
             {

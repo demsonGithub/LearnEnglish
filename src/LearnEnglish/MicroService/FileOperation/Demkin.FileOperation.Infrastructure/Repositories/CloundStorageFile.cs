@@ -69,6 +69,8 @@ namespace Demkin.FileOperation.Infrastructure.Repositories
 
                     _cache.Set(cacheKey, _completedPercent);
 
+                    Thread.Sleep(300);
+
                     if (readByteCount == 0)
                         break;
                 }

@@ -47,6 +47,7 @@ try
 
     app.MapControllers();
     app.MapHub<UploadFileHub>("/Hubs/UploadFileHub");
+    app.MapHub<TranscodeFileHub>("/Hubs/TranscodeFileHub");
 
     app.Run();
 }

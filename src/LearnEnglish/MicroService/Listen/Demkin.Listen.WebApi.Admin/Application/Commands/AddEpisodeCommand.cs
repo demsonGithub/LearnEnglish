@@ -62,9 +62,9 @@ namespace Demkin.Listen.WebApi.Admin.Application.Commands
                 await redisDb.StringSetAsync(redisKeyForEpisode, JsonSerializer.Serialize(episodeFileInfo));
 
                 // 通知转码
-                await _capPublisher.PublishAsync("Transcoding.Audio", new TranscodeFileIntegrationEvent()
+                await _capPublisher.PublishAsync("Transcoding.Audio", new
                 {
-                    MediaIdKey = redisKeyForEpisode,
+                    RedisKey = redisKeyForEpisode,
                     MediaUrl = request.AudioUrl,
                     OutputFormat = "m4a"
                 });

@@ -3,6 +3,9 @@
     <div>
       <el-button type="success" @click="handleAddEpisode">添加音频</el-button>
     </div>
+    <div v-show="transcodeData.length > 0">
+      <transode-info :transcode-data="transcodeData" />
+    </div>
     <div style="margin-top: 15px">
       <el-table :data="episodeData" border style="width: 100%">
         <el-table-column
@@ -63,6 +66,8 @@ import { useRouter } from 'vue-router'
 import DialogEpisode, {
   IEditEpisodeOptions,
 } from './component/DialogEpisode.vue'
+import TransodeInfo, { ITranscodeOptions } from './component/TransodeInfo.vue'
+import * as signalR from '@microsoft/signalr'
 
 interface IEpisodeDetial {
   id: number
@@ -155,7 +160,9 @@ const handleUpdateSubmit = (params: IEditEpisodeOptions) => {}
 const handleDelete = (params: IEpisodeDetial) => {}
 //#endregion
 
-onMounted(() => {
+const transcodeData = ref<ITranscodeOptions[]>([])
+
+const init = () => {
   if (
     store.getParams === null ||
     typeof store.getParams.albumId === 'undefined'
@@ -166,6 +173,49 @@ onMounted(() => {
 
   currentAlbumId.value = store.getParams.albumId
   queryEpisodeList(currentAlbumId.value)
+}
+
+const signalrId = ref('')
+
+const initSignalR = () => {
+  const connection = new signalR.HubConnectionBuilder()
+    .withUrl('http://localhost:8083/Hubs/TranscodeFileHub', {
+      skipNegotiation: true,
+      transport: signalR.HttpTransportType.WebSockets, // 强制WebSockets
+      logger: signalR.LogLevel.Error,
+    })
+    .build()
+
+  // 连接回调函数
+  connection.on('ConnectCallback', connId => {
+    signalrId.value = connId
+  })
+
+  connection.on('RecieveMessage', data => {
+    const { transcodeStatus, title, createTime } = data
+
+    switch (transcodeStatus) {
+      case 0:
+        transcodeData.value.push({
+          title: title,
+          createTime: createTime,
+          currentStatus: transcodeStatus,
+        })
+        break
+      case 1:
+        var entity = transcodeData.value.find(item => item.title === title)
+        entity.currentStatus = transcodeStatus
+        queryEpisodeList(currentAlbumId.value)
+        break
+    }
+  })
+
+  connection.start()
+}
+
+onMounted(() => {
+  init()
+  initSignalR()
 })
 </script>
 <style lang="scss" scope></style>

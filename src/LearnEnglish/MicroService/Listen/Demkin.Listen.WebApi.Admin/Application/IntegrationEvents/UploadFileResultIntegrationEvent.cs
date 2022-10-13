@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Demkin.Listen.WebApi.Admin.Application.IntegrationEvents
 {
-    public class UploadFileCompletedIntegrationEvent : ICapSubscribe
+    public class UploadFileResultIntegrationEvent : ICapSubscribe
     {
         [CapSubscribe("UploadFileCompleted")]
         public Task UploadFileCompletedHandle(object parameters)
@@ -11,7 +11,6 @@ namespace Demkin.Listen.WebApi.Admin.Application.IntegrationEvents
             var completedInputParams = JsonConvert.DeserializeObject<UploadFileCompletedInputParams>(Convert.ToString(parameters));
 
             // todo
-            Console.WriteLine(completedInputParams?.FileUrl);
 
             return Task.CompletedTask;
         }

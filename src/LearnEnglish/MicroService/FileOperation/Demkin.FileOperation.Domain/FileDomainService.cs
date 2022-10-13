@@ -50,7 +50,10 @@ namespace Demkin.FileOperation.Domain
 
             var oldFileInfo = await FindFileAsync(fileSize, hash);
             if (oldFileInfo != null)
+            {
+                _cache.Set(cacheKey, 100);
                 return (oldFileInfo, true);
+            }
 
             DateTime today = DateTime.Today;
 
