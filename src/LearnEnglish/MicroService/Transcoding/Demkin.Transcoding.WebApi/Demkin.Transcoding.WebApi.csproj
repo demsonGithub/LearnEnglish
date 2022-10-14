@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Demkin.Transcoding.Domain\Demkin.Transcoding.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>
