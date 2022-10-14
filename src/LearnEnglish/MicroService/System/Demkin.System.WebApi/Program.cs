@@ -1,3 +1,4 @@
+using Demkin.System.WebApi.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 string logFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
@@ -17,10 +18,7 @@ try
     builder.Services.AddSwaggerGen();
 
     builder.InitConfigureDefaultServices();
-    builder.Services.AddDbContext<SystemDbContext>(options =>
-    {
-        options.UseSqlServer(builder.Configuration.GetSection("DbConnection:MasterDb_System").Value);
-    });
+    builder.Services.AddDbSetup(builder.Configuration.GetSection("DbConnection:MasterDb_System").Value);
 
     var app = builder.Build();
 

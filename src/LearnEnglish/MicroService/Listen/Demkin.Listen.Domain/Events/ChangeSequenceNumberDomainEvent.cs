@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Demkin.Listen.Domain.Events
+﻿namespace Demkin.Listen.Domain.Events
 {
     public class ChangeSequenceNumberDomainEvent : IDomainEvent
     {

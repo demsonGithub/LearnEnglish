@@ -13,10 +13,10 @@
 
     public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryCommand, string>
     {
-        private readonly ListenDomainService _domainService;
+        private readonly DomainService _domainService;
         private readonly ICategoryRepository _categoryRepository;
 
-        public UpdateCategoryCommandHandler(ListenDomainService domainService, ICategoryRepository categoryRepository)
+        public UpdateCategoryCommandHandler(DomainService domainService, ICategoryRepository categoryRepository)
         {
             _domainService = domainService;
             _categoryRepository = categoryRepository;

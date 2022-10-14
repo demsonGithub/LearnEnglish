@@ -4,7 +4,7 @@ using Demkin.Transcoding.WebApi.Models;
 using DotNetCore.CAP;
 using Newtonsoft.Json;
 
-namespace Demkin.Transcoding.WebApi.Application.IntegrationEvents
+namespace Demkin.Transcoding.WebApi.IntegrationEvents
 {
     public class TranscodeFileIntegrationEvent : ICapSubscribe
     {
@@ -29,7 +29,7 @@ namespace Demkin.Transcoding.WebApi.Application.IntegrationEvents
             //将json字符转换为实体对象
             TranscodeFileInputParams? inputParams = JsonConvert.DeserializeObject<TranscodeFileInputParams>(Convert.ToString(parameters));
 
-            await _capPublisher.PublishAsync("Transcoding.Audio.Result", new { RedisKey = inputParams.RedisKey, Status = "Started", HasTranscodeFileUrl = "" });
+            await _capPublisher.PublishAsync("Transcoding.Audio.Result", new { inputParams.RedisKey, Status = "Started", HasTranscodeFileUrl = "" });
 
             // 1. 下载视频，否则无权限操作解码 创建临时文件夹
             string tempDir = Path.Combine(Path.GetTempPath(), "SF");
@@ -77,7 +77,7 @@ namespace Demkin.Transcoding.WebApi.Application.IntegrationEvents
             await _capPublisher.PublishAsync("Transcoding.Audio.Result",
                 new
                 {
-                    RedisKey = inputParams.RedisKey,
+                    inputParams.RedisKey,
                     Status = "Completed",
                     HasTranscodeFileUrl = targetUrl
                 });

@@ -22,7 +22,7 @@ namespace Demkin.Listen.WebApi.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<ApiResult<AlbumDetailDto>> AddNewAlbum([FromBody] AddNewAlbumCommand command)
+        public async Task<ApiResult<AlbumDetailDto>> AddNewAlbum([FromBody] AddAlbumCommand command)
         {
             var result = await _mediator.Send(command, HttpContext.RequestAborted);
 

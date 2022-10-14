@@ -1,4 +1,4 @@
-﻿namespace Demkin.Transcoding.WebApi.BackgroundServices
+﻿namespace Demkin.Transcoding.WebApi.Services
 {
     public class TranscodeJob : BackgroundService
     {

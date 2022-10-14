@@ -1,7 +1,7 @@
 using Demkin.Core.Extensions;
 using Demkin.Transcoding.Domain;
-using Demkin.Transcoding.WebApi.Application.IntegrationEvents;
-using Demkin.Transcoding.WebApi.BackgroundServices;
+using Demkin.Transcoding.WebApi.IntegrationEvents;
+using Demkin.Transcoding.WebApi.Services;
 using Demkin.Utils;
 using Serilog;
 
