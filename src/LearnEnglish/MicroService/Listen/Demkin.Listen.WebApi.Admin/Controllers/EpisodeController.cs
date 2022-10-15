@@ -22,10 +22,10 @@ namespace Demkin.Listen.WebApi.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<ApiResult<string>> AddEpisode([FromBody] AddEpisodeCommand command)
+        public async Task<ApiResult<bool>> AddEpisode([FromBody] AddEpisodeCommand command)
         {
-            var result = await _mediator.Send(command, HttpContext.RequestAborted);
-            return ApiResult<string>.Build(result);
+            var commandResult = await _mediator.Send(command, HttpContext.RequestAborted);
+            return ApiResult<bool>.Build(commandResult);
         }
     }
 }

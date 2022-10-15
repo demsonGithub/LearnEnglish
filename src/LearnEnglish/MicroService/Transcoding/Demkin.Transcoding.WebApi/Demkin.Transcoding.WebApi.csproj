@@ -7,13 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="DotNetCore.CAP" Version="6.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Shared\Demkin.Core\Demkin.Core.csproj" />
     <ProjectReference Include="..\Demkin.Transcoding.Domain\Demkin.Transcoding.Domain.csproj" />
+    <ProjectReference Include="..\Demkin.Transcoding.Infrastructure\Demkin.Transcoding.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -20,7 +20,7 @@ namespace Demkin.Listen.WebApi.Admin.Application.IntegrationEvents
             _hubContext = hubContext;
         }
 
-        [CapSubscribe("Transcoding.Audio.Result")]
+        [CapSubscribe(Constant.Transcode_Result_Event)]
         public async Task TranscodeAudio(object obj)
         {
             var parameter = JsonConvert.DeserializeObject<TranscodeFileResultInputParams>(Convert.ToString(obj));

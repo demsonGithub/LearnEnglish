@@ -1,5 +1,6 @@
 using Demkin.Core.Extensions;
 using Demkin.Transcoding.Domain;
+using Demkin.Transcoding.WebApi.Extensions;
 using Demkin.Transcoding.WebApi.IntegrationEvents;
 using Demkin.Transcoding.WebApi.Services;
 using Demkin.Utils;
@@ -20,11 +21,12 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
-    builder.InitConfigureDefaultServices();
-    builder.Services.AddTransient<TranscodeFileIntegrationEvent>();
+    builder.Services.AddHostedService<TranscodeBgService>();
     builder.Services.AddHttpClient();
 
-    builder.Services.AddHostedService<TranscodeJob>();
+    builder.InitConfigureDefaultServices();
+    builder.Services.AddDbSetup(builder.Configuration.GetSection("DbConnection:MasterDb_Transcode").Value);
+    builder.Services.AddEventBusSetup();
 
     var app = builder.Build();
 

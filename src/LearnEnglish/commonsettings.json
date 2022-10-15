@@ -5,14 +5,22 @@
     "Audience": "all",
     "ExpireSeconds": 3600
   },
-  "CAP_ConnectionString": "server=192.168.1.7;uid=sa;pwd=abc123#;database=LearnEnglish_CAP;",
+  "CAP_ConnectionString": "server=192.168.0.136;uid=sa;pwd=abc123#;database=LearnEnglish_CAP;",
   "RabbitMQ": {
-    "HostName": "192.168.1.7",
+    "HostName": "192.168.0.136",
     "Port": 5672,
     "UserName": "admin",
     "Password": "admin"
   },
   "AppOptions": {
     "AllowCors": "http://localhost:8080"
+  },
+  "DbConnection":{
+    "MasterDb_System": "server=192.168.0.136;uid=sa;pwd=abc123#;database=LearnEnglish_System;",
+	"MasterDb_Listen": "server=192.168.0.136;uid=sa;pwd=abc123#;database=LearnEnglish_Listen;",
+	"MasterDb_File": "server=192.168.0.136;uid=sa;pwd=abc123#;database=LearnEnglish_File;"
+  },
+  "Redis":{
+	"ConnStr":"192.168.0.136:6379,password=abc123#"
   }
 }

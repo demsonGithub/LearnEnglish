@@ -1,5 +1,12 @@
-﻿namespace Demkin.Listen.WebApi.Admin.Application.Models
+﻿namespace Demkin.Transcoding.WebApi.Models
 {
+    public class TranscodeFileInputParams
+    {
+        public EpisodeFileInfo EpisodeFileInfo { get; set; }
+
+        public string OutputFormat { get; set; }
+    }
+
     public class EpisodeFileInfo
     {
         public string Title { get; set; }

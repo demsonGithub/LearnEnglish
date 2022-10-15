@@ -1,15 +1,11 @@
-﻿using Demkin.Domain.Abstraction;
+﻿using Demkin.Transcoding.Domain.Interfaces;
 using FFmpeg.NET;
 
-namespace Demkin.Transcoding.Domain
+namespace Demkin.Transcoding.Infrastructure.Repository
 {
-    public class TranscodeService : IDenpendencyScope
+    public class FFMpegTranscodeService : ITranscodeService
     {
-        public TranscodeService()
-        {
-        }
-
-        public async Task TranscodeFileToM4a(string sourceUrl, string targetUrl, CancellationToken ct = default)
+        public async Task TranscodeFileToTarget(string sourceUrl, string targetUrl, CancellationToken ct = default)
         {
             var inputFile = new InputFile(sourceUrl);
             var outputFile = new OutputFile(targetUrl);

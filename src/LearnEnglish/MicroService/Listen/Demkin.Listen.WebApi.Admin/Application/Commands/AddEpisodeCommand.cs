@@ -6,7 +6,7 @@ using System.Text.Json;
 
 namespace Demkin.Listen.WebApi.Admin.Application.Commands
 {
-    public class AddEpisodeCommand : IRequest<string>
+    public class AddEpisodeCommand : IRequest<bool>
     {
         public string Title { get; set; }
 
@@ -23,7 +23,7 @@ namespace Demkin.Listen.WebApi.Admin.Application.Commands
         public long AlbumId { get; set; }
     }
 
-    public class AddEpisodeCommandHandler : IRequestHandler<AddEpisodeCommand, string>
+    public class AddEpisodeCommandHandler : IRequestHandler<AddEpisodeCommand, bool>
     {
         private readonly DomainService _domainService;
         private readonly ICapPublisher _capPublisher;
@@ -38,7 +38,7 @@ namespace Demkin.Listen.WebApi.Admin.Application.Commands
             _episodeRepository = episodeRepository;
         }
 
-        public async Task<string> Handle(AddEpisodeCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(AddEpisodeCommand request, CancellationToken cancellationToken)
         {
             // 1. 判断是否需要转码，保证存入数据库的数据都是合法数据
             var audioUrl = _domainService.IsNeedTranscode(request.AudioUrl);
@@ -57,38 +57,34 @@ namespace Demkin.Listen.WebApi.Admin.Application.Commands
                 var entity = builder.Create();
 
                 await _episodeRepository.AddAsync(entity, cancellationToken);
-                await _episodeRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
-
-                // todo 通知前端刷新
-
-                return entity.Id.ToString(); ;
+                return await _episodeRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
             }
             else
             {
-                var episodeId = IdGenerateHelper.Instance.GenerateId();
+                // var episodeId = IdGenerateHelper.Instance.GenerateId();
                 // 待转码文件信息保存到redis
-                string redisKeyForEpisode = "Demkin.Listen.Episode." + episodeId;
-                var redisDb = _redisConn.GetDatabase();
+                // string redisKeyForEpisode = Constant.RedisPrefix_Episode + episodeId;
+                //var redisDb = _redisConn.GetDatabase();
                 var episodeFileInfo = new EpisodeFileInfo()
                 {
                     Title = request.Title,
                     Description = request.Description,
                     SequenceNumber = request.SequenceNumber,
+                    SourceFileUrl = request.AudioUrl,
                     DurationInSecond = request.DurationInSecond,
                     Subtitles = request.Subtitles,
                     AlbumId = request.AlbumId,
                 };
-                await redisDb.StringSetAsync(redisKeyForEpisode, JsonSerializer.Serialize(episodeFileInfo));
+                // await redisDb.StringSetAsync(redisKeyForEpisode, JsonSerializer.Serialize(episodeFileInfo));
 
-                // 通知转码
+                // 将转码过程交给转码服务
                 await _capPublisher.PublishAsync("Transcoding.Audio", new
                 {
-                    RedisKey = redisKeyForEpisode,
-                    MediaUrl = request.AudioUrl,
+                    EpisodeFileInfo = episodeFileInfo,
                     OutputFormat = "m4a"
                 });
 
-                return "";
+                return false;
             }
         }
     }

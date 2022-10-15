@@ -22,7 +22,7 @@
 
         public async Task<string> Handle(AddCategoryCommand request, CancellationToken cancellationToken)
         {
-            var category = await _domainService.AddNewCategory(request.Title, request.CoverUrl, request.SequenceNumber);
+            var category = await _domainService.AddCategory(request.Title, request.CoverUrl, request.SequenceNumber);
 
             // 添加到数据库
             var entity = await _categoryRepository.AddAsync(category);

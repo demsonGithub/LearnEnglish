@@ -12,28 +12,6 @@ namespace Demkin.System.Infrastructure
         {
         }
 
-        //public SystemDbContext(IMediator mediator, IConfiguration configuration) : base(mediator)
-        //{
-        //    _configuration = configuration;
-        //}
-
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    string connectionString = _configuration.GetSection("DbConnection:MasterDb").Value;
-
-        //    optionsBuilder.UseSqlServer(connectionString, x =>
-        //    {
-        //        x.CommandTimeout(20);
-        //    });
-        //    optionsBuilder.LogTo(new Action<string>(q =>
-        //    {
-        //        if (q.Contains("Executed DbCommand"))
-        //        {
-        //            Debug.WriteLine(q);
-        //        }
-        //    }), LogLevel.Information);
-        //}
-
         public DbSet<User> Users { get; set; } = default!;
 
         public DbSet<Role> Roles { get; set; } = default!;

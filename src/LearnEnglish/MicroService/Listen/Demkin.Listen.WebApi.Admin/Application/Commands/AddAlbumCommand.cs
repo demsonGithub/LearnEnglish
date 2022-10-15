@@ -26,7 +26,7 @@
 
         public async Task<AlbumDetailDto> Handle(AddAlbumCommand request, CancellationToken cancellationToken)
         {
-            var album = await _domainService.AddNewAlbum(request.Title, request.CoverUrl, request.SequenceNumber, request.CategoryId);
+            var album = await _domainService.AddAlbum(request.Title, request.CoverUrl, request.SequenceNumber, request.CategoryId);
 
             await _albumRepository.AddAsync(album, cancellationToken);
             var isSaved = await _albumRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
