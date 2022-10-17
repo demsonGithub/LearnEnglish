@@ -91,7 +91,7 @@ const episodeData = ref<IEpisodeDetial[]>()
 
 //#region 查询
 const queryEpisodeList = async (albumId: string) => {
-  let apiParams: IQueryEpisodeParams = {
+  const apiParams: IQueryEpisodeParams = {
     albumId: albumId,
   }
   const result = await episodeApi.queryEpisodeList(apiParams)
@@ -194,6 +194,7 @@ const initSignalR = () => {
 
   connection.on('RecieveMessage', data => {
     const { transcodeStatus, title, createTime } = data
+    const entity = transcodeData.value.find(item => item.title === title)
 
     switch (transcodeStatus) {
       case TranscodeStatusEnum.ready:
@@ -205,17 +206,16 @@ const initSignalR = () => {
 
         break
       case TranscodeStatusEnum.start:
-        var entity = transcodeData.value.find(item => item.title === title)
         entity.currentStatus = transcodeStatus
 
         break
       case TranscodeStatusEnum.completed:
-        var entity = transcodeData.value.find(item => item.title === title)
         entity.currentStatus = transcodeStatus
         queryEpisodeList(currentAlbumId.value)
 
         break
       case TranscodeStatusEnum.failed:
+        entity.currentStatus = transcodeStatus
         console.log('TranscodeStatus Error', data)
         break
       default:

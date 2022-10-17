@@ -35,7 +35,7 @@ namespace Demkin.Listen.Infrastructure
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new CategoryEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new AlbumEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new AudioEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new EpisodeEntityTypeConfiguration());
         }
     }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Demkin.Listen.Infrastructure.Migrations
 {
     [DbContext(typeof(ListenDbContext))]
-    [Migration("20220929143520_InitDba")]
-    partial class InitDba
+    [Migration("20221017130359_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -53,7 +53,35 @@ namespace Demkin.Listen.Infrastructure.Migrations
                     b.ToTable("Album", (string)null);
                 });
 
-            modelBuilder.Entity("Demkin.Listen.Domain.AggregateModels.Audio", b =>
+            modelBuilder.Entity("Demkin.Listen.Domain.AggregateModels.Category", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("CoverUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("SequenceNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("Title");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Title")
+                        .IsUnique();
+
+                    b.ToTable("Category", (string)null);
+                });
+
+            modelBuilder.Entity("Demkin.Listen.Domain.AggregateModels.Episode", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
@@ -88,35 +116,7 @@ namespace Demkin.Listen.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Audio", (string)null);
-                });
-
-            modelBuilder.Entity("Demkin.Listen.Domain.AggregateModels.Category", b =>
-                {
-                    b.Property<long>("Id")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("CoverUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("SequenceNumber")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("Title");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Title")
-                        .IsUnique();
-
-                    b.ToTable("Category", (string)null);
+                    b.ToTable("Episode", (string)null);
                 });
 #pragma warning restore 612, 618
         }

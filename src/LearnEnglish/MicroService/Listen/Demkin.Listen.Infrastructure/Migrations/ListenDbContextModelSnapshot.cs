@@ -51,7 +51,35 @@ namespace Demkin.Listen.Infrastructure.Migrations
                     b.ToTable("Album", (string)null);
                 });
 
-            modelBuilder.Entity("Demkin.Listen.Domain.AggregateModels.Audio", b =>
+            modelBuilder.Entity("Demkin.Listen.Domain.AggregateModels.Category", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("CoverUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("SequenceNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("Title");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Title")
+                        .IsUnique();
+
+                    b.ToTable("Category", (string)null);
+                });
+
+            modelBuilder.Entity("Demkin.Listen.Domain.AggregateModels.Episode", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
@@ -86,35 +114,7 @@ namespace Demkin.Listen.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Audio", (string)null);
-                });
-
-            modelBuilder.Entity("Demkin.Listen.Domain.AggregateModels.Category", b =>
-                {
-                    b.Property<long>("Id")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("CoverUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("SequenceNumber")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("Title");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Title")
-                        .IsUnique();
-
-                    b.ToTable("Category", (string)null);
+                    b.ToTable("Episode", (string)null);
                 });
 #pragma warning restore 612, 618
         }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Demkin.Transcoding.Infrastructure.Migrations
 {
-    public partial class InitDb : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -22,7 +22,8 @@ namespace Demkin.Transcoding.Infrastructure.Migrations
                     TranscodingUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TranscodeStatus = table.Column<int>(type: "int", nullable: false),
                     LogMessage = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RedisKey = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {

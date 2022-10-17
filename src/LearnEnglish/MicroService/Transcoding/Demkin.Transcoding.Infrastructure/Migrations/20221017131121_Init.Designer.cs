@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Demkin.Transcoding.Infrastructure.Migrations
 {
     [DbContext(typeof(TranscodeDbContext))]
-    [Migration("20221017020316_UpdateDbRediskey")]
-    partial class UpdateDbRediskey
+    [Migration("20221017131121_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

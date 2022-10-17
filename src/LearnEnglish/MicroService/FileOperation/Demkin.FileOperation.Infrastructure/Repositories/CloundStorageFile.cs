@@ -69,12 +69,6 @@ namespace Demkin.FileOperation.Infrastructure.Repositories
                     _completedPercent = Convert.ToInt32(fsWrite.Length / Convert.ToDouble(content.Length) * 100);
 
                     _cache.Set(cacheKey, _completedPercent);
-
-                    if (_completedPercent == 100)
-                    {
-                        Debug.WriteLine("ok???");
-                    }
-
                     if (readByteCount == 0)
                         break;
                 }

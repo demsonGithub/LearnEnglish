@@ -42,6 +42,8 @@ const StateStyle = (state: Number) => {
       return 'state-completed'
     case TranscodeStatusEnum.failed:
       return 'state-failed'
+    default:
+      return ''
   }
 }
 
@@ -55,6 +57,8 @@ const StateString = (state: Number) => {
       return '已完成'
     case TranscodeStatusEnum.failed:
       return '转码失败'
+    default:
+      return '未知错误'
   }
 }
 </script>

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Demkin.Listen.Infrastructure.Migrations
 {
-    public partial class InitDba : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,7 +27,22 @@ namespace Demkin.Listen.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Audio",
+                name: "Category",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    CoverUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SequenceNumber = table.Column<int>(type: "int", nullable: false),
+                    CreateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Category", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Episode",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false),
@@ -42,22 +57,7 @@ namespace Demkin.Listen.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Audio", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Category",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    CoverUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SequenceNumber = table.Column<int>(type: "int", nullable: false),
-                    CreateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Category", x => x.Id);
+                    table.PrimaryKey("PK_Episode", x => x.Id);
                 });
 
             migrationBuilder.CreateIndex(
@@ -73,10 +73,10 @@ namespace Demkin.Listen.Infrastructure.Migrations
                 name: "Album");
 
             migrationBuilder.DropTable(
-                name: "Audio");
+                name: "Category");
 
             migrationBuilder.DropTable(
-                name: "Category");
+                name: "Episode");
         }
     }
 }

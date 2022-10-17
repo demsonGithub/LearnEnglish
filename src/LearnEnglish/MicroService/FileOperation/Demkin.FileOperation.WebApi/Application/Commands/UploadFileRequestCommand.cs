@@ -54,7 +54,10 @@ namespace Demkin.FileOperation.WebApi.Application.Commands
                 while (true)
                 {
                     int completedPercent = _cache.Get<int>(cacheKey);
-                    await redisDb.StringSetAsync(cacheKey, completedPercent);
+                    if (!string.IsNullOrEmpty(request.IdentityId))
+                    {
+                        await redisDb.StringSetAsync(cacheKey, completedPercent);
+                    }
                     Thread.Sleep(100);
                     if (completedPercent >= 100)
                     {
@@ -64,11 +67,6 @@ namespace Demkin.FileOperation.WebApi.Application.Commands
                 }
             });
             var result = await _domainService.UploadFileAsync(fileName, stream, cacheKey, cancellationToken);
-
-            if (string.IsNullOrEmpty(request.IdentityId))
-            {
-                redisDb.KeyDelete(cacheKey);
-            }
 
             if (result.isOldData)
             {

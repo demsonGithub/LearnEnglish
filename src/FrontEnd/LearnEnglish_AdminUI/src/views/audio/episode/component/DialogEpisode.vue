@@ -55,10 +55,9 @@
 <script lang="ts" setup>
 import fileOperationApi from '@/api/fileOperation'
 import { UploadProps, UploadRequestHandler } from 'element-plus'
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import * as signalR from '@microsoft/signalr'
 import { apiResultCode } from '@/api/request'
-import { computed } from '@vue/reactivity'
 
 export interface IEditEpisodeOptions {
   id?: string

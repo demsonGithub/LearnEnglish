@@ -3,6 +3,7 @@ using DotNetCore.CAP;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using StackExchange.Redis;
+using System.Diagnostics;
 
 namespace Demkin.Listen.WebApi.Admin.Application.IntegrationEvents
 {
@@ -31,6 +32,7 @@ namespace Demkin.Listen.WebApi.Admin.Application.IntegrationEvents
                     await _hubContext.Clients.Client(parameter?.IdentityId).SendAsync("RecieveMessage", Convert.ToInt32(completedProgress));
 
                     Thread.Sleep(1000);
+
                     if (Convert.ToInt32(completedProgress) >= 100)
                     {
                         redisDb.KeyDelete(parameter.RedisCacheKey);
