@@ -16,6 +16,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+import { TranscodeStatusEnum } from '../index'
 
 export interface ITranscodeOptions {
   title: string
@@ -33,21 +34,27 @@ const transcodeData = computed(() => props.transcodeData)
 
 const StateStyle = (state: Number) => {
   switch (state) {
-    case 0:
-      return 'stateOne'
-    case 1:
-      return 'stateTwo'
-    case -1:
-      return 'stateThree'
+    case TranscodeStatusEnum.ready:
+      return 'state-ready'
+    case TranscodeStatusEnum.start:
+      return 'state-start'
+    case TranscodeStatusEnum.completed:
+      return 'state-completed'
+    case TranscodeStatusEnum.failed:
+      return 'state-failed'
   }
 }
 
 const StateString = (state: Number) => {
   switch (state) {
-    case 0:
-      return '开始转码'
-    case 1:
-      return '转码完成'
+    case TranscodeStatusEnum.ready:
+      return '等待中...'
+    case TranscodeStatusEnum.start:
+      return '正在转码...'
+    case TranscodeStatusEnum.completed:
+      return '已完成'
+    case TranscodeStatusEnum.failed:
+      return '转码失败'
   }
 }
 </script>
@@ -59,13 +66,16 @@ const StateString = (state: Number) => {
   line-height: 30px;
   color: rgb(255, 255, 255);
 }
-.stateOne {
+.state-ready {
+  background-color: rgb(240, 200, 60);
+}
+.state-start {
   background-color: rgb(57, 157, 255);
 }
-.stateTwo {
-  background-color: rgb(100, 200, 60);
+.state-completed {
+  background-color: rgb(20, 210, 100);
 }
-.stateThree {
+.state-failed {
   background-color: rgb(250, 0, 0);
 }
 </style>

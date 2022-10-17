@@ -61,6 +61,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\Demkin.Core\Demkin.Core.csproj" />
     <ProjectReference Include="..\Demkin.Transcoding.Domain\Demkin.Transcoding.Domain.csproj" />
   </ItemGroup>
 

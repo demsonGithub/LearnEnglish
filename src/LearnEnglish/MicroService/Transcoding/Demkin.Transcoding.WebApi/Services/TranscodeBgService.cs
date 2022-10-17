@@ -16,13 +16,7 @@ namespace Demkin.Transcoding.WebApi.Services
         private readonly ITranscodeService _transcodeService;
         private readonly IConfiguration _configuration;
 
-        public TranscodeBgService(IServiceScopeFactory serviceFactory,
-
-            ITranscodeFileRepository repository,
-            IHttpClientFactory httpClientFactory,
-            IWebHostEnvironment env,
-            ITranscodeService transcodeService,
-            IConfiguration configuration)
+        public TranscodeBgService(IServiceScopeFactory serviceFactory)
         {
             _serviceScope = serviceFactory.CreateScope();
             var sp = _serviceScope.ServiceProvider;
@@ -68,6 +62,10 @@ namespace Demkin.Transcoding.WebApi.Services
 
         private async Task TranscodeProcessAsync(TranscodeFile transcodeFile)
         {
+            transcodeFile.Start();
+            await _repository.UpdateAsync(transcodeFile);
+            await _repository.UnitOfWork.SaveEntitiesAsync();
+
             // 1.得到源文件，将原视频下载保存临时文件 ,否则无权限操作解码
             var fileInfo = await DownloadAsync(transcodeFile.SourceUrl);
 
@@ -91,12 +89,23 @@ namespace Demkin.Transcoding.WebApi.Services
             string targetFilePath = Path.Combine(targetFolder, $"{targetFileNameNoExt}.{transcodeFile.TargetFormat}");
 
             // 3. 使用ffmpeg工具转码
-            await _transcodeService.TranscodeFileToTarget(fileInfo.FullName, targetFilePath);
+            try
+            {
+                await _transcodeService.TranscodeFileToTarget(fileInfo.FullName, targetFilePath);
+            }
+            catch (Exception)
+            {
+            }
+            finally
+            {
+                fileInfo.Delete();
+            }
 
             // 4. 转码完成上传到存储，然后返回地址 todo 上传
+            var transcodeUrl = await _transcodeService.UploadFile("http://localhost:8082/api/Upload/UploadFile", targetFilePath);
 
             // 5. 完成转码，触发领域事件
-            transcodeFile.Complete();
+            transcodeFile.Complete(transcodeUrl);
             await _repository.UpdateAsync(transcodeFile);
             await _repository.UnitOfWork.SaveEntitiesAsync();
         }

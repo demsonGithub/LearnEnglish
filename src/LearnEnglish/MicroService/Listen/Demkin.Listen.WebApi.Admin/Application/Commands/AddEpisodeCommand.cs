@@ -1,6 +1,9 @@
 ﻿using Demkin.Listen.WebApi.Admin.Application.Models;
+using Demkin.Listen.WebApi.Admin.Hubs;
 using Demkin.Utils.IdGenerate;
 using DotNetCore.CAP;
+using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 using StackExchange.Redis;
 using System.Text.Json;
 
@@ -29,13 +32,15 @@ namespace Demkin.Listen.WebApi.Admin.Application.Commands
         private readonly ICapPublisher _capPublisher;
         private readonly IConnectionMultiplexer _redisConn;
         private readonly IEpisodeRepository _episodeRepository;
+        private readonly IHubContext<TranscodeFileHub> _hubContext;
 
-        public AddEpisodeCommandHandler(DomainService domainService, ICapPublisher capPublisher, IConnectionMultiplexer redisConn, IEpisodeRepository episodeRepository)
+        public AddEpisodeCommandHandler(DomainService domainService, ICapPublisher capPublisher, IConnectionMultiplexer redisConn, IEpisodeRepository episodeRepository, IHubContext<TranscodeFileHub> hubContext)
         {
             _domainService = domainService;
             _capPublisher = capPublisher;
             _redisConn = redisConn;
             _episodeRepository = episodeRepository;
+            _hubContext = hubContext;
         }
 
         public async Task<bool> Handle(AddEpisodeCommand request, CancellationToken cancellationToken)
@@ -61,12 +66,11 @@ namespace Demkin.Listen.WebApi.Admin.Application.Commands
             }
             else
             {
-                // var episodeId = IdGenerateHelper.Instance.GenerateId();
-                // 待转码文件信息保存到redis
-                // string redisKeyForEpisode = Constant.RedisPrefix_Episode + episodeId;
-                //var redisDb = _redisConn.GetDatabase();
+                var redisKeyEpisodeId = Constant.RedisPrefix_Episode + IdGenerateHelper.Instance.GenerateId();
+
                 var episodeFileInfo = new EpisodeFileInfo()
                 {
+                    RedisKey = redisKeyEpisodeId,
                     Title = request.Title,
                     Description = request.Description,
                     SequenceNumber = request.SequenceNumber,
@@ -74,13 +78,25 @@ namespace Demkin.Listen.WebApi.Admin.Application.Commands
                     DurationInSecond = request.DurationInSecond,
                     Subtitles = request.Subtitles,
                     AlbumId = request.AlbumId,
+                    CurrentStatus = EpisodeTranscodeState.Create
                 };
-                // await redisDb.StringSetAsync(redisKeyForEpisode, JsonSerializer.Serialize(episodeFileInfo));
+                // 将信息保存到redis
+                var redisDb = _redisConn.GetDatabase();
+                await redisDb.StringSetAsync(redisKeyEpisodeId, JsonConvert.SerializeObject(episodeFileInfo));
+
+                await _hubContext.Clients.All.SendAsync("RecieveMessage", new
+                {
+                    TranscodeStatus = TranscodeStatus.Ready,
+                    Title = request.Title,
+                    CreateTime = DateTime.Now,
+                });
 
                 // 将转码过程交给转码服务
                 await _capPublisher.PublishAsync("Transcoding.Audio", new
                 {
-                    EpisodeFileInfo = episodeFileInfo,
+                    RedisKey = redisKeyEpisodeId,
+                    FileTitle = request.Title,
+                    FileSourceUrl = request.AudioUrl,
                     OutputFormat = "m4a"
                 });
 

@@ -14,7 +14,7 @@ namespace Demkin.Listen.WebApi.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<ApiResult<List<CategoryDto>>> GetCategoryListByCondiations([FromQuery] GetCategoryListByCondiationsQuery query)
+        public async Task<ApiResult<List<CategoryDto>>> GetCategoryListByCondiations([FromQuery] GetCategoryListQuery query)
         {
             var result = await _mediator.Send(query, HttpContext.RequestAborted);
             return ApiResult<List<CategoryDto>>.Build(result);

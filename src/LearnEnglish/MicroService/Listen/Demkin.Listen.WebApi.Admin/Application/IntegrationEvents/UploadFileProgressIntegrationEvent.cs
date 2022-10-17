@@ -28,7 +28,7 @@ namespace Demkin.Listen.WebApi.Admin.Application.IntegrationEvents
                 while (true)
                 {
                     var completedProgress = await redisDb.StringGetAsync(parameter.RedisCacheKey);
-                    _hubContext.Clients.Client(parameter?.IdentityId).SendAsync("RecieveMessage", Convert.ToInt32(completedProgress));
+                    await _hubContext.Clients.Client(parameter?.IdentityId).SendAsync("RecieveMessage", Convert.ToInt32(completedProgress));
 
                     Thread.Sleep(1000);
                     if (Convert.ToInt32(completedProgress) >= 100)

@@ -42,6 +42,7 @@
       <el-form-item>
         <el-button
           type="primary"
+          :disabled="form.audioUrl === ''"
           @click="handleSubmit"
           v-text="editData === null ? '添加' : '修改'"
         ></el-button>

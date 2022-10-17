@@ -1,4 +1,4 @@
-﻿namespace Demkin.Transcoding.Domain
+﻿namespace Demkin.Listen.WebApi.Admin.Application.Models
 {
     public enum TranscodeStatus
     {

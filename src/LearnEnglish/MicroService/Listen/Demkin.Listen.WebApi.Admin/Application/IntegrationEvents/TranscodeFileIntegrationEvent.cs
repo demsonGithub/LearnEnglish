@@ -29,20 +29,20 @@ namespace Demkin.Listen.WebApi.Admin.Application.IntegrationEvents
             var episodeInfo = await redisDb.StringGetAsync(parameter.RedisKey);
             EpisodeFileInfo episodeFileInfo = JsonConvert.DeserializeObject<EpisodeFileInfo>(episodeInfo);
 
-            switch (parameter.Status)
+            switch (parameter.CurrentStatus)
             {
-                case "Started":
+                case TranscodeStatus.Started:
 
                     await _hubContext.Clients.All.SendAsync("RecieveMessage",
                         new
                         {
-                            TranscodeStatus = 0,
+                            TranscodeStatus = TranscodeStatus.Started,
                             Title = episodeFileInfo.Title,
                             CreateTime = DateTime.Now,
                         });
                     break;
 
-                case "Completed":
+                case TranscodeStatus.Completed:
 
                     // 将结果保存到数据库
                     var builder = new Episode.Builder();
@@ -52,27 +52,27 @@ namespace Demkin.Listen.WebApi.Admin.Application.IntegrationEvents
                         .DurationInSecond(episodeFileInfo.DurationInSecond)
                         .Subtitles(episodeFileInfo.Subtitles)
                         .AlbumId(episodeFileInfo.AlbumId)
-                        .AudioUrl(parameter.HasTranscodeFileUrl);
+                        .AudioUrl(parameter.TranscodingUrl);
                     var entity = builder.Create();
 
                     await _episodeRepository.AddAsync(entity);
                     await _episodeRepository.UnitOfWork.SaveEntitiesAsync();
 
                     await redisDb.KeyDeleteAsync(parameter.RedisKey);
-                    _hubContext.Clients.All.SendAsync("RecieveMessage", new
+                    await _hubContext.Clients.All.SendAsync("RecieveMessage", new
                     {
-                        TranscodeStatus = 1,
+                        TranscodeStatus = TranscodeStatus.Completed,
                         Title = episodeFileInfo.Title,
                         CreateTime = DateTime.Now,
                     });
 
                     break;
 
-                case "Failed":
+                case TranscodeStatus.Failed:
                     await _hubContext.Clients.All.SendAsync("RecieveMessage",
                         new
                         {
-                            TranscodeStatus = -1,
+                            TranscodeStatus = TranscodeStatus.Failed,
                             Title = episodeFileInfo.Title,
                             CreateTime = DateTime.Now,
                         });
@@ -82,14 +82,5 @@ namespace Demkin.Listen.WebApi.Admin.Application.IntegrationEvents
                     break;
             }
         }
-    }
-
-    public class TranscodeFileResultInputParams
-    {
-        public string RedisKey { get; set; }
-
-        public string Status { get; set; }
-
-        public string HasTranscodeFileUrl { get; set; }
     }
 }

@@ -28,10 +28,8 @@ namespace Demkin.Transcoding.WebApi.IntegrationEvents
             // 1. 将json字符转换为实体对象
             TranscodeFileInputParams? inputParams = JsonConvert.DeserializeObject<TranscodeFileInputParams>(Convert.ToString(parameters));
 
-            var episodeInfo = inputParams.EpisodeFileInfo;
-
             // 2. 将任务添加到数据库
-            TranscodeFile entity = TranscodeFile.Create(episodeInfo.Title, episodeInfo.SourceFileUrl, inputParams.OutputFormat);
+            TranscodeFile entity = TranscodeFile.Create(inputParams.RedisKey, inputParams.FileTitle, inputParams.FileSourceUrl, inputParams.OutputFormat);
 
             await _transcodeFileRepository.AddAsync(entity);
             await _transcodeFileRepository.UnitOfWork.SaveEntitiesAsync();

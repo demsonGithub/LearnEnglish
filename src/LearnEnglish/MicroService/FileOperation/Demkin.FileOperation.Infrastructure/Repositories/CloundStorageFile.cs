@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace Demkin.FileOperation.Infrastructure.Repositories
 {
@@ -69,7 +70,10 @@ namespace Demkin.FileOperation.Infrastructure.Repositories
 
                     _cache.Set(cacheKey, _completedPercent);
 
-                    Thread.Sleep(300);
+                    if (_completedPercent == 100)
+                    {
+                        Debug.WriteLine("ok???");
+                    }
 
                     if (readByteCount == 0)
                         break;

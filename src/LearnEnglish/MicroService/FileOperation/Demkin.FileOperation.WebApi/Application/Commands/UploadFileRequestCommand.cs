@@ -3,6 +3,7 @@ using DotNetCore.CAP;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Memory;
 using StackExchange.Redis;
+using System.Diagnostics;
 
 namespace Demkin.FileOperation.WebApi.Application.Commands
 {
@@ -42,7 +43,10 @@ namespace Demkin.FileOperation.WebApi.Application.Commands
             using Stream stream = file.OpenReadStream();
 
             string cacheKey = "FileOperation." + IdGenerateHelper.Instance.GenerateId();
-            await _capPublisher.PublishAsync("FileOperation.UploadFile.Progress", new { IdentityId = request.IdentityId, RedisCacheKey = cacheKey });
+            if (!string.IsNullOrEmpty(request.IdentityId))
+            {
+                await _capPublisher.PublishAsync("FileOperation.UploadFile.Progress", new { IdentityId = request.IdentityId, RedisCacheKey = cacheKey });
+            }
             var redisDb = _redisCoon.GetDatabase();
             // 上传文件
             Task.Factory.StartNew(async () =>
@@ -51,7 +55,7 @@ namespace Demkin.FileOperation.WebApi.Application.Commands
                 {
                     int completedPercent = _cache.Get<int>(cacheKey);
                     await redisDb.StringSetAsync(cacheKey, completedPercent);
-                    Thread.Sleep(1000);
+                    Thread.Sleep(100);
                     if (completedPercent >= 100)
                     {
                         _cache.Remove(cacheKey);
@@ -59,7 +63,12 @@ namespace Demkin.FileOperation.WebApi.Application.Commands
                     }
                 }
             });
-            var result = await _domainService.UploadFileAsync(cacheKey, fileName, stream, cancellationToken);
+            var result = await _domainService.UploadFileAsync(fileName, stream, cacheKey, cancellationToken);
+
+            if (string.IsNullOrEmpty(request.IdentityId))
+            {
+                redisDb.KeyDelete(cacheKey);
+            }
 
             if (result.isOldData)
             {

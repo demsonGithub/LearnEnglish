@@ -37,7 +37,7 @@ namespace Demkin.FileOperation.Domain
         /// <param name="stream"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<(UploadFileInfo uploadFileInfo, bool isOldData)> UploadFileAsync(string cacheKey, string fileName, Stream stream, CancellationToken cancellationToken)
+        public async Task<(UploadFileInfo uploadFileInfo, bool isOldData)> UploadFileAsync(string fileName, Stream stream, string cacheKey = null, CancellationToken cancellationToken = default)
 
         {
             // 创建文件的hash值

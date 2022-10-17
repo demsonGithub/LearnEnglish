@@ -1,4 +1,6 @@
-﻿namespace Demkin.Transcoding.WebApi.Application.DomainEventHandles
+﻿using Demkin.Transcoding.Domain;
+
+namespace Demkin.Transcoding.WebApi.Application.DomainEventHandles
 {
     public class TranscodeFileStartDomainEvnetHandler : IDomainEventHandler<TranscodeFileStartDomainEvent>
     {
@@ -11,7 +13,9 @@
 
         public async Task Handle(TranscodeFileStartDomainEvent notification, CancellationToken cancellationToken)
         {
-            await _capPublisher.PublishAsync(Constant.Transcode_Result_Event, notification.TranscodeFile.TranscodingUrl);
+            var item = notification.TranscodeFile;
+
+            await _capPublisher.PublishAsync(Constant.Transcode_Result_Event, new { RedisKey = item.RedisKey, CurrentStatus = TranscodeStatus.Started });
         }
     }
 }

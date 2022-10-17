@@ -57,9 +57,14 @@ namespace Demkin.Transcoding.Domain
         /// </summary>
         public DateTime CreateTime { get; private set; }
 
+        /// <summary>
+        /// 缓存文件信息的标识key
+        /// </summary>
+        public string RedisKey { get; private set; }
+
         #endregion
 
-        public static TranscodeFile Create(string title, string sourceUrl, string targetFormat)
+        public static TranscodeFile Create(string redisKey, string title, string sourceUrl, string targetFormat)
         {
             var transcodeFile = new TranscodeFile()
             {
@@ -69,6 +74,7 @@ namespace Demkin.Transcoding.Domain
                 TargetFormat = targetFormat,
                 TranscodeStatus = TranscodeStatus.Ready,
                 CreateTime = DateTime.Now,
+                RedisKey = redisKey,
             };
             transcodeFile.AddDomainEvent(new TranscodeFileCreatedDomainEvent(transcodeFile));
             return transcodeFile;
@@ -80,8 +86,9 @@ namespace Demkin.Transcoding.Domain
             AddDomainEvent(new TranscodeFileStartDomainEvent(this));
         }
 
-        public void Complete()
+        public void Complete(string transcodeUrl)
         {
+            TranscodingUrl = transcodeUrl;
             TranscodeStatus = TranscodeStatus.Completed;
             AddDomainEvent(new TranscodeFileCompleteDomainEvent(this));
         }

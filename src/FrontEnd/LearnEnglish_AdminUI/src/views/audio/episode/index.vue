@@ -68,6 +68,7 @@ import DialogEpisode, {
 } from './component/DialogEpisode.vue'
 import TransodeInfo, { ITranscodeOptions } from './component/TransodeInfo.vue'
 import * as signalR from '@microsoft/signalr'
+import { TranscodeStatusEnum } from './index'
 
 interface IEpisodeDetial {
   id: number
@@ -195,17 +196,30 @@ const initSignalR = () => {
     const { transcodeStatus, title, createTime } = data
 
     switch (transcodeStatus) {
-      case 0:
+      case TranscodeStatusEnum.ready:
         transcodeData.value.push({
           title: title,
           createTime: createTime,
           currentStatus: transcodeStatus,
         })
+
         break
-      case 1:
+      case TranscodeStatusEnum.start:
+        var entity = transcodeData.value.find(item => item.title === title)
+        entity.currentStatus = transcodeStatus
+
+        break
+      case TranscodeStatusEnum.completed:
         var entity = transcodeData.value.find(item => item.title === title)
         entity.currentStatus = transcodeStatus
         queryEpisodeList(currentAlbumId.value)
+
+        break
+      case TranscodeStatusEnum.failed:
+        console.log('TranscodeStatus Error', data)
+        break
+      default:
+        console.log('TranscodeStatus Not Found', data)
         break
     }
   })
