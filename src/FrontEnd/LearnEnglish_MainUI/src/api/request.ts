@@ -16,17 +16,17 @@ class RequestInstance {
    * @return {*}
    */
   public initRequestInterceptors() {
-    this.instance!.interceptors.request.use(
+    this.instance.interceptors.request.use(
       (config: AxiosRequestConfig) => {
         // 请求时携带token
         const token = localStorage.getItem('ACCESS_TOKEN')
         if (token) {
-          config.headers!.Authorization = 'Bearer ' + token
+          config.headers.Authorization = 'Bearer ' + token
         }
-
         return config
       },
       (error: any) => {
+        // eslint-disable-next-line no-console
         console.error(error)
       }
     )
@@ -37,14 +37,13 @@ class RequestInstance {
    * @return {*}
    */
   public initResponseInterceptors() {
-    this.instance!.interceptors.response.use(
+    this.instance.interceptors.response.use(
       // 请求成功
       (response: AxiosResponse) => {
         if (response.status === 200) {
           // 成功直接返回data内容
-          // return Promise.resolve(response.data)
 
-          return Promise.resolve(response)
+          return Promise.resolve(response.data)
         }
 
         this.errorHandle(response)
@@ -59,7 +58,8 @@ class RequestInstance {
           return Promise.reject(response.data)
         }
         // 处理请求超时,断网的情况
-        console.log('网络连接异常,请稍后再试!')
+        // eslint-disable-next-line no-console
+        console.log('处理请求超时!')
       }
     )
   }
@@ -76,10 +76,12 @@ class RequestInstance {
       case 403:
         break
       case 404:
+        // eslint-disable-next-line no-console
         console.log('请求的资源不存在')
         break
       default:
-        console.log('连接错误')
+        // eslint-disable-next-line no-console
+        console.log('未知错误状态码:' + res.status)
     }
   }
 
@@ -100,8 +102,8 @@ class RequestInstance {
  * 请求的配置
  */
 const requestConfig: AxiosRequestConfig = {
-  //baseURL: import.meta.env.VITE_APP_WEBAPI_URL, //请求地址
-  //timeout: 5000, //超时时间，毫秒
+  baseURL: import.meta.env.VITE_APP_WEB_URL, //请求地址
+  timeout: 5000, //超时时间，毫秒
   // 设置请求头，如果还有415错误，可能是get或post方法传参错误
   headers: {
     'Content-Type': 'application/json',

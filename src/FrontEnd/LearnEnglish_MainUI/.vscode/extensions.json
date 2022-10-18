@@ -1,3 +1,16 @@
 {
-  "recommendations": ["Vue.volar"]
+  "recommendations": [
+    "Vue.volar",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "vscode-icons-team.vscode-icons",
+    "dariofuzinato.vue-peek",
+    "ecmel.vscode-html-css",
+    "formulahendry.auto-close-tag",
+    "formulahendry.auto-rename-tag",
+    "OBKoro1.korofileheader",
+    "ritwickdey.LiveServer",
+    "zhuangtongfa.material-theme",
+    "christian-kohler.path-intellisense"
+  ]
 }

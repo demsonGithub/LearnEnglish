@@ -22,7 +22,7 @@
     "types": ["vite/client", "node"], // 加载的声明文件包
     "typeRoots": ["./node_modules/@types/"] // 声明文件目录，默认时node_modules/@types
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "vite.config.ts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "exclude": ["node_modules", "dist", "**/*.js"], //编译器需要排除的文件或文件夹
   "references": [{ "path": "./tsconfig.node.json" }]
 }

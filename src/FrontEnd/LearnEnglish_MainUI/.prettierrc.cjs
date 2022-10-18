@@ -7,13 +7,13 @@ module.exports = {
   semi: false, //句末使用分号
   overrides: [
     {
-      files: "*.json",
+      files: '*.json',
       options: {
         printWidth: 200,
       },
     },
   ],
-  arrowParens: "avoid", //单参数箭头函数参数周围使用圆括号-eg: (x) => x
-  htmlWhitespaceSensitivity: "ignore",
-  endOfLine: "auto",
-};
+  arrowParens: 'avoid', //单参数箭头函数参数周围使用圆括号-eg: (x) => x
+  htmlWhitespaceSensitivity: 'ignore',
+  endOfLine: 'auto',
+}

@@ -1,4 +1,3 @@
-// /plugins/svgBuilder.ts
 import { readFileSync, readdirSync } from 'fs'
 import { join as pathJoin } from 'path'
 import { Plugin } from 'vite'

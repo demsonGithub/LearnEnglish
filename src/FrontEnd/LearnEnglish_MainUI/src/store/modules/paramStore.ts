@@ -1,6 +1,5 @@
-import { getCookie, setCookie } from '@/utils/jsCookie'
+import { getCookie, setCookie } from '@/utils/JsCookie'
 import { defineStore } from 'pinia'
-import { stringify } from 'querystring'
 
 export const useParamStore = defineStore({
   id: 'sys-param',
@@ -9,13 +8,13 @@ export const useParamStore = defineStore({
   }),
   getters: {
     getParams: state => {
-      if (state.paramsValue != null) {
+      if (state.paramsValue !== null) {
         return state.paramsValue
       }
       try {
         state.paramsValue = JSON.parse(getCookie('route-params'))
       } catch (err) {
-        state.paramsValue = null
+        state.paramsValue = ''
       } finally {
         return state.paramsValue
       }

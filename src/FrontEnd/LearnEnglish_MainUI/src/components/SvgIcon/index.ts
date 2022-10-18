@@ -1,3 +1,3 @@
-import SvgIcon from './src/SvgIcon.vue'
+import SvgIcon from './SvgIcon.vue'
 
 export { SvgIcon }
