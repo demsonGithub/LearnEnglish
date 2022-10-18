@@ -21,7 +21,7 @@ namespace Demkin.Core.Extensions
     {
         public static void InitConfigureDefaultServices(this WebApplicationBuilder builder)
         {
-            string basePath = @"D:\";
+            string basePath = @"D:\GitRepository";
             builder.Configuration.SetBasePath(basePath).AddJsonFile("commonsettings.json", optional: false, reloadOnChange: true);
             IServiceCollection services = builder.Services;
             IConfiguration configuration = builder.Configuration;

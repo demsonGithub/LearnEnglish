@@ -102,6 +102,18 @@ const episodeApi = {
     })
     return result.data
   },
+  analysisSubtitles: async function (params: FormData): Promise<apiResult> {
+    const result = await request({
+      method: 'post',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      url: '/api/Episode/AnalysisSubtitles',
+      baseURL: '/Listen',
+      data: params,
+    })
+    return result.data
+  },
 }
 
 export { categoryApi, albumApi, episodeApi }

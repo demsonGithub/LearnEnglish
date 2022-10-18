@@ -12,9 +12,8 @@
     "Demkin.Listen.WebApi.Main": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:5057",
+      "launchUrl": "api",
+      "applicationUrl": "http://localhost:8180",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

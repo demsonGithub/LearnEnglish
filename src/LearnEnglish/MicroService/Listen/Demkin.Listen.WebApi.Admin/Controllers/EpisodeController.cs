@@ -27,5 +27,13 @@ namespace Demkin.Listen.WebApi.Admin.Controllers
             var commandResult = await _mediator.Send(command, HttpContext.RequestAborted);
             return ApiResult<bool>.Build(commandResult);
         }
+
+        [HttpPost]
+        [DisableRequestSizeLimit]
+        public async Task<ApiResult<string>> AnalysisSubtitles([FromForm] AnalysisSubtitlesCommand command)
+        {
+            var commandResult = await _mediator.Send(command, HttpContext.RequestAborted);
+            return ApiResult<string>.Build(commandResult);
+        }
     }
 }

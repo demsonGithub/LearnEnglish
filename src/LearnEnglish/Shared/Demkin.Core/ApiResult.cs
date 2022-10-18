@@ -17,15 +17,6 @@
             };
         }
 
-        public static ApiResult<T> Build(string msg)
-        {
-            return new ApiResult<T>()
-            {
-                code = ApiCode.Success,
-                msg = msg,
-            };
-        }
-
         public static ApiResult<T> Build(T data)
         {
             return new ApiResult<T>()

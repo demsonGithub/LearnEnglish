@@ -34,7 +34,17 @@
         <el-input v-model="form.audioDuration" />
       </el-form-item>
       <el-form-item label="字&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;幕：">
-        <el-input v-model="form.subtitles" />
+        <div style="display: flex; width: 100%">
+          <el-input v-model="form.subtitles" type="textarea" :rows="5" />
+
+          <el-upload
+            :show-file-list="false"
+            :http-request="analysisSubtitlesFile"
+            :on-success="analysisSubtitlesSuccessHandle"
+          >
+            <el-button type="primary">选择文件</el-button>
+          </el-upload>
+        </div>
       </el-form-item>
       <el-form-item label="排序编号：">
         <el-input v-model="form.sequenceNumber" />
@@ -55,9 +65,10 @@
 <script lang="ts" setup>
 import fileOperationApi from '@/api/fileOperation'
 import { UploadProps, UploadRequestHandler } from 'element-plus'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import * as signalR from '@microsoft/signalr'
 import { apiResultCode } from '@/api/request'
+import { episodeApi } from '@/api/audio'
 
 export interface IEditEpisodeOptions {
   id?: string
@@ -81,6 +92,17 @@ const props = defineProps<IDialogEpisodeProps>()
 const emits = defineEmits(['closeDialog', 'handleSubmit'])
 
 const form = computed(() => props.editData)
+
+const analysisSubtitlesFile = async (params: any) => {
+  const subtitlesData = new FormData()
+  subtitlesData.append('file', params.file)
+  const result = await episodeApi.analysisSubtitles(subtitlesData)
+
+  return result.data
+}
+const analysisSubtitlesSuccessHandle = (response: any) => {
+  form.value.subtitles = response
+}
 
 const handleSubmit = () => {
   emits('handleSubmit', form.value)

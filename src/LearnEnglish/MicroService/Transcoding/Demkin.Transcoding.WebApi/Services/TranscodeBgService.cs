@@ -62,6 +62,8 @@ namespace Demkin.Transcoding.WebApi.Services
 
         private async Task TranscodeProcessAsync(TranscodeFile transcodeFile)
         {
+            // todo Redis分布式锁
+
             transcodeFile.Start();
             await _repository.UpdateAsync(transcodeFile);
             await _repository.UnitOfWork.SaveEntitiesAsync();
