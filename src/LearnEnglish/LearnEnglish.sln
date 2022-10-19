@@ -50,11 +50,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demkin.Listen.WebApi.Main",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Transcoding", "Transcoding", "{6F2E96CA-2F71-4C82-AE38-503FCD1C5EA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demkin.Transcoding.Domain", "MicroService\Transcoding\Demkin.Transcoding.Domain\Demkin.Transcoding.Domain.csproj", "{513DD557-11A6-4A33-B8ED-C08BC8621848}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demkin.Transcoding.Domain", "MicroService\Transcoding\Demkin.Transcoding.Domain\Demkin.Transcoding.Domain.csproj", "{513DD557-11A6-4A33-B8ED-C08BC8621848}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demkin.Transcoding.Infrastructure", "MicroService\Transcoding\Demkin.Transcoding.Infrastructure\Demkin.Transcoding.Infrastructure.csproj", "{CA56C907-9AF7-4BE7-BDD6-58BF6C324EB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demkin.Transcoding.Infrastructure", "MicroService\Transcoding\Demkin.Transcoding.Infrastructure\Demkin.Transcoding.Infrastructure.csproj", "{CA56C907-9AF7-4BE7-BDD6-58BF6C324EB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demkin.Transcoding.WebApi", "MicroService\Transcoding\Demkin.Transcoding.WebApi\Demkin.Transcoding.WebApi.csproj", "{2EB7E8AF-477E-4B1C-B29B-B4363CDD36FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demkin.Transcoding.WebApi", "MicroService\Transcoding\Demkin.Transcoding.WebApi\Demkin.Transcoding.WebApi.csproj", "{2EB7E8AF-477E-4B1C-B29B-B4363CDD36FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

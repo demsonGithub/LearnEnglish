@@ -1,4 +1,5 @@
 using Demkin.Core.Extensions;
+using Demkin.FileOperation.WebApi.GrpcServices;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -15,6 +16,8 @@ try
     builder.Services.AddControllers().AddNewtonsoftJson();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
+
+    builder.Services.AddGrpc();
 
     builder.InitConfigureDefaultServices();
     builder.Services.AddDbContext<FileDbContext>(options =>
@@ -40,6 +43,7 @@ try
     app.InitUseDefaultMiddleware();
 
     app.MapControllers();
+    app.MapGrpcService<UploadFileService>();
 
     app.Run();
 }

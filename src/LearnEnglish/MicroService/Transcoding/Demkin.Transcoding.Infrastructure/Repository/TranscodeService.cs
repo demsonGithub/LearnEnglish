@@ -9,6 +9,13 @@ namespace Demkin.Transcoding.Infrastructure.Repository
 {
     public class FFMpegTranscodeService : ITranscodeService
     {
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        public FFMpegTranscodeService(IHttpClientFactory httpClientFactory)
+        {
+            _httpClientFactory = httpClientFactory;
+        }
+
         public async Task TranscodeFileToTarget(string sourceUrl, string targetUrl, CancellationToken ct = default)
         {
             var inputFile = new InputFile(sourceUrl);
@@ -35,7 +42,7 @@ namespace Demkin.Transcoding.Infrastructure.Repository
         public async Task<string> UploadFile(string uploadApiUrl, string filePath)
         {
             // 1. 实例化HttpClient
-            HttpClient client = new HttpClient();
+            HttpClient client = _httpClientFactory.CreateClient();
             // 2. 读取文件
             Stream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
 
