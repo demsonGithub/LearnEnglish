@@ -14,6 +14,17 @@ const fileOperationApi = {
 
     return result.data
   },
+
+  getFileHost: async function (params: any): Promise<apiResult> {
+    const result = await request({
+      method: 'get',
+      url: '/api/Upload/GetFileHost',
+      baseURL: '/FileOperation',
+      params: params,
+    })
+
+    return result.data
+  },
 }
 
 export default fileOperationApi

@@ -29,7 +29,8 @@ namespace Demkin.Transcoding.WebApi.IntegrationEvents
             TranscodeFileInputParams? inputParams = JsonConvert.DeserializeObject<TranscodeFileInputParams>(Convert.ToString(parameters));
 
             // 2. 将任务添加到数据库
-            TranscodeFile entity = TranscodeFile.Create(inputParams.RedisKey, inputParams.FileTitle, inputParams.FileSourceUrl, inputParams.OutputFormat);
+            string sourceUrl = "http://localhost:8082" + inputParams.FileSourceUrl;
+            TranscodeFile entity = TranscodeFile.Create(inputParams.RedisKey, inputParams.FileTitle, sourceUrl, inputParams.OutputFormat);
 
             await _transcodeFileRepository.AddAsync(entity);
             await _transcodeFileRepository.UnitOfWork.SaveEntitiesAsync();

@@ -31,7 +31,7 @@ namespace Demkin.FileHanlde.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ApiResult<string>> GetFileUrl([FromBody] GetFileUrlRequestQuery query)
+        public async Task<ApiResult<string>> GetFileHost([FromQuery] GetFileHostRequestQuery query)
         {
             var result = await _mediator.Send(query, HttpContext.RequestAborted);
 

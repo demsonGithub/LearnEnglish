@@ -10,12 +10,12 @@
         /// <summary>
         /// 保存文件
         /// </summary>
-        /// <param name="cacheKey"></param>
-        /// <param name="key"></param>
-        /// <param name="content"></param>
+        /// <param name="fileName">文件名，带后缀</param>
+        /// <param name="content">文件流</param>
+        /// <param name="cacheKey">缓存的Key</param>
         /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        Task<Uri> SaveFileAsync(string cacheKey, string key, Stream content, CancellationToken cancellationToken = default);
+        /// <returns>相对路径</returns>
+        Task<string> SaveFileAsync(string fileName, Stream content, string cacheKey, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 上传文件的进度

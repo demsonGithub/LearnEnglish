@@ -42,8 +42,8 @@ try
 
     app.InitUseDefaultMiddleware();
 
+    app.MapGrpcService<UploadFileGrpcServiceImpl>();
     app.MapControllers();
-    app.MapGrpcService<UploadFileService>();
 
     app.Run();
 }

@@ -1,38 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="DotNetCore.CAP" Version="6.2.0" />
-    <PackageReference Include="Google.Protobuf" Version="3.21.8" />
-    <PackageReference Include="Grpc.Net.Client" Version="2.49.0" />
-    <PackageReference Include="Grpc.Tools" Version="2.50.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.49.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.9">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="RedLock.net" Version="2.3.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\..\Shared\Demkin.Core\Demkin.Core.csproj" />
     <ProjectReference Include="..\Demkin.Transcoding.Domain\Demkin.Transcoding.Domain.csproj" />
     <ProjectReference Include="..\Demkin.Transcoding.Infrastructure\Demkin.Transcoding.Infrastructure.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
-
-	<ItemGroup>
+  <ItemGroup>
+    <Protobuf Include="..\..\FileOperation\Demkin.FileOperation.WebApi\Protos\uploadFile.proto" Link="Protos\uploadFile.proto" />
+  </ItemGroup>
+  <!--<ItemGroup>
 		<Protobuf Include="Protos\uploadFile.proto" />
-	</ItemGroup>
+	</ItemGroup>-->
 </Project>

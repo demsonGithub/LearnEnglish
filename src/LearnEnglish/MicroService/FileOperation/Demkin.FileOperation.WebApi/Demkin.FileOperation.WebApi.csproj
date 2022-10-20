@@ -1,18 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;CS4014;</NoWarn>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <NoWarn>1701;1702;CS4014;</NoWarn>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.49.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
@@ -22,19 +18,16 @@
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\..\Shared\Demkin.Core\Demkin.Core.csproj" />
     <ProjectReference Include="..\..\..\Shared\Demkin.Utils\Demkin.Utils.csproj" />
     <ProjectReference Include="..\Demkin.FileOperation.Domain\Demkin.FileOperation.Domain.csproj" />
     <ProjectReference Include="..\Demkin.FileOperation.Infrastructure\Demkin.FileOperation.Infrastructure.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="Application\IntegrationEvents\" />
   </ItemGroup>
-
-	<ItemGroup>
-		<Protobuf Include="Protos\uploadFile.proto" GrpcServices="Server" />
-	</ItemGroup>
+  <ItemGroup>
+    <Protobuf Include="Protos\uploadFile.proto" />
+  </ItemGroup>
 </Project>

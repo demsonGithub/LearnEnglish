@@ -76,6 +76,7 @@ namespace Demkin.Listen.WebApi.Admin.Application.IntegrationEvents
                             Title = episodeFileInfo.Title,
                             CreateTime = DateTime.Now,
                         });
+                    await redisDb.KeyDeleteAsync(parameter.RedisKey);
                     break;
 
                 default:

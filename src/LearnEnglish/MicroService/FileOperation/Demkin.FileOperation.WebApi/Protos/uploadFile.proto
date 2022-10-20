@@ -1,22 +1,22 @@
 // 指定版本
 syntax = "proto3";
 // 定义命名空间
-option csharp_namespace = "Demkin.FileOperation.WebApi.Proto";
+option csharp_namespace = "Demkin.Proto";
 // 指定包名，避免冲突
 package UploadFileGrpcServices;
 
 // 上传文件的请求
 message UploadFileRequest{
-	string identityId=1;
+	string fileName=1;
 	bytes data=2;
 }
 // 返回的结果
-message UploadFileResponseMsg{
+message UploadFileReply{
 	string remoteUrl=1;
 }
 
 // 约定需要提供的服务方法
 service UploadFileGrpc{
-	rpc UploadFile(stream UploadFileRequest) returns (UploadFileResponseMsg);
+	rpc UploadFile(stream UploadFileRequest) returns (UploadFileReply);
 }
 

@@ -8,7 +8,7 @@
 
         public long FileSize { get; set; }
 
-        public Uri RemoteUrl { get; set; }
+        public string RemoteUrl { get; set; }
 
         public DateTime CreateTime { get; set; }
     }

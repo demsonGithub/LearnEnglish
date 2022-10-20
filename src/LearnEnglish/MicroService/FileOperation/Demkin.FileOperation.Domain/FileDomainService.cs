@@ -51,19 +51,13 @@ namespace Demkin.FileOperation.Domain
             var oldFileInfo = await FindFileAsync(fileSize, hash);
             if (oldFileInfo != null)
             {
-                _cache.Set(cacheKey, 100);
+                if (!string.IsNullOrEmpty(cacheKey))
+                    _cache.Set(cacheKey, 100);
                 return (oldFileInfo, true);
             }
 
-            DateTime today = DateTime.Today;
-
-            //用日期把文件分散在不同文件夹存储，同时由于加上了文件hash值作为目录，又用用户上传的文件夹做文件名，
-            //所以几乎不会发生不同文件冲突的可能
-            //用用户上传的文件名保存文件名，这样用户查看、下载文件的时候，文件名更灵活
-            string key = $"{today.Year}/{today.Month}/{today.Day}/{hash}/{fileName}";
-
             // 上传文件,领域层不操作数据库所以返回实体对象，由应用层添加保存数据库
-            Uri remoteUrl = await _storageFile.SaveFileAsync(cacheKey, key, stream, cancellationToken);
+            string remoteUrl = await _storageFile.SaveFileAsync(fileName, stream, cacheKey, cancellationToken);
 
             stream.Position = 0;
 

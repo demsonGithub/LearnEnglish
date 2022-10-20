@@ -23,7 +23,11 @@
           label="排序"
           width="60"
         ></el-table-column>
-        <el-table-column prop="audioUrl" label="音频源地址"></el-table-column>
+        <el-table-column label="音频源地址">
+          <template #default="scope">
+            <span>{{ formatSourceUrl(scope.row.audioUrl) }}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           prop="durationInSecond"
           label="时长(秒)"
@@ -69,6 +73,7 @@ import DialogEpisode, {
 import TransodeInfo, { ITranscodeOptions } from './component/TransodeInfo.vue'
 import * as signalR from '@microsoft/signalr'
 import { TranscodeStatusEnum } from './index'
+import fileOperationApi from '@/api/fileOperation'
 
 interface IEpisodeDetial {
   id: number
@@ -87,15 +92,28 @@ const router = useRouter()
 
 const currentAlbumId = ref()
 
+const fileHost = ref('')
+
 const episodeData = ref<IEpisodeDetial[]>()
 
 //#region 查询
+const queryFileHost = async () => {
+  const apiParams = {}
+  const result = await fileOperationApi.getFileHost(apiParams)
+  fileHost.value = result.data
+}
+
 const queryEpisodeList = async (albumId: string) => {
   const apiParams: IQueryEpisodeParams = {
     albumId: albumId,
   }
   const result = await episodeApi.queryEpisodeList(apiParams)
   episodeData.value = result.data
+}
+
+const formatSourceUrl = (sourceUrl: string): string => {
+  const targetUrl = fileHost.value + sourceUrl
+  return targetUrl
 }
 //#endregion
 
@@ -173,6 +191,8 @@ const init = () => {
   }
 
   currentAlbumId.value = store.getParams.albumId
+
+  queryFileHost()
   queryEpisodeList(currentAlbumId.value)
 }
 
@@ -191,6 +211,11 @@ const initSignalR = () => {
   connection.on('ConnectCallback', connId => {
     signalrId.value = connId
   })
+
+  // 设置超时时间（10分钟）
+  connection.serverTimeoutInMilliseconds = 10 * 60 * 1000
+  // 断开 尝试重连
+  connection.onclose(() => initSignalR())
 
   connection.on('RecieveMessage', data => {
     const { transcodeStatus, title, createTime } = data

@@ -387,6 +387,5 @@ FodyWeavers.xsd
 .idea/
 *.sln.iml
 
-#CommandFile
-Demkin.CommandFile/*.7z
-Demkin.CommandFile/webApi
+#测试文件
+src/LearnEnglish/MicroService/FileOperation/Demkin.FileOperation.WebApi/wwwroot/UploadedResources/

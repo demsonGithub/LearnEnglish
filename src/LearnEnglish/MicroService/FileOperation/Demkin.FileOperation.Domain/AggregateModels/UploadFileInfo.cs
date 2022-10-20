@@ -18,14 +18,14 @@
         public string FileSHA256Hash { get; private set; }
 
         /// <summary>
-        /// 网络访问地址
+        /// 网络访问地址(相对路径)
         /// </summary>
-        public Uri RemoteUrl { get; private set; }
+        public string RemoteUrl { get; private set; }
 
         /// <summary>
-        /// 备份文件地址
+        /// 备份文件地址(相对路径)
         /// </summary>
-        public Uri BackupUrl { get; private set; }
+        public string BackupUrl { get; private set; }
 
         /// <summary>
         /// 创建时间
@@ -35,7 +35,7 @@
         private UploadFileInfo()
         { }
 
-        public static UploadFileInfo Create(string fileName, long fileSizeBytes, string fileSHA256Hash, Uri remoteUrl, Uri backupUrl)
+        public static UploadFileInfo Create(string fileName, long fileSizeBytes, string fileSHA256Hash, string remoteUrl, string backupUrl)
         {
             UploadFileInfo item = new UploadFileInfo()
             {

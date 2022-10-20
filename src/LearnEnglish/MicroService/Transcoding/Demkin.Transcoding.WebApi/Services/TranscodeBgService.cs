@@ -1,10 +1,14 @@
 ﻿using Dapper;
-using Demkin.FileOperation.WebApi.Proto;
+using Demkin.Core.Exceptions;
+using Demkin.Proto;
 using Demkin.Transcoding.Domain;
 using Demkin.Transcoding.Domain.Interfaces;
 using Google.Protobuf;
 using Grpc.Net.Client;
 using Microsoft.Data.SqlClient;
+using RedLockNet.SERedis;
+using RedLockNet.SERedis.Configuration;
+using StackExchange.Redis;
 
 namespace Demkin.Transcoding.WebApi.Services
 {
@@ -18,6 +22,7 @@ namespace Demkin.Transcoding.WebApi.Services
         private readonly IWebHostEnvironment _env;
         private readonly ITranscodeService _transcodeService;
         private readonly IConfiguration _configuration;
+        private readonly List<RedLockMultiplexer> _redLockMultiplexers;
 
         public TranscodeBgService(IServiceScopeFactory serviceFactory)
         {
@@ -28,6 +33,12 @@ namespace Demkin.Transcoding.WebApi.Services
             _transcodeService = sp.GetRequiredService<ITranscodeService>(); ;
             _configuration = sp.GetRequiredService<IConfiguration>();
             _repository = sp.GetRequiredService<ITranscodeFileRepository>();
+
+            IConnectionMultiplexer connectionMultiplexer = sp.GetRequiredService<IConnectionMultiplexer>();
+            _redLockMultiplexers = new List<RedLockMultiplexer>
+            {
+                new RedLockMultiplexer(connectionMultiplexer)
+            };
 
             _connectionString = _configuration.GetSection("DbConnection:MasterDb_Transcode").Value;
         }
@@ -65,7 +76,16 @@ namespace Demkin.Transcoding.WebApi.Services
 
         private async Task TranscodeProcessAsync(TranscodeFile transcodeFile)
         {
-            // todo Redis分布式锁
+            // Redis分布式锁来避免两个转码微服务进程处理同一个转码的任务问题
+            var expiry = TimeSpan.FromSeconds(30);
+            var redloakFactory = RedLockFactory.Create(_redLockMultiplexers);
+            string lockKey = $"Demkin.Transcode.{transcodeFile.Id}";
+            using var redlock = await redloakFactory.CreateLockAsync(lockKey, expiry);
+            if (!redlock.IsAcquired)
+            {
+                //获取锁失败，已被其它服务锁定处理，返回去执行下一个
+                return;
+            }
 
             transcodeFile.Start();
             await _repository.UpdateAsync(transcodeFile);
@@ -75,48 +95,41 @@ namespace Demkin.Transcoding.WebApi.Services
             var fileInfo = await DownloadAsync(transcodeFile.SourceUrl);
 
             // 2. 创建一个转码后保存的文件路径，确保不存在
-            string stroageFolderPath = Path.Combine(_env.WebRootPath, Constant.TempFolder);
-            if (!Directory.Exists(stroageFolderPath))
-                Directory.CreateDirectory(stroageFolderPath);
 
-            // 获取文件名称，无后缀
             string targetFileNameNoExt = Path.GetFileNameWithoutExtension(transcodeFile.SourceUrl);
-            string targetFolderPath = Path.GetDirectoryName(transcodeFile.SourceUrl);
-            string targetFolderName = Path.GetFileName(targetFolderPath);
+            // 创建临时文件夹目录
+            string tempFolderPath = Path.Combine(Path.GetTempPath(), Constant.TempFolder, Guid.NewGuid().ToString());
 
-            DateTime today = DateTime.Today;
-            string folderKey = $"{today.Year}/{today.Month}/{today.Day}/{targetFolderName}";
+            if (!Directory.Exists(tempFolderPath))
+                Directory.CreateDirectory(tempFolderPath);
 
-            string targetFolder = Path.Combine(stroageFolderPath, folderKey);
-            if (!Directory.Exists(targetFolder))
-                Directory.CreateDirectory(targetFolder);
+            string fileName = $"{targetFileNameNoExt}.{transcodeFile.TargetFormat}";
 
-            string targetFilePath = Path.Combine(targetFolder, $"{targetFileNameNoExt}.{transcodeFile.TargetFormat}");
+            string targetFilePath = Path.Combine(tempFolderPath, fileName);
 
             // 3. 使用ffmpeg工具转码
             try
             {
                 await _transcodeService.TranscodeFileToTarget(fileInfo.FullName, targetFilePath);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                throw new DomainException(ex.Message);
             }
             finally
             {
                 fileInfo.Delete();
             }
 
-            // 4. 转码完成上传到存储，然后返回地址 todo 上传
-            //var transcodeUrl = await _transcodeService.UploadFile("http://localhost:8082/api/Upload/UploadFile", targetFilePath);
-            var transcodeUrl = "";
+            // 4. 转码完成,Grpc上传到存储，然后返回地址
+            Stream fileStream = new FileStream(targetFilePath, FileMode.Open, FileAccess.Read);
 
+            var transcodeUrl = string.Empty;
             try
             {
-                using var channel = GrpcChannel.ForAddress("Http://localhost:8082");
+                using var channel = GrpcChannel.ForAddress("Http://localhost:8182");
                 var grpcClient = new UploadFileGrpc.UploadFileGrpcClient(channel);
-                // 将文件转为stream
-                Stream fileStream = new FileStream(targetFilePath, FileMode.Open, FileAccess.Read);
-                // 通过客户端请求流将流发送到服务端
+                // 将文件转为stream 通过客户端请求流将流发送到服务端
                 using var call = grpcClient.UploadFile();
                 var clientStream = call.RequestStream;
                 while (true)
@@ -130,16 +143,31 @@ namespace Demkin.Transcoding.WebApi.Services
                         break;
                     }
                     // 5、将每次读取到的文件流通过客户端流发送到服务端
-                    await clientStream.WriteAsync(new UploadFileRequest { Data = ByteString.CopyFrom(buffer) });
+                    await clientStream.WriteAsync(new UploadFileRequest { FileName = fileName, Data = ByteString.CopyFrom(buffer) });
                 }
                 // 6、发送完成之后，告诉服务端发送完成
                 await clientStream.CompleteAsync();
+
                 // 7、接收返回结果，并显示在文本框中
-                var res = await call.ResponseAsync;
+                var responseMsg = await call.ResponseAsync;
+                transcodeUrl = responseMsg.RemoteUrl;
+
+                if (string.IsNullOrEmpty(transcodeUrl))
+                {
+                    throw new DomainException("转码后上传出错");
+                }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
+                throw;
             }
+            finally
+            {
+                fileStream.Dispose();
+                // 删除临时目录
+                Directory.Delete(tempFolderPath, true);
+            }
+
             // 5. 完成转码，触发领域事件
             transcodeFile.Complete(transcodeUrl);
             await _repository.UpdateAsync(transcodeFile);

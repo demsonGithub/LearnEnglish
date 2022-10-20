@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Demkin.Utils;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Memory;
@@ -13,7 +14,6 @@ namespace Demkin.FileOperation.Infrastructure.Repositories
     public class CloundStorageFile : IStorageFile
     {
         private readonly IWebHostEnvironment _env;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<CloundStorageFile> _logger;
         private readonly IMemoryCache _cache;
         private int _completedPercent = 0;
@@ -24,31 +24,40 @@ namespace Demkin.FileOperation.Infrastructure.Repositories
             IHttpContextAccessor httpContextAccessor, ILogger<CloundStorageFile> logger, IMemoryCache cache)
         {
             _env = env;
-            _httpContextAccessor = httpContextAccessor;
             _logger = logger;
             _cache = cache;
         }
 
-        public async Task<Uri> SaveFileAsync(string cacheKey, string key, Stream content, CancellationToken cancellationToken = default)
+        public async Task<string> SaveFileAsync(string fileName, Stream content, string cacheKey, CancellationToken cancellationToken = default)
         {
-            if (key.StartsWith("/"))
+            if (fileName.StartsWith("/"))
             {
-                throw new DomainException($"key不能以'/'开头,{nameof(key)}");
+                throw new DomainException($"key不能以'/'开头,{nameof(fileName)}");
             }
             string webDir = Path.Combine(_env.ContentRootPath, "wwwroot", "UploadedResources");
-            string fullPath = Path.Combine(webDir, key);
-            // 判断路径的目录是否存在
-            string fullPathDir = Path.GetDirectoryName(fullPath);
-            if (!Directory.Exists(fullPathDir))
+
+            DateTime today = DateTime.Today;
+            //用日期把文件分散在不同文件夹存储，同时由于加上了文件hash值作为目录，又用用户上传的文件夹做文件名，
+            //所以几乎不会发生不同文件冲突的可能
+            //用用户上传的文件名保存文件名，这样用户查看、下载文件的时候，文件名更灵活
+            var hash = HashHelper.ComputeSha256Hash(content);
+
+            string folder = $"{today.Year}/{today.Month}/{today.Day}/{hash}";
+
+            // 判断文件夹是否存在
+            string storageFolder = Path.Combine(webDir, folder);
+            if (!Directory.Exists(storageFolder))
             {
-                Directory.CreateDirectory(fullPathDir);
+                Directory.CreateDirectory(storageFolder);
             }
+
+            string storageFilePath = Path.Combine(storageFolder, fileName);
             try
             {
                 // 如果存在，尝试删除
-                if (File.Exists(fullPath))
+                if (File.Exists(storageFilePath))
                 {
-                    File.Delete(fullPath);
+                    File.Delete(storageFilePath);
                 }
             }
             catch (Exception ex)
@@ -56,27 +65,30 @@ namespace Demkin.FileOperation.Infrastructure.Repositories
                 _logger.LogError($"上传文件:{ex.Message}");
             }
 
-            using (var fsWrite = new FileStream(fullPath, FileMode.Create))
+            using (var fsWrite = new FileStream(storageFilePath, FileMode.Create))
             {
                 _completedPercent = 0;
                 byte[] buffer = new byte[1024 * 1024 * 1];
                 int readByteCount = 0;
+                content.Seek(0, SeekOrigin.Begin);
 
                 while (true)
                 {
                     readByteCount = await content.ReadAsync(buffer, 0, buffer.Length);
+
                     await fsWrite.WriteAsync(buffer, 0, readByteCount);
                     _completedPercent = Convert.ToInt32(fsWrite.Length / Convert.ToDouble(content.Length) * 100);
 
-                    _cache.Set(cacheKey, _completedPercent);
+                    if (!string.IsNullOrEmpty(cacheKey))
+                        _cache.Set(cacheKey, _completedPercent);
                     if (readByteCount == 0)
                         break;
                 }
             }
 
-            var request = _httpContextAccessor.HttpContext.Request;
-            string url = request.Scheme + "://" + request.Host + "/UploadedResources/" + key;
-            return new Uri(url);
+            string url = $"/UploadedResources/{folder}/{fileName}";
+
+            return url;
         }
 
         public int GetCompletedPercent() => _completedPercent;
