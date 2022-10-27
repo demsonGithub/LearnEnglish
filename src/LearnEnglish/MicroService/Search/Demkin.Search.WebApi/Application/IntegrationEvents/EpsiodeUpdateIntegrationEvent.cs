@@ -20,7 +20,14 @@ namespace Demkin.Search.WebApi.Application.IntegrationEvents
         {
             EpisodeUpdateParams item = JsonConvert.DeserializeObject<EpisodeUpdateParams>(Convert.ToString(obj));
 
-            Episode entity = Episode.Create(item.EpisodeId, item.Title, item.Description, item.Subtitles, item.AlbumId);
+            Episode entity = new Episode
+            {
+                EpisodeId = item.EpisodeId.ToString(),
+                Title = item.Title,
+                Description = item.Description,
+                Subtitles = item.Subtitles,
+                AlbumId = item.AlbumId.ToString(),
+            };
 
             await _repository.UpdateAsync(entity);
         }

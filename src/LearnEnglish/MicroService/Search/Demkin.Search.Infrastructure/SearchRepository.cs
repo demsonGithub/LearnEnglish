@@ -17,32 +17,35 @@ namespace Demkin.Search.Infrastructure
 
         public async Task UpdateAsync(Episode episode)
         {
-            var response = await _elasticClient.IndexAsync(episode, idx => idx.Index("episodes").Id(episode.Id));
+            var response = await _elasticClient.IndexAsync(episode, idx => idx.Index("episodes").Id(episode.EpisodeId));
             if (!response.IsValid)
             {
                 throw new DomainException(response.DebugInformation);
             }
         }
 
-        public Task DeleteAsync(long episodeId)
+        public async Task DeleteAsync(string episodeId)
         {
-            _elasticClient.DeleteByQuery<Episode>(iq => iq.Index("episodes").Query(rq => rq.Term(f => f.Id, "elasticsearch.pm")));
-
+            _elasticClient.DeleteByQuery<Episode>(iq => iq.Index("episodes").Query(rq => rq.Term(f => f.EpisodeId, "elasticsearch.pm")));
             //如果Episode被删除，则把对应的数据也从Elastic Search中删除
-            return _elasticClient.DeleteAsync(new DeleteRequest("episodes", episodeId));
+            await _elasticClient.DeleteAsync(new DeleteRequest("episodes", episodeId));
         }
 
         public async Task<SearchEpisodeResponse> SearchEpisodes(string keyword, int pageIndex, int pageSize)
         {
             int from = pageSize * (pageIndex - 1);
-            string kw = keyword;
-            Func<QueryContainerDescriptor<Episode>, QueryContainer> query = (q) =>
-                          q.Match(mq => mq.Field(f => f.Title).Query(kw))
-                          || q.Match(mq => mq.Field(f => f.Subtitles).Query(kw));
+
+            Func<QueryContainerDescriptor<Episode>, QueryContainer> searchRequest = q =>
+            q.Match(mq => mq.Field(f => f.Title).Query(keyword)) ||
+            q.Match(mq => mq.Field(f => f.Description).Query(keyword)) ||
+            q.Match(mq => mq.Field(f => f.Subtitles).Query(keyword));
+
             Func<HighlightDescriptor<Episode>, IHighlight> highlightSelector = h => h
                 .Fields(fs => fs.Field(f => f.Subtitles));
-            var result = await _elasticClient.SearchAsync<Episode>(s => s.Index("episodes").From(from)
-                .Size(pageSize).Query(query).Highlight(highlightSelector));
+
+            var result = await _elasticClient.SearchAsync<Episode>(s => s.Index("episodes").Query(searchRequest).From(from)
+                .Size(pageSize).Highlight(highlightSelector));
+
             if (!result.IsValid)
             {
                 throw result.OriginalException;
@@ -60,7 +63,15 @@ namespace Demkin.Search.Infrastructure
                 {
                     highlightedSubtitle = Cut(hit.Source.Subtitles, 50);
                 }
-                var episode = Episode.Create(hit.Source.EpisodeId, hit.Source.Title, hit.Source.Description, highlightedSubtitle, hit.Source.AlbumId);
+
+                var episode = new Episode
+                {
+                    EpisodeId = hit.Source.EpisodeId,
+                    Title = hit.Source.Title,
+                    Description = hit.Source.Description,
+                    Subtitles = highlightedSubtitle,
+                    AlbumId = hit.Source.AlbumId,
+                };
 
                 episodes.Add(episode);
             }

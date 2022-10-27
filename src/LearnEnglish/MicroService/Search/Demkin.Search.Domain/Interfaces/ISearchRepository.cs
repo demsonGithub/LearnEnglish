@@ -7,7 +7,7 @@ namespace Demkin.Search.Domain.Interfaces
     {
         Task UpdateAsync(Episode episode);
 
-        Task DeleteAsync(long episodeId);
+        Task DeleteAsync(string episodeId);
 
         Task<SearchEpisodeResponse> SearchEpisodes(string keyword, int pageIndex, int pageSize);
     }
