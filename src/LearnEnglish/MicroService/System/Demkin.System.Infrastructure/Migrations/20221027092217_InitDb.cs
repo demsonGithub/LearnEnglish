@@ -4,7 +4,7 @@
 
 namespace Demkin.System.Infrastructure.Migrations
 {
-    public partial class Init : Migration
+    public partial class InitDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

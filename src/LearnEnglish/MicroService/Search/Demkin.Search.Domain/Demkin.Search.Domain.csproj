@@ -6,4 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Events\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\Demkin.Domain.Abstraction\Demkin.Domain.Abstraction.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Demkin.Infrastructure.Core\Demkin.Infrastructure.Core.csproj" />
+  </ItemGroup>
+
 </Project>

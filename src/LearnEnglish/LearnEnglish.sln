@@ -58,9 +58,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demkin.Transcoding.WebApi",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Search", "Search", "{6CF9EAFF-A95F-4884-8AB9-25C595104646}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demkin.Search.WebApi", "MicroService\Search\Demkin.Search.WebApi\Demkin.Search.WebApi.csproj", "{6006F237-7213-4995-B3C1-E38B689A90BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demkin.Search.WebApi", "MicroService\Search\Demkin.Search.WebApi\Demkin.Search.WebApi.csproj", "{6006F237-7213-4995-B3C1-E38B689A90BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demkin.Search.Domain", "MicroService\Search\Demkin.Search.Domain\Demkin.Search.Domain.csproj", "{31EA3562-4FB3-4E9A-A15D-77A52E02C604}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demkin.Search.Domain", "MicroService\Search\Demkin.Search.Domain\Demkin.Search.Domain.csproj", "{31EA3562-4FB3-4E9A-A15D-77A52E02C604}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demkin.Search.Infrastructure", "MicroService\Search\Demkin.Search.Infrastructure\Demkin.Search.Infrastructure.csproj", "{4C65F167-E7EB-4D43-B056-F9C4ADB6D904}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -144,6 +146,10 @@ Global
 		{31EA3562-4FB3-4E9A-A15D-77A52E02C604}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31EA3562-4FB3-4E9A-A15D-77A52E02C604}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31EA3562-4FB3-4E9A-A15D-77A52E02C604}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C65F167-E7EB-4D43-B056-F9C4ADB6D904}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C65F167-E7EB-4D43-B056-F9C4ADB6D904}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C65F167-E7EB-4D43-B056-F9C4ADB6D904}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C65F167-E7EB-4D43-B056-F9C4ADB6D904}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -173,6 +179,7 @@ Global
 		{6CF9EAFF-A95F-4884-8AB9-25C595104646} = {8F7D42FF-AAD7-4FD0-8D3A-CDFD862B1E1E}
 		{6006F237-7213-4995-B3C1-E38B689A90BA} = {6CF9EAFF-A95F-4884-8AB9-25C595104646}
 		{31EA3562-4FB3-4E9A-A15D-77A52E02C604} = {6CF9EAFF-A95F-4884-8AB9-25C595104646}
+		{4C65F167-E7EB-4D43-B056-F9C4ADB6D904} = {6CF9EAFF-A95F-4884-8AB9-25C595104646}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {73CB9E65-B7D1-4BC7-92B4-C2E7B69D65E0}
