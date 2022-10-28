@@ -1,0 +1,118 @@
+{
+  "Routes": [
+    {
+      // Upstream 上游请求，客户端请求到API的请求
+      "UpstreamPathTemplate": "/System/{url}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UseServicesDiscovery": true,
+
+      // Downstream 下游请求，即转发的目标服务地址
+      "DownstreamPathTemplate": "/api/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        // 可以是多个负载均衡
+        {
+          "Host": "localhost",
+          "Port": 8081
+        }
+      ],
+      "LoadBalancerOption": {
+        "Type": "RoundRobin"
+      }
+    },
+    {
+      // Upstream 上游请求，客户端请求到API的请求
+      "UpstreamPathTemplate": "/Listen/{url}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UseServicesDiscovery": true,
+
+      // Downstream 下游请求，即转发的目标服务地址
+      "DownstreamPathTemplate": "/api/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        // 可以是多个负载均衡
+        {
+          "Host": "localhost",
+          "Port": 8082
+        }
+      ],
+      "LoadBalancerOption": {
+        "Type": "RoundRobin"
+      }
+    },
+    {
+      // Upstream 上游请求，客户端请求到API的请求
+      "UpstreamPathTemplate": "/FileOperation/{url}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UseServicesDiscovery": true,
+
+      // Downstream 下游请求，即转发的目标服务地址
+      "DownstreamPathTemplate": "/api/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        // 可以是多个负载均衡
+        {
+          "Host": "localhost",
+          "Port": 8083
+        }
+      ],
+      "LoadBalancerOption": {
+        "Type": "RoundRobin"
+      }
+    },
+    {
+      // Upstream 上游请求，客户端请求到API的请求
+      "UpstreamPathTemplate": "/Transcoding/{url}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UseServicesDiscovery": true,
+
+      // Downstream 下游请求，即转发的目标服务地址
+      "DownstreamPathTemplate": "/api/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        // 可以是多个负载均衡
+        {
+          "Host": "localhost",
+          "Port": 8084
+        }
+      ],
+      "LoadBalancerOption": {
+        "Type": "RoundRobin"
+      }
+    },
+    {
+      // Upstream 上游请求，客户端请求到API的请求
+      "UpstreamPathTemplate": "/Search/{url}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UseServicesDiscovery": true,
+
+      // Downstream 下游请求，即转发的目标服务地址
+      "DownstreamPathTemplate": "/api/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        // 可以是多个负载均衡
+        {
+          "Host": "localhost",
+          "Port": 8085
+        }
+      ],
+      "LoadBalancerOption": {
+        "Type": "RoundRobin"
+      }
+    }
+  ],
+  "GlobalConfiguration": {
+    ////外部暴露的Url
+    //"BaseUrl": "http://localhost:13763",
+    ////限流扩展配置
+    //"RateLimitOptions": {
+    //  //指定是否禁用X-Rate-Limit和Retry-After标头
+    //  "DisableRateLimitHeaders": false,
+    //  //当请求过载被截断时返回的消息
+    //  "QuotaExceededMessage": "Oh,Oops!",
+    //  //当请求过载被截断时返回的http status
+    //  "HttpStatusCode": 4421,
+    //  //用来识别客户端的请求头，默认是 ClientId
+    //  "ClientIdHeader": "ClientId"
+  }
+}
