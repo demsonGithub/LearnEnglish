@@ -4,8 +4,7 @@ const loginApi = {
   login: async function (params: ILoginParams): Promise<apiResult> {
     const result = await request({
       method: 'post',
-      url: '/api/User/LoginByAccountPassword',
-      baseURL: '/System',
+      url: '/System/User/LoginByAccountPassword',
       data: params,
     })
 

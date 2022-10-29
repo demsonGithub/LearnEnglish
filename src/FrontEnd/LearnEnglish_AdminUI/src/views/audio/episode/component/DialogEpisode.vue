@@ -152,7 +152,7 @@ const getAudioDuration = (file: Blob | MediaSource) => {
 
 const init = async () => {
   const connection = new signalR.HubConnectionBuilder()
-    .withUrl('http://localhost:8083/Hubs/UploadFileHub', {
+    .withUrl('http://localhost:5051/Gateway/UploadFileHub', {
       skipNegotiation: true,
       transport: signalR.HttpTransportType.WebSockets, // 强制WebSockets
       logger: signalR.LogLevel.Error,
@@ -161,6 +161,8 @@ const init = async () => {
 
   // 连接回调函数
   connection.on('ConnectCallback', connId => {
+    console.log(connId)
+
     signalrId.value = connId
   })
 

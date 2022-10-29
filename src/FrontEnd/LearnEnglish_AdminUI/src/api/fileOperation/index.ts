@@ -7,8 +7,7 @@ const fileOperationApi = {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-      url: '/api/Upload/UploadFile',
-      baseURL: '/FileOperation',
+      url: '/FileOperation/Upload/UploadFile',
       data: params,
     })
 
@@ -18,8 +17,7 @@ const fileOperationApi = {
   getFileHost: async function (params: any): Promise<apiResult> {
     const result = await request({
       method: 'get',
-      url: '/api/Upload/GetFileHost',
-      baseURL: '/FileOperation',
+      url: '/FileOperation/Upload/GetFileHost',
       params: params,
     })
 

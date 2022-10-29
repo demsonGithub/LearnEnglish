@@ -13,8 +13,13 @@
         // 可以是多个负载均衡
         {
           "Host": "localhost",
+          "Port": 8089
+        },
+        {
+          "Host": "localhost",
           "Port": 8081
         }
+
       ],
       "LoadBalancerOption": {
         "Type": "RoundRobin"
@@ -24,7 +29,7 @@
       // Upstream 上游请求，客户端请求到API的请求
       "UpstreamPathTemplate": "/Listen/{url}",
       "UpstreamHttpMethod": [ "GET", "POST" ],
-      "UseServicesDiscovery": true,
+      "UseServicesDiscovery": false,
 
       // Downstream 下游请求，即转发的目标服务地址
       "DownstreamPathTemplate": "/api/{url}",
@@ -42,9 +47,25 @@
     },
     {
       // Upstream 上游请求，客户端请求到API的请求
+      "UpstreamPathTemplate": "/Gateway/{url}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UseServicesDiscovery": false,
+
+      // Downstream 下游请求，即转发的目标服务地址
+      "DownstreamPathTemplate": "/Hubs/{url}",
+      "DownstreamScheme": "ws",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8082
+        }
+      ]
+    },
+    {
+      // Upstream 上游请求，客户端请求到API的请求
       "UpstreamPathTemplate": "/FileOperation/{url}",
       "UpstreamHttpMethod": [ "GET", "POST" ],
-      "UseServicesDiscovery": true,
+      "UseServicesDiscovery": false,
 
       // Downstream 下游请求，即转发的目标服务地址
       "DownstreamPathTemplate": "/api/{url}",
@@ -64,7 +85,7 @@
       // Upstream 上游请求，客户端请求到API的请求
       "UpstreamPathTemplate": "/Transcoding/{url}",
       "UpstreamHttpMethod": [ "GET", "POST" ],
-      "UseServicesDiscovery": true,
+      "UseServicesDiscovery": false,
 
       // Downstream 下游请求，即转发的目标服务地址
       "DownstreamPathTemplate": "/api/{url}",
@@ -84,7 +105,7 @@
       // Upstream 上游请求，客户端请求到API的请求
       "UpstreamPathTemplate": "/Search/{url}",
       "UpstreamHttpMethod": [ "GET", "POST" ],
-      "UseServicesDiscovery": true,
+      "UseServicesDiscovery": false,
 
       // Downstream 下游请求，即转发的目标服务地址
       "DownstreamPathTemplate": "/api/{url}",
@@ -102,6 +123,12 @@
     }
   ],
   "GlobalConfiguration": {
+    "ServiceDiscoveryProvider": {
+      "Host": "localhost",
+      "Port": 8500,
+      "Type": "Consul",
+      "PollingInterval": 100
+    }
     ////外部暴露的Url
     //"BaseUrl": "http://localhost:13763",
     ////限流扩展配置

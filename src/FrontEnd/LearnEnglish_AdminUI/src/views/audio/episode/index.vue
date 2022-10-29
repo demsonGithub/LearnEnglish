@@ -200,7 +200,7 @@ const signalrId = ref('')
 
 const initSignalR = () => {
   const connection = new signalR.HubConnectionBuilder()
-    .withUrl('http://localhost:8083/Hubs/TranscodeFileHub', {
+    .withUrl('http://localhost:5051/Gateway/TranscodeFileHub', {
       skipNegotiation: true,
       transport: signalR.HttpTransportType.WebSockets, // 强制WebSockets
       logger: signalR.LogLevel.Error,

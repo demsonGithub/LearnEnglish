@@ -6,8 +6,7 @@ const categoryApi = {
   ): Promise<apiResult> {
     const result = await request({
       method: 'get',
-      url: '/api/Category/GetCategoryListByCondiations',
-      baseURL: '/Listen',
+      url: '/Listen/Category/GetCategoryListByCondiations',
       params: params,
     })
 
@@ -16,8 +15,7 @@ const categoryApi = {
   AddCategory: async function (params: IAddCategoryParams): Promise<apiResult> {
     const result = await request({
       method: 'post',
-      url: '/api/Category/AddCategory',
-      baseURL: '/Listen',
+      url: '/Listen/Category/AddCategory',
       data: params,
     })
 
@@ -28,8 +26,7 @@ const categoryApi = {
   ): Promise<apiResult> {
     const result = await request({
       method: 'post',
-      url: '/api/Category/UpdateCategory',
-      baseURL: '/Listen',
+      url: '/Listen/Category/UpdateCategory',
       data: params,
     })
     return result.data
@@ -39,8 +36,7 @@ const categoryApi = {
   ): Promise<apiResult> {
     const result = await request({
       method: 'post',
-      url: '/api/Category/DeleteCategory',
-      baseURL: '/Listen',
+      url: '/Listen/Category/DeleteCategory',
       data: params,
     })
     return result.data
@@ -53,8 +49,7 @@ const albumApi = {
   ): Promise<apiResult> {
     const result = await request({
       method: 'get',
-      url: '/api/Album/GetAlbumList',
-      baseURL: '/Listen',
+      url: '/Listen/Album/GetAlbumList',
       params: params,
     })
 
@@ -63,8 +58,7 @@ const albumApi = {
   addAlbum: async function (params: IAddAlbumParams): Promise<apiResult> {
     const result = await request({
       method: 'post',
-      url: '/api/Album/AddNewAlbum',
-      baseURL: '/Listen',
+      url: '/Listen/Album/AddNewAlbum',
       data: params,
     })
     return result.data
@@ -72,8 +66,7 @@ const albumApi = {
   updateAlbum: async function (params: IUpdateAlbumParams): Promise<apiResult> {
     const result = await request({
       method: 'post',
-      url: '/api/Album/UpdateAlbum',
-      baseURL: '/Listen',
+      url: '/Listen/Album/UpdateAlbum',
       data: params,
     })
     return result.data
@@ -86,8 +79,7 @@ const episodeApi = {
   ): Promise<apiResult> {
     const result = await request({
       method: 'get',
-      url: '/api/Episode/GetEpisodeList',
-      baseURL: '/Listen',
+      url: '/Listen/Episode/GetEpisodeList',
       params: params,
     })
 
@@ -96,8 +88,7 @@ const episodeApi = {
   addEpisode: async function (params: IAddEpisodeParams): Promise<apiResult> {
     const result = await request({
       method: 'post',
-      url: '/api/Episode/AddEpisode',
-      baseURL: '/Listen',
+      url: '/Listen/Episode/AddEpisode',
       data: params,
     })
     return result.data
@@ -108,8 +99,7 @@ const episodeApi = {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-      url: '/api/Episode/AnalysisSubtitles',
-      baseURL: '/Listen',
+      url: '/Listen/Episode/AnalysisSubtitles',
       data: params,
     })
     return result.data

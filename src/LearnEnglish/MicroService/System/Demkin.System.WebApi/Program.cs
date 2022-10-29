@@ -1,3 +1,4 @@
+using Consul;
 using Demkin.System.WebApi.Extensions;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,6 +40,8 @@ try
     app.InitUseDefaultMiddleware();
 
     app.MapControllers();
+
+    app.UseConsulMiddleware();
 
     app.Run();
 }

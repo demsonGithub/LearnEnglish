@@ -21,21 +21,21 @@ export default defineConfig({
     port: 8080,
     https: false,
     proxy: {
-      '/System': {
-        target: 'http://localhost:8081',
-        changeOrigin: true,
-        rewrite: path => path.replace(/^\/System/, ''),
-      },
-      '/Listen': {
-        target: 'http://localhost:8083',
-        changeOrigin: true,
-        rewrite: path => path.replace(/^\/Listen/, ''),
-      },
-      '/FileOperation': {
-        target: 'http://localhost:8082',
-        changeOrigin: true,
-        rewrite: path => path.replace(/^\/FileOperation/, ''),
-      },
+      // '/System': {
+      //   target: 'http://localhost:8081',
+      //   changeOrigin: true,
+      //   rewrite: path => path.replace(/^\/System/, ''),
+      // },
+      // '/Listen': {
+      //   target: 'http://localhost:8083',
+      //   changeOrigin: true,
+      //   rewrite: path => path.replace(/^\/Listen/, ''),
+      // },
+      // '/FileOperation': {
+      //   target: 'http://localhost:8082',
+      //   changeOrigin: true,
+      //   rewrite: path => path.replace(/^\/FileOperation/, ''),
+      // },
     },
   },
   plugins: [
