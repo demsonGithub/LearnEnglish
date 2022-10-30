@@ -13,6 +13,7 @@ namespace Demkin.System.WebApi.Controllers
         /// <returns></returns>
         [HttpGet]
         public IActionResult Check()
+
         {
             return Ok("ok");
         }

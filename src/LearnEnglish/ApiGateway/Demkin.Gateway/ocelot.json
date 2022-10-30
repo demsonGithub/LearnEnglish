@@ -4,26 +4,13 @@
       // Upstream 上游请求，客户端请求到API的请求
       "UpstreamPathTemplate": "/System/{url}",
       "UpstreamHttpMethod": [ "GET", "POST" ],
-      "UseServicesDiscovery": true,
-
       // Downstream 下游请求，即转发的目标服务地址
       "DownstreamPathTemplate": "/api/{url}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        // 可以是多个负载均衡
-        {
-          "Host": "localhost",
-          "Port": 8089
-        },
-        {
-          "Host": "localhost",
-          "Port": 8081
-        }
-
-      ],
       "LoadBalancerOption": {
         "Type": "RoundRobin"
-      }
+      },
+      "ServiceName": "System"
     },
     {
       // Upstream 上游请求，客户端请求到API的请求
@@ -124,7 +111,7 @@
   ],
   "GlobalConfiguration": {
     "ServiceDiscoveryProvider": {
-      "Host": "localhost",
+      "Host": "192.168.1.7",
       "Port": 8500,
       "Type": "Consul",
       "PollingInterval": 100

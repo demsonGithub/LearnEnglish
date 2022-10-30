@@ -41,7 +41,9 @@ try
 
     app.MapControllers();
 
-    app.UseConsulMiddleware();
+    var lifetime = scope.ServiceProvider.GetRequiredService<IHostApplicationLifetime>();
+
+    app.UseConsulMiddleware(lifetime);
 
     app.Run();
 }

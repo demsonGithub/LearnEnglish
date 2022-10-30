@@ -4,14 +4,14 @@ namespace Demkin.System.WebApi.Extensions
 {
     public static class MiddlewareExtension
     {
-        public static void UseConsulMiddleware(this IApplicationBuilder app)
+        public static IApplicationBuilder UseConsulMiddleware(this IApplicationBuilder app, IHostApplicationLifetime lifetime)
         {
             try
             {
-                string serviceAddress = "127.0.0.1";
-                string servicePort = "8081";
+                string serviceAddress = "192.168.1.7";
+                string servicePort = "8089";
 
-                string consulAddress = $"http://127.0.0.1:8500";
+                string consulAddress = $"http://192.168.1.7:8500";
 
                 var consulClient = new ConsulClient(cfg => { cfg.Address = new Uri(consulAddress); });
 
@@ -25,14 +25,21 @@ namespace Demkin.System.WebApi.Extensions
 
                 var registration = new AgentServiceRegistration
                 {
-                    Check = healthCheck,
                     Address = serviceAddress,
                     Port = Convert.ToInt32(servicePort),
                     ID = "Service_" + Guid.NewGuid(),
-                    Name = "System"
+                    Name = "System",
+                    Check = healthCheck,
                 };
 
-                consulClient.Agent.ServiceRegister(registration).GetAwaiter().GetResult();
+                consulClient.Agent.ServiceRegister(registration).Wait();
+
+                lifetime.ApplicationStopping.Register(() =>
+                {
+                    consulClient.Agent.ServiceDeregister(registration.ID).Wait();
+                });
+
+                return app;
             }
             catch (Exception ex)
             {
