@@ -1,5 +1,6 @@
 using Consul;
 using Demkin.System.WebApi.Extensions;
+using Exceptionless;
 using Microsoft.EntityFrameworkCore;
 
 string logFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
@@ -21,29 +22,34 @@ try
     builder.InitConfigureDefaultServices();
     builder.Services.AddDbSetup(builder.Configuration.GetSection("DbConnection:MasterDb_System").Value);
 
+    builder.Services.AddExceptionless(builder.Configuration);
+
     var app = builder.Build();
+
+    app.UseExceptionless();
 
     var scope = app.Services.CreateScope();
     SeedData.Initialize(scope.ServiceProvider);
 
     // Configure the HTTP request pipeline.
-    if (app.Environment.IsDevelopment())
+    //if (app.Environment.IsDevelopment())
+    //{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
     {
-        app.UseSwagger();
-        app.UseSwaggerUI(c =>
-        {
-            c.SwaggerEndpoint($"/swagger/v1/swagger.json", "System Service");
-            c.RoutePrefix = "api";
-        });
-    }
+        c.SwaggerEndpoint($"/swagger/v1/swagger.json", "System Service");
+        c.RoutePrefix = "api";
+    });
+    //}
 
     app.InitUseDefaultMiddleware();
 
     app.MapControllers();
 
     var lifetime = scope.ServiceProvider.GetRequiredService<IHostApplicationLifetime>();
+    //var consulOptions = scope.ServiceProvider.GetRequiredService<ConsulOptions>();
 
-    app.UseConsulMiddleware(lifetime);
+    app.UseConsulMiddleware(builder.Configuration, lifetime);
 
     app.Run();
 }

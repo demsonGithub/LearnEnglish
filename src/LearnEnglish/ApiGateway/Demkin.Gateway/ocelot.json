@@ -111,7 +111,7 @@
   ],
   "GlobalConfiguration": {
     "ServiceDiscoveryProvider": {
-      "Host": "192.168.1.7",
+      "Host": "192.168.0.175",
       "Port": 8500,
       "Type": "Consul",
       "PollingInterval": 100

@@ -4,7 +4,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 #配置工作目录
 WORKDIR /app
 #暴露容器端口，此端口与程序运行路径一致，可
-EXPOSE 80
+EXPOSE 8081
 
 #复制文件到工作目录
 COPY . .

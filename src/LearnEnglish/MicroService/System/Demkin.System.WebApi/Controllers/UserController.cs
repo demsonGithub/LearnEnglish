@@ -1,3 +1,5 @@
+using Demkin.Core.Exceptions;
+using Exceptionless;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Demkin.System.WebApi.Controllers
@@ -28,6 +30,20 @@ namespace Demkin.System.WebApi.Controllers
             var result = await _mediator.Send(query, HttpContext.RequestAborted);
 
             return ApiResult<UserInfoDto>.Build(result);
+        }
+
+        [HttpGet]
+        public IActionResult MockException()
+        {
+            //try
+            //{
+            throw new DomainException("Mock Error");
+            //}
+            //catch (Exception ex)
+            //{
+            //    ex.ToExceptionless().Submit();
+            //}
+            //return Ok();
         }
     }
 }
