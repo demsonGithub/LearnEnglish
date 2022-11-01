@@ -9,7 +9,7 @@ namespace Demkin.Utils
         public static void LogInitialize(string logFilePath)
         {
             //日志的输出模板
-            string SerilogOutputTemplate = "Time:{Timestamp:yyyy-MM-dd HH:mm:ss.fff}  Level：{Level}{NewLine}" +
+            string SerilogOutputTemplate = "Time:{Timestamp:yyyy-MM-dd HH:mm:ss.fff}  Level：[{Level}]{NewLine}" +
                 "Message: {Message}{NewLine}" +
                "{Exception}{NewLine}" +
                 new string('-', 70) + "{NewLine}";
@@ -20,9 +20,9 @@ namespace Demkin.Utils
                 .MinimumLevel.Override("Default", LogEventLevel.Warning)
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
+                .WriteTo.Console(outputTemplate: SerilogOutputTemplate)
                 .WriteTo.Async(o =>
                 {
-                    o.Console(outputTemplate: SerilogOutputTemplate);
                     //输出到文件,需要提供输出路径和周期
                     o.File(logFilePath + "/log_.log",
                         rollingInterval: RollingInterval.Day,

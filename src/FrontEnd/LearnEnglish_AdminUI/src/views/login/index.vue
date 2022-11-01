@@ -106,7 +106,6 @@ const loginHandle = (formVal: FormInstance) => {
       }
 
       const result = await loginApi.login(apiParams)
-      console.log(result)
 
       if (result.code === apiResultCode.fail) {
         verifyCodeInstance.refresh()

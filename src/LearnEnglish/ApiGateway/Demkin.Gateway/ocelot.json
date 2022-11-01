@@ -1,6 +1,17 @@
 {
   "Routes": [
     {
+      "UpstreamPathTemplate": "/System/User/LoginByAccountPassword",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "DownstreamPathTemplate": "/api/User/LoginByAccountPassword",
+      "DownstreamScheme": "http",
+      "LoadBalancerOption": {
+        "Type": "RoundRobin"
+      },
+      "ServiceName": "System",
+      "Prioirty": 1
+    },
+    {
       // Upstream 上游请求，客户端请求到API的请求
       "UpstreamPathTemplate": "/System/{url}",
       "UpstreamHttpMethod": [ "GET", "POST" ],
@@ -10,7 +21,11 @@
       "LoadBalancerOption": {
         "Type": "RoundRobin"
       },
-      "ServiceName": "System"
+      "ServiceName": "System",
+      "AuthenticationOptions": {
+        "AllowedScopes": [],
+        "AuthenticationProviderKey": "Demkin.Gateway"
+      }
     },
     {
       // Upstream 上游请求，客户端请求到API的请求
@@ -21,13 +36,14 @@
       // Downstream 下游请求，即转发的目标服务地址
       "DownstreamPathTemplate": "/api/{url}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        // 可以是多个负载均衡
-        {
-          "Host": "localhost",
-          "Port": 8082
-        }
-      ],
+      //"DownstreamHostAndPorts": [
+      //  // 可以是多个负载均衡
+      //  {
+      //    "Host": "localhost",
+      //    "Port": 8082
+      //  }
+      //],
+      "ServiceName": "Listen",
       "LoadBalancerOption": {
         "Type": "RoundRobin"
       }
@@ -41,12 +57,7 @@
       // Downstream 下游请求，即转发的目标服务地址
       "DownstreamPathTemplate": "/Hubs/{url}",
       "DownstreamScheme": "ws",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 8082
-        }
-      ]
+      "ServiceName": "Listen"
     },
     {
       // Upstream 上游请求，客户端请求到API的请求
@@ -60,7 +71,7 @@
       "DownstreamHostAndPorts": [
         // 可以是多个负载均衡
         {
-          "Host": "localhost",
+          "Host": "192.168.0.175",
           "Port": 8083
         }
       ],
@@ -70,20 +81,14 @@
     },
     {
       // Upstream 上游请求，客户端请求到API的请求
-      "UpstreamPathTemplate": "/Transcoding/{url}",
+      "UpstreamPathTemplate": "/Transcode/{url}",
       "UpstreamHttpMethod": [ "GET", "POST" ],
       "UseServicesDiscovery": false,
 
       // Downstream 下游请求，即转发的目标服务地址
       "DownstreamPathTemplate": "/api/{url}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        // 可以是多个负载均衡
-        {
-          "Host": "localhost",
-          "Port": 8084
-        }
-      ],
+      "ServiceName": "Transcode",
       "LoadBalancerOption": {
         "Type": "RoundRobin"
       }

@@ -3,7 +3,6 @@ using Demkin.Search.Domain;
 using Demkin.Search.WebApi.Application.Commands;
 using Demkin.Search.WebApi.Application.Queries;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Demkin.Search.WebApi.Controllers

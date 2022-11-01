@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Demkin.Listen.WebApi.Admin.Controllers
 {
+    [Authorize(Policy = "policy1")]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class CategoryController : ControllerBase

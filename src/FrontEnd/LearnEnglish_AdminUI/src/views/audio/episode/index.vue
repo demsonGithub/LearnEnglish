@@ -199,8 +199,10 @@ const init = () => {
 const signalrId = ref('')
 
 const initSignalR = () => {
+  let hubUrl = import.meta.env.VITE_APP_WEBAPI_URL
+
   const connection = new signalR.HubConnectionBuilder()
-    .withUrl('http://localhost:5051/Gateway/TranscodeFileHub', {
+    .withUrl(hubUrl + '/Gateway/TranscodeFileHub', {
       skipNegotiation: true,
       transport: signalR.HttpTransportType.WebSockets, // 强制WebSockets
       logger: signalR.LogLevel.Error,

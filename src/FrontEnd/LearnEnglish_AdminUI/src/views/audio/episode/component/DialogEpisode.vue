@@ -151,8 +151,9 @@ const getAudioDuration = (file: Blob | MediaSource) => {
 }
 
 const init = async () => {
+  const hubUrl = import.meta.env.VITE_APP_WEBAPI_URL
   const connection = new signalR.HubConnectionBuilder()
-    .withUrl('http://localhost:5051/Gateway/UploadFileHub', {
+    .withUrl(hubUrl + '/Gateway/UploadFileHub', {
       skipNegotiation: true,
       transport: signalR.HttpTransportType.WebSockets, // 强制WebSockets
       logger: signalR.LogLevel.Error,

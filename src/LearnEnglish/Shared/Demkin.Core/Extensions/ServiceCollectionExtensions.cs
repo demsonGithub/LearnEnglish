@@ -1,19 +1,20 @@
 ﻿using Autofac;
-using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
 using Demkin.Core.Filters;
 using Demkin.Core.Jwt;
 using Demkin.Utils;
 using Demkin.Utils.ContractResolver;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Serilog;
 using StackExchange.Redis;
+using System.Text;
 
 namespace Demkin.Core.Extensions
 {
@@ -21,8 +22,6 @@ namespace Demkin.Core.Extensions
     {
         public static void InitConfigureDefaultServices(this WebApplicationBuilder builder)
         {
-            //string basePath = @"D:\GitRepository";
-            //builder.Configuration.SetBasePath(basePath).AddJsonFile("commonsettings.json", optional: false, reloadOnChange: true);
             IServiceCollection services = builder.Services;
             IConfiguration configuration = builder.Configuration;
 
@@ -71,6 +70,36 @@ namespace Demkin.Core.Extensions
             builder.Host.UseSerilog(dispose: true);
 
             #endregion Serilog
+
+            #region 认证授权
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                JwtOptions jwtOptions = new JwtOptions();
+                configuration.Bind("JwtOptions", jwtOptions);
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = jwtOptions.Issuer,
+                    ValidateAudience = true,
+                    ValidAudience = jwtOptions.Audience,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey)),
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.FromSeconds(30),
+                    RequireExpirationTime = true
+                };
+            });
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("policy1", policy => policy.RequireRole("sysadmin", "admin"));
+                options.AddPolicy("policy2", policy => policy.RequireRole("admin"));
+            });
+
+            #endregion 认证授权
 
             #region MediatoR
 

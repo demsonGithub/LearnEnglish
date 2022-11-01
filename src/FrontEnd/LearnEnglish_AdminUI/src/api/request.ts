@@ -1,3 +1,5 @@
+import { Constant } from '@/constant'
+import { getCookie } from '@/utils/jsCookie'
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 
 class RequestInstance {
@@ -19,7 +21,8 @@ class RequestInstance {
     this.instance.interceptors.request.use(
       (config: AxiosRequestConfig) => {
         // 请求时携带token
-        const token = localStorage.getItem('ACCESS_TOKEN')
+        const token = getCookie(Constant.tokenKey)
+
         if (token) {
           config.headers.Authorization = 'Bearer ' + token
         }

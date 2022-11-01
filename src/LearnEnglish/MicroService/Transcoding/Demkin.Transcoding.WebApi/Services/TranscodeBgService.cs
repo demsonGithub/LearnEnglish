@@ -127,7 +127,8 @@ namespace Demkin.Transcoding.WebApi.Services
             var transcodeUrl = string.Empty;
             try
             {
-                using var channel = GrpcChannel.ForAddress("Http://localhost:8183");
+                var grpcUrl = _configuration.GetValue<string>("GrpcUrl");
+                using var channel = GrpcChannel.ForAddress(grpcUrl);
                 var grpcClient = new UploadFileGrpc.UploadFileGrpcClient(channel);
                 // 将文件转为stream 通过客户端请求流将流发送到服务端
                 using var call = grpcClient.UploadFile();

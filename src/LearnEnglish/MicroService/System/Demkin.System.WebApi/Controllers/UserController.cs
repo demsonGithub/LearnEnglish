@@ -1,5 +1,6 @@
 using Demkin.Core.Exceptions;
 using Exceptionless;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Demkin.System.WebApi.Controllers
@@ -24,26 +25,13 @@ namespace Demkin.System.WebApi.Controllers
             return ApiResult<LoginSuccesDto>.Build(result);
         }
 
+        [Authorize(Policy = "policy1")]
         [HttpPost]
         public async Task<ApiResult<UserInfoDto>> GetUserInfoByToken([FromBody] GetUserInfoByTokenQuery query)
         {
             var result = await _mediator.Send(query, HttpContext.RequestAborted);
 
             return ApiResult<UserInfoDto>.Build(result);
-        }
-
-        [HttpGet]
-        public IActionResult MockException()
-        {
-            //try
-            //{
-            throw new DomainException("Mock Error");
-            //}
-            //catch (Exception ex)
-            //{
-            //    ex.ToExceptionless().Submit();
-            //}
-            //return Ok();
         }
     }
 }

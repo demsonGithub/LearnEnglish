@@ -49,6 +49,10 @@ try
     app.MapHub<UploadFileHub>("/Hubs/UploadFileHub");
     app.MapHub<TranscodeFileHub>("/Hubs/TranscodeFileHub");
 
+    var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
+    var lifetime = scope.ServiceProvider.GetRequiredService<IHostApplicationLifetime>();
+    app.UseConsulMiddleware(builder.Configuration, lifetime);
+
     app.Run();
 }
 catch (Exception ex)
