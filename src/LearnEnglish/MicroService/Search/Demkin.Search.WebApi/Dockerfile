@@ -2,9 +2,8 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
-EXPOSE 8083
-EXPOSE 8183
+EXPOSE 8085
 
 COPY . .
 
-ENTRYPOINT ["dotnet", "Demkin.FileOperation.WebApi.dll"]
+ENTRYPOINT ["dotnet", "Demkin.Search.WebApi.dll"]

@@ -1,19 +1,24 @@
 ﻿using Demkin.Core;
 using Demkin.Transcoding.Domain.Interfaces;
 using FFmpeg.NET;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Serilog;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.InteropServices;
 
 namespace Demkin.Transcoding.Infrastructure.Repository
 {
     public class FFMpegTranscodeService : ITranscodeService
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly ILogger<FFMpegTranscodeService> _logger;
 
-        public FFMpegTranscodeService(IHttpClientFactory httpClientFactory)
+        public FFMpegTranscodeService(IHttpClientFactory httpClientFactory, ILogger<FFMpegTranscodeService> logger)
         {
             _httpClientFactory = httpClientFactory;
+            _logger = logger;
         }
 
         public async Task TranscodeFileToTarget(string sourceUrl, string targetUrl, CancellationToken ct = default)
@@ -22,7 +27,16 @@ namespace Demkin.Transcoding.Infrastructure.Repository
             var outputFile = new OutputFile(targetUrl);
 
             string baseDir = AppContext.BaseDirectory;
-            string ffmpegPath = Path.Combine(baseDir, "FFmpeg", "ffmpeg.exe");
+            string ffmpegPath = "";
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                ffmpegPath = "/usr/bin/ffmpeg";
+            }
+            else
+            {
+                ffmpegPath = Path.Combine(baseDir, "FFmpeg", "ffmpeg.exe");
+            }
+
             var ffmpeg = new Engine(ffmpegPath);
 
             string? errorMsg = null;
@@ -31,10 +45,15 @@ namespace Demkin.Transcoding.Infrastructure.Repository
                 errorMsg += e.Exception.Message;
             };
 
+            Log.Information("FFmpeg01");
+
             await ffmpeg.ConvertAsync(inputFile, outputFile, ct);
+
+            Log.Information("FFmpeg02");
 
             if (!string.IsNullOrEmpty(errorMsg))
             {
+                Log.Information("FFmpeg" + errorMsg);
                 throw new Exception(errorMsg);
             }
         }

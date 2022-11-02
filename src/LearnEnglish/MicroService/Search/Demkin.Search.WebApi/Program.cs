@@ -23,8 +23,8 @@ try
     builder.Services.AddScoped<IElasticClient>(op =>
     {
         Uri url = new Uri(builder.Configuration.GetValue<string>("ElasticSearchConnection"));
-        var settings = new ConnectionSettings(url);
-        return new ElasticClient();
+        var settings = new ConnectionSettings(url).DefaultIndex("episodes");
+        return new ElasticClient(settings);
     });
     builder.Services.AddIntegrationEvent();
 
@@ -41,7 +41,7 @@ try
         });
     }
 
-    app.UseHttpsRedirection();
+    //app.UseHttpsRedirection();
 
     app.InitUseDefaultMiddleware();
     app.MapControllers();

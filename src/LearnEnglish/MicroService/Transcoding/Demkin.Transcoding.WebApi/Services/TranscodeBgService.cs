@@ -8,6 +8,7 @@ using Grpc.Net.Client;
 using Microsoft.Data.SqlClient;
 using RedLockNet.SERedis;
 using RedLockNet.SERedis.Configuration;
+using Serilog;
 using StackExchange.Redis;
 
 namespace Demkin.Transcoding.WebApi.Services
@@ -114,6 +115,8 @@ namespace Demkin.Transcoding.WebApi.Services
             }
             catch (Exception ex)
             {
+                Log.Information("FFmpeg03");
+
                 throw new DomainException(ex.Message);
             }
             finally
@@ -121,15 +124,21 @@ namespace Demkin.Transcoding.WebApi.Services
                 fileInfo.Delete();
             }
 
+            Log.Information("FFmpeg04");
+
             // 4. 转码完成,Grpc上传到存储，然后返回地址
             Stream fileStream = new FileStream(targetFilePath, FileMode.Open, FileAccess.Read);
+
+            Log.Information("FFmpeg05");
 
             var transcodeUrl = string.Empty;
             try
             {
                 var grpcUrl = _configuration.GetValue<string>("GrpcUrl");
+
                 using var channel = GrpcChannel.ForAddress(grpcUrl);
                 var grpcClient = new UploadFileGrpc.UploadFileGrpcClient(channel);
+
                 // 将文件转为stream 通过客户端请求流将流发送到服务端
                 using var call = grpcClient.UploadFile();
                 var clientStream = call.RequestStream;
@@ -168,6 +177,7 @@ namespace Demkin.Transcoding.WebApi.Services
                 // 删除临时目录
                 Directory.Delete(tempFolderPath, true);
             }
+            Log.Information("999999");
 
             // 5. 完成转码，触发领域事件
             transcodeFile.Complete(transcodeUrl);

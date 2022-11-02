@@ -135,6 +135,8 @@ const uploadSuccessHandle: UploadProps['onSuccess'] = (
   response,
   uploadFile
 ) => {
+  console.log('1', response)
+
   form.value.audioUrl = response.remoteUrl
   progressValue.value = 100
   progressStatus.value = 'success'

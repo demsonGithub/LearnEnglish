@@ -10,10 +10,12 @@ namespace Demkin.Transcoding.WebApi.IntegrationEvents
     public class TranscodeFileIntegrationEvent : ICapSubscribe
     {
         private readonly ITranscodeFileRepository _transcodeFileRepository;
+        private readonly IConfiguration _configuration;
 
-        public TranscodeFileIntegrationEvent(ITranscodeFileRepository transcodeFileRepository)
+        public TranscodeFileIntegrationEvent(ITranscodeFileRepository transcodeFileRepository, IConfiguration configuration)
         {
             _transcodeFileRepository = transcodeFileRepository;
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -29,7 +31,7 @@ namespace Demkin.Transcoding.WebApi.IntegrationEvents
             TranscodeFileInputParams? inputParams = JsonConvert.DeserializeObject<TranscodeFileInputParams>(Convert.ToString(parameters));
 
             // 2. 将任务添加到数据库
-            string sourceUrl = "http://localhost:8083" + inputParams.FileSourceUrl;
+            string sourceUrl = _configuration.GetValue<string>("FileUrl") + inputParams.FileSourceUrl;
             TranscodeFile entity = TranscodeFile.Create(inputParams.RedisKey, inputParams.FileTitle, sourceUrl, inputParams.OutputFormat);
 
             await _transcodeFileRepository.AddAsync(entity);
