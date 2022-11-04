@@ -1,14 +1,9 @@
-#引入镜像，低版本 docker 去掉  AS base
-#FROM registry.cn-chengdu.aliyuncs.com/jimlicatpub/aspnet:6.0 AS base
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
-#配置工作目录
-WORKDIR /app
-#暴露容器端口，此端口与程序运行路径一致，可
-EXPOSE 8081
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-#复制文件到工作目录
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+WORKDIR /app
+EXPOSE 80
+
 COPY . .
 
-
-#启动程序
 ENTRYPOINT ["dotnet", "Demkin.System.WebApi.dll"]

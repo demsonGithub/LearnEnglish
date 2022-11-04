@@ -1,0 +1,51 @@
+version: "3.8"
+services:
+    sqlserver:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        container_name: sqlserver2019
+        ports:
+            - 1433:1433
+        volumes:
+            - D:/DockerRepository/basicEnv/mssql2019/data:/var/opt/mssql/data
+            - D:/DockerRepository/basicEnv/mssql2019/log:/var/opt/mssql/log
+            - D:/DockerRepository/basicEnv/mssql2019/secrets:/var/opt/mssql/secrets
+        restart: always
+        environment:
+            - ACCEPT_EULA=Y
+            - MSSQL_SA_PASSWORD=abcd1234#
+        networks:
+            - basic_env
+    
+    redis:
+        image: redis:6.2.7
+        container_name: redis
+        ports:
+            - 6379:6379
+        volumes:
+            - D:/DockerRepository/basicEnv/redis/redis.conf:/etc/redis/redis.conf 
+            - D:/DockerRepository/basicEnv/redis/data:/data
+        restart: always
+        command:
+            /bin/bash -c "redis-server /etc/redis/redis.conf "
+        networks:
+            - basic_env
+            
+    rabbitmq:
+        image: rabbitmq:3.9.24-management
+        container_name: rabbitmq
+        hostname: rabbitmq
+        ports:
+            - 5672:5672
+            - 15672:15672
+        volumes:
+            - D:/DockerRepository/basicEnv/rabbitmq/conf.d:/etc/rabbitmq/conf.d
+            - D:/DockerRepository/basicEnv/rabbitmq/data:/var/lib/rabbitmq
+            - D:/DockerRepository/basicEnv/rabbitmq/log:/var/log/rabbitmq
+        environment:
+            - RABBITMQ_DEFAULT_USER=admin
+            - RABBITMQ_DEFAULT_PASS=abcd1234#
+        networks:
+            - basic_env
+        
+networks:
+    basic_env:

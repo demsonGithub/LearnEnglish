@@ -1,0 +1,114 @@
+version: "3.8"
+services:
+    consul:
+        container_name: consul
+        image: consul:1.13.3
+        ports:
+            - 8300:8300
+            - 8301:8301
+            - 8302:8302
+            - 8500:8500
+            - 8600:8600
+        networks:
+            - webapi
+            
+    gateway-api:
+        container_name: gateway-api
+        build:
+            context: ./ApiGateway/Demkin.Gateway/.publish
+            dockerfile: Dockerfile
+        image: dev_gateway:1.0.0
+        ports:
+            - 5050:5050
+        networks:
+            - webapi
+        depends_on:
+            - consul
+        volumes:
+            - D:/DockerRepository/web/gateway-api/appsettings.json:/app/appsettings.json
+            - D:/DockerRepository/web/gateway-api/log:/app/Logs
+    auth-api:
+        container_name: auth-api
+        build:
+            context: ./MicroService/System/Demkin.System.WebApi/.publish
+            dockerfile: Dockerfile
+        image: dev_auth:1.0.0
+        ports:
+            - 8081:8081
+        networks:
+            - webapi
+        depends_on:
+            - consul
+        volumes:
+            - D:/DockerRepository/web/auth-api/appsettings.json:/app/appsettings.json
+            - D:/DockerRepository/web/auth-api/log:/app/Logs
+            
+    listen-api:
+        container_name: listen-api
+        build:
+            context: ./MicroService/Listen/Demkin.Listen.WebApi.Admin/.publish
+            dockerfile: Dockerfile
+        image: dev_listen:1.0.0
+        ports:
+            - 8082:8082
+        networks:
+            - webapi
+        depends_on:
+            - consul
+        volumes:
+            - D:/DockerRepository/web/listen-api/appsettings.json:/app/appsettings.json
+            - D:/DockerRepository/web/listen-api/log:/app/Logs
+            
+    file-api:
+        container_name: file-api
+        build:
+            context: ./MicroService/FileOperation/Demkin.FileOperation.WebApi/.publish
+            dockerfile: Dockerfile
+        image: dev_file:1.0.0
+        ports:
+            - 8083:8083
+            - 8183:8183
+        networks:
+            - webapi
+        depends_on:
+            - consul
+        volumes:
+            - D:/DockerRepository/web/file-api/appsettings.json:/app/appsettings.json
+            - D:/DockerRepository/web/file-api/log:/app/Logs
+            - D:/DockerRepository/web/file-api/UploadedResources:/app/wwwroot/UploadedResources
+            
+    transcode-api:
+        container_name: transcode-api
+        build:
+            context: ./MicroService/Transcoding/Demkin.Transcoding.WebApi/.publish
+            dockerfile: Dockerfile
+        image: dev_transcode:1.0.0
+        ports:
+            - 8084:8084
+            - 8184:8184
+        networks:
+            - webapi
+        depends_on:
+            - consul
+        volumes:
+            - D:/DockerRepository/web/transcode-api/appsettings.json:/app/appsettings.json
+            - D:/DockerRepository/web/transcode-api/log:/app/Logs
+            
+    search-api:
+        container_name: search-api
+        build:
+            context: ./MicroService/Search/Demkin.Search.WebApi/.publish
+            dockerfile: Dockerfile
+        image: dev_search:1.0.0
+        ports:
+            - 8085:8085
+        networks:
+            - webapi
+        depends_on:
+            - consul
+        volumes:
+            - D:/DockerRepository/web/search-api/appsettings.json:/app/appsettings.json
+            - D:/DockerRepository/web/search-api/log:/app/Logs
+        
+networks:
+    webapi: 

@@ -389,3 +389,4 @@ FodyWeavers.xsd
 
 #测试文件
 src/LearnEnglish/MicroService/FileOperation/Demkin.FileOperation.WebApi/wwwroot/UploadedResources/
+**/.publish/*
