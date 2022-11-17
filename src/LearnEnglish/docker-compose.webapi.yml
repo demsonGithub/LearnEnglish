@@ -26,6 +26,7 @@ services:
             - consul
         volumes:
             - D:/DockerRepository/web/gateway-api/appsettings.json:/app/appsettings.json
+            - D:/DockerRepository/web/gateway-api/ocelot.json:/app/ocelot.json
             - D:/DockerRepository/web/gateway-api/log:/app/Logs
     auth-api:
         container_name: auth-api

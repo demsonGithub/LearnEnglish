@@ -42,7 +42,7 @@ services:
         links:
             - elasticsearch:es
         volumes:
-            - D:/DockerRepository/elk/logstash/logstash-springboot.conf:/usr/share/logstash/pipeline/logstash.conf
+            - D:/DockerRepository/elk/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
         networks:
             - elk
 

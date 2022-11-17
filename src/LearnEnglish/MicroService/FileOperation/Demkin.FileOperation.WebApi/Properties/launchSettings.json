@@ -29,7 +29,11 @@
     "Docker": {
       "commandName": "Docker",
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
-      "publishAllPorts": true
+      "environmentVariables": {
+        "ASPNETCORE_URLS": "http://*:80",
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "httpPort": 8083
     }
   }
 }

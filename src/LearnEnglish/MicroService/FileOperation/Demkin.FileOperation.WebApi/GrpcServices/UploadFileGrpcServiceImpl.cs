@@ -24,9 +24,10 @@ namespace Demkin.FileOperation.WebApi.GrpcServices
 
                 while (await requestStream.MoveNext())
                 {
-                    if (idx == 0) { }
-                    fileName = requestStream.Current.FileName;
-
+                    if (idx == 0)
+                    {
+                        fileName = requestStream.Current.FileName;
+                    }
                     acceptBytes.AddRange(requestStream.Current.Data);
 
                     idx++;
