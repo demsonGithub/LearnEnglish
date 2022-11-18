@@ -9,3 +9,11 @@ declare interface IMockFormat {
   requestType: string
   responseAction: any
 }
+
+declare interface IEpisode {
+  episodeId: string
+  title: string
+  description: string
+  subtitles: string
+  albumId: string
+}

@@ -76,7 +76,7 @@ services:
         volumes:
             - D:/DockerRepository/web/file-api/appsettings.json:/app/appsettings.json
             - D:/DockerRepository/web/file-api/log:/app/Logs
-            - D:/DockerRepository/web/file-api/UploadedResources:/app/wwwroot/UploadedResources
+            - D:/DockerRepository/web/file-api/wwwroot:/app/wwwroot
             
     transcode-api:
         container_name: transcode-api

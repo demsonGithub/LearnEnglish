@@ -18,20 +18,19 @@ namespace Demkin.Search.WebApi.Controllers
             _mediator = mediator;
         }
 
+        [HttpPost]
+        public async Task<ApiResult<string>> DeleteEpisode([FromBody] DeleteEpisodeCommand command)
+        {
+            var result = await _mediator.Send(command, HttpContext.RequestAborted);
+            return ApiResult<string>.Build(result);
+        }
+
         [HttpGet]
         public async Task<ApiResult<SearchEpisodeResponse>> SearchEpisodes([FromQuery] SearchEpisodesQuery query)
         {
             var result = await _mediator.Send(query, HttpContext.RequestAborted);
 
             return ApiResult<SearchEpisodeResponse>.Build(result);
-        }
-
-        [HttpPost]
-        public async Task<ApiResult<string>> DeleteEpisode([FromBody] DeleteEpisodeCommand command)
-        {
-            var result = await _mediator.Send(command, HttpContext.RequestAborted);
-
-            return ApiResult<string>.Build(result);
         }
     }
 }

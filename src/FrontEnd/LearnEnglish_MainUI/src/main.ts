@@ -7,6 +7,7 @@ import { SvgIcon } from '@/components/SvgIcon/index'
 
 import 'normalize.css/normalize.css'
 import 'element-plus/es/components/message/style/css'
+import '@/assets/styles/index.css'
 
 const app = createApp(App)
 

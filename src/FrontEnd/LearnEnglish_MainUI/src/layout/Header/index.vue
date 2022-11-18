@@ -30,6 +30,8 @@ const handleSearch = () => {
     })
     return
   }
+
+  
   router.push({ path: '/search', query: { keyword: searchInput.value } })
 }
 
